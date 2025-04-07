@@ -4,12 +4,13 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.loc.searchapp.data.interceptors.AuthInterceptor
+import com.loc.searchapp.data.authenticator.AuthAuthenticator
+import com.loc.searchapp.data.authenticator.AuthInterceptor
 import com.loc.searchapp.data.manger.LocalUserMangerImpl
-import com.loc.searchapp.data.preferences.UserPreferences
-import com.loc.searchapp.data.preferences.dataStore
 import com.loc.searchapp.data.network.AuthApi
 import com.loc.searchapp.data.network.CatalogApi
+import com.loc.searchapp.data.preferences.UserPreferences
+import com.loc.searchapp.data.preferences.dataStore
 import com.loc.searchapp.data.repository.AuthRepositoryImpl
 import com.loc.searchapp.data.repository.CatalogRepositoryImpl
 import com.loc.searchapp.domain.manger.LocalUserManger
@@ -45,16 +46,28 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    @Provides
+    @Singleton
+    fun provideAuthAuthenticator(
+        userPreferences: UserPreferences,
+    ): AuthAuthenticator {
+        return AuthAuthenticator(userPreferences)
+    }
+
     //  OKHTTPCLIENT
     @Provides
     @Singleton
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        authAuthenticator: AuthAuthenticator
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(120, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)
             .writeTimeout(120, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .addInterceptor(authInterceptor)
+            .authenticator(authAuthenticator)
             .apply {
                 connectionSpecs(
                     listOf(
@@ -148,7 +161,7 @@ object AppModule {
         )
     }
 
-//      DATASTORE
+//  DATASTORE
     @Provides
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {

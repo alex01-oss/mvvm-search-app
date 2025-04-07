@@ -35,7 +35,7 @@ class AuthRepositoryImpl(
         token: String
     ): Response<AuthResponse> {
         return api.refresh(
-            RefreshRequest(token)
+            RefreshRequest(token).toString()
         )
     }
 }

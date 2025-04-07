@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.loc.searchapp.domain.model.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -61,12 +61,17 @@ class UserPreferences @Inject constructor(internal val dataStore: DataStore<Pref
     }
 
     suspend fun getToken(): String? {
-        val token = dataStore.data.map { it[Keys.TOKEN] }.firstOrNull()
-        return token
+        return dataStore.data.first()[Keys.TOKEN]
     }
 
     suspend fun getRefreshToken(): String? {
-        val refreshToken = dataStore.data.map { it[Keys.REFRESH_TOKEN] }.firstOrNull()
-        return refreshToken
+        return dataStore.data.first()[Keys.REFRESH_TOKEN]
+    }
+
+    suspend fun saveToken(token: String) {
+        val currentUser = user.first()
+        if (currentUser != null) {
+            saveUser(currentUser.copy(token = token))
+        }
     }
 }

@@ -12,5 +12,5 @@ data class RegisterRequest(
 )
 
 data class RefreshRequest(
-    val token: String
+    val refreshToken: String
 )
