@@ -2,7 +2,7 @@ package com.loc.searchapp.data.network.dto
 
 import com.loc.searchapp.domain.model.Product
 
-data class CatalogResponse(
+data class Catalog(
     val current_page: Int = 1,
     val items: List<Product> = emptyList(),
     val items_per_page: Int = 10,

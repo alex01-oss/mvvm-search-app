@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.loc.searchapp.data.authenticator.AuthAuthenticator
 import com.loc.searchapp.data.authenticator.AuthInterceptor
+import com.loc.searchapp.data.authenticator.TokenRefreshInterceptor
 import com.loc.searchapp.data.manger.LocalUserMangerImpl
 import com.loc.searchapp.data.network.AuthApi
 import com.loc.searchapp.data.network.CatalogApi
@@ -20,7 +20,9 @@ import com.loc.searchapp.domain.usecases.app_entry.AppEntryUseCases
 import com.loc.searchapp.domain.usecases.app_entry.ReadAppEntry
 import com.loc.searchapp.domain.usecases.app_entry.SaveAppEntry
 import com.loc.searchapp.domain.usecases.auth.AuthUseCases
+import com.loc.searchapp.domain.usecases.auth.GetUser
 import com.loc.searchapp.domain.usecases.auth.LoginUser
+import com.loc.searchapp.domain.usecases.auth.LogoutUser
 import com.loc.searchapp.domain.usecases.auth.RefreshToken
 import com.loc.searchapp.domain.usecases.auth.RegisterUser
 import com.loc.searchapp.domain.usecases.catalog.AddProduct
@@ -28,6 +30,7 @@ import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.domain.usecases.catalog.DeleteProduct
 import com.loc.searchapp.domain.usecases.catalog.GetCart
 import com.loc.searchapp.domain.usecases.catalog.GetCatalog
+import com.loc.searchapp.domain.usecases.catalog.GetMenu
 import com.loc.searchapp.domain.usecases.catalog.SelectProduct
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 import dagger.Module
@@ -40,6 +43,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -48,18 +52,38 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthAuthenticator(
-        userPreferences: UserPreferences,
-    ): AuthAuthenticator {
-        return AuthAuthenticator(userPreferences)
+    @Named("authClient")
+    fun provideAuthOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .build()
     }
 
-    //  OKHTTPCLIENT
     @Provides
     @Singleton
-    fun provideOkHttpClient(
+    @Named("authRetrofit")
+    fun provideAuthRetrofit(@Named("authClient") okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(CATALOG_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(@Named("authRetrofit") retrofit: Retrofit): AuthApi {
+        return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMainOkHttpClient(
         authInterceptor: AuthInterceptor,
-        authAuthenticator: AuthAuthenticator
+        tokenRefreshInterceptor: TokenRefreshInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(120, TimeUnit.SECONDS)
@@ -67,36 +91,17 @@ object AppModule {
             .writeTimeout(120, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .addInterceptor(authInterceptor)
-            .authenticator(authAuthenticator)
-            .apply {
-                connectionSpecs(
-                    listOf(
-                        ConnectionSpec.MODERN_TLS,
-                        ConnectionSpec.COMPATIBLE_TLS,
-                        ConnectionSpec.CLEARTEXT
-                    )
+            .addInterceptor(tokenRefreshInterceptor)
+            .connectionSpecs(
+                listOf(
+                    ConnectionSpec.MODERN_TLS,
+                    ConnectionSpec.COMPATIBLE_TLS,
+                    ConnectionSpec.CLEARTEXT
                 )
-            }
+            )
             .build()
     }
 
-    //  ONBOARDING
-    @Provides
-    @Singleton
-    fun provideLocalUserManger(
-        application: Application
-    ): LocalUserManger = LocalUserMangerImpl(application)
-
-    @Provides
-    @Singleton
-    fun provideAppEntryUseCases(
-        localUserManger: LocalUserManger
-    ) = AppEntryUseCases(
-        readAppEntry = ReadAppEntry(localUserManger),
-        saveAppEntry = SaveAppEntry(localUserManger)
-    )
-
-    //  CATALOG
     @Provides
     @Singleton
     fun provideCatalogApi(okHttpClient: OkHttpClient): CatalogApi {
@@ -112,9 +117,7 @@ object AppModule {
     @Singleton
     fun provideCatalogRepository(
         catalogApi: CatalogApi,
-    ): CatalogRepository = CatalogRepositoryImpl(
-        catalogApi
-    )
+    ): CatalogRepository = CatalogRepositoryImpl(catalogApi)
 
     @Provides
     @Singleton
@@ -127,20 +130,9 @@ object AppModule {
             getCart = GetCart(catalogRepository, userPreferences),
             addProduct = AddProduct(catalogRepository),
             deleteProduct = DeleteProduct(catalogRepository),
-            selectProduct = SelectProduct(catalogRepository)
+            selectProduct = SelectProduct(catalogRepository),
+            getMenu = GetMenu(catalogRepository)
         )
-    }
-
-    //  AUTHORIZATION
-    @Provides
-    @Singleton
-    fun provideAuthApi(okHttpClient: OkHttpClient): AuthApi {
-        return Retrofit.Builder()
-            .baseUrl(CATALOG_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(AuthApi::class.java)
     }
 
     @Provides
@@ -157,11 +149,12 @@ object AppModule {
         return AuthUseCases(
             loginUser = LoginUser(authRepository),
             registerUser = RegisterUser(authRepository),
-            refreshToken = RefreshToken(authRepository)
+            refreshToken = RefreshToken(authRepository),
+            logoutUser = LogoutUser(authRepository),
+            getUser = GetUser(authRepository)
         )
     }
 
-//  DATASTORE
     @Provides
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
@@ -173,4 +166,19 @@ object AppModule {
     fun provideUserPreferences(dataStore: DataStore<Preferences>): UserPreferences {
         return UserPreferences(dataStore)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocalUserManger(
+        application: Application
+    ): LocalUserManger = LocalUserMangerImpl(application)
+
+    @Provides
+    @Singleton
+    fun provideAppEntryUseCases(
+        localUserManger: LocalUserManger
+    ) = AppEntryUseCases(
+        readAppEntry = ReadAppEntry(localUserManger),
+        saveAppEntry = SaveAppEntry(localUserManger)
+    )
 }

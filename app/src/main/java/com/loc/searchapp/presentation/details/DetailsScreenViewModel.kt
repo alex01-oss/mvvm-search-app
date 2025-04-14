@@ -29,7 +29,7 @@ class DetailsScreenViewModel @Inject constructor(
                     if(product == null) {
                         upsertArticle(product = event.product)
                     } else {
-                        deleteArticle(product = event.product)
+                        deleteArticle(code = event.product.code)
                     }
                 }
             }
@@ -45,8 +45,8 @@ class DetailsScreenViewModel @Inject constructor(
         sideEffect = "Product inserted"
     }
 
-    private suspend fun deleteArticle(product: Product) {
-        catalogUseCases.deleteProduct(product = product)
+    private suspend fun deleteArticle(code: String) {
+        catalogUseCases.deleteProduct(code = code)
         sideEffect = "Product deleted"
     }
 }

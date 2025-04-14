@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.loc.searchapp.presentation.nvgraph.NavGraph
-import com.loc.searchapp.ui.theme.NewsAppTheme
+import com.loc.searchapp.ui.theme.SearchAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            NewsAppTheme {
+            SearchAppTheme {
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
                     val startDestination = viewModel.startDestination
                     NavGraph(startDestination = startDestination)

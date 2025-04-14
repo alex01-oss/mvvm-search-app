@@ -1,8 +1,10 @@
 package com.loc.searchapp.data.repository
 
 import com.loc.searchapp.data.network.CatalogApi
+import com.loc.searchapp.data.network.dto.CartRemoveRequest
 import com.loc.searchapp.data.network.dto.CartResponse
-import com.loc.searchapp.data.network.dto.CatalogResponse
+import com.loc.searchapp.data.network.dto.Catalog
+import com.loc.searchapp.data.network.dto.ItemCartResponse
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.repository.CatalogRepository
 import javax.inject.Inject
@@ -15,7 +17,7 @@ class CatalogRepositoryImpl @Inject constructor(
         searchQuery: String,
         searchType: String,
         page: Int,
-    ): CatalogResponse {
+    ): Catalog {
         val response = api.getCatalog(
             searchQuery = searchQuery,
             searchType = searchType,
@@ -23,7 +25,7 @@ class CatalogRepositoryImpl @Inject constructor(
         )
 
         if (response.isSuccessful) {
-            return response.body() ?: CatalogResponse()
+            return response.body() ?: Catalog()
         } else {
             throw Exception("API error: ${response.code()}")
         }
@@ -33,15 +35,21 @@ class CatalogRepositoryImpl @Inject constructor(
         return api.getCart(token)
     }
 
-    override suspend fun addProduct(product: Product) {
-        TODO("Not yet implemented")
+    override suspend fun addProduct(product: Product): ItemCartResponse {
+        return api.addToCart(product)
     }
 
-    override suspend fun deleteProduct(product: Product) {
-        TODO("Not yet implemented")
+    override suspend fun deleteProduct(code: String): ItemCartResponse {
+        return api.removeFromCart(
+            CartRemoveRequest(code)
+        )
     }
 
     override suspend fun getProduct(code: String): Product? {
         return getProduct(code = code)
+    }
+
+    override suspend fun getMenu(): Map<String, Any> {
+        return api.getMenu()
     }
 }

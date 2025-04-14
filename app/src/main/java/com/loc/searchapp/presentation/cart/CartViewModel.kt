@@ -15,16 +15,21 @@ import javax.inject.Inject
 class CartViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases
 ) : ViewModel() {
-    private val _products = MutableStateFlow<List<CartItem>>(emptyList())
-    val cartItems: StateFlow<List<CartItem>> = _products.asStateFlow()
+
+    private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
+    val cartItems: StateFlow<List<CartItem>> = _cartItems.asStateFlow()
 
     init {
         getCart()
     }
 
-    private fun getCart() {
+    fun getCart() {
         viewModelScope.launch {
-            _products.value = catalogUseCases.getCart()
+            _cartItems.value = catalogUseCases.getCart()
         }
+    }
+
+    fun updateCart() {
+        getCart()
     }
 }

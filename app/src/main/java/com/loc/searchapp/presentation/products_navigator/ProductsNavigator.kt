@@ -129,8 +129,7 @@ fun ProductsNavigator() {
                             product = product
                         )
                     },
-                    onAdd = {},
-                    onRemove = {}
+                    viewModel = hiltViewModel(),
                 )
             }
 
@@ -165,7 +164,7 @@ fun ProductsNavigator() {
                         )
                     },
                     cartItems = cartItems,
-                    onDelete = {},
+                    onRemove = {},
                 )
             }
 

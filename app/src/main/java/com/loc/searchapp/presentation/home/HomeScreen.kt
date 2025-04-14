@@ -9,21 +9,23 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.loc.searchapp.domain.model.ListItem
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.cart.CartViewModel
 import com.loc.searchapp.presentation.common.ProductsList
 import com.loc.searchapp.presentation.common.SearchBar
 import com.loc.searchapp.presentation.home.components.HomeTopBar
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel,
     products: State<List<Product>>,
     navigateToSearch: () -> Unit,
     navigateToDetails: (Product) -> Unit,
-    onAdd: (Product) -> Unit,
-    onRemove: (Product) -> Unit
 ) {
+    val cartViewModel: CartViewModel = hiltViewModel()
 
     Column(
         modifier = Modifier
@@ -55,9 +57,20 @@ fun HomeScreen(
             modifier = Modifier.padding(horizontal = MediumPadding1),
             items = catalogListItems,
             onClick = { navigateToDetails },
-            onAdd = {  },
-            onRemove = {  },
-            onDelete = {  }
+            onAdd = {
+                if (it is ListItem.CatalogListItem) {
+                    viewModel.addToCart(it.product) {
+                        cartViewModel.updateCart()
+                    }
+                }
+            },
+            onRemove = {
+                if (it is ListItem.CatalogListItem) {
+                    viewModel.removeFromCart(it.product.code) {
+                        cartViewModel.updateCart()
+                    }
+                }
+            }
         )
     }
 }

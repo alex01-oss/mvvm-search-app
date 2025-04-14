@@ -22,7 +22,7 @@ import com.loc.searchapp.presentation.common.ProductsList
 fun CartScreen(
     cartItems: State<List<CartItem>>,
     navigateToDetails: (CartItem) -> Unit,
-    onDelete: (CartItem) -> Unit
+    onRemove: (CartItem) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -48,10 +48,13 @@ fun CartScreen(
         ProductsList(
             modifier = Modifier.padding(horizontal = MediumPadding1),
             items = cartListItems,
-            onClick = { navigateToDetails },
-            onAdd = {  },
-            onRemove = {  },
-            onDelete = {  }
+            onClick = { item ->
+                if (item is ListItem.CartListItem) navigateToDetails(item.cartItem)
+            },
+            onRemove = { item ->
+                if (item is ListItem.CartListItem) onRemove(item.cartItem)
+            },
+            onAdd = {},
         )
     }
 }

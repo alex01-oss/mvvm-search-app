@@ -45,7 +45,6 @@ fun SearchScreen(
             onClick = { navigateToDetails },
             onAdd = {  },
             onRemove = {  },
-            onDelete = {  }
         )
     }
 }

@@ -1,14 +1,16 @@
 package com.loc.searchapp.presentation.home.components
 
+import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,15 +24,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
-import com.loc.searchapp.presentation.Dimens.ProductCardSize
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
-import com.loc.searchapp.presentation.Dimens.IconSize
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.Dimens.smallIconSize
+import com.loc.searchapp.presentation.Dimens.ProductCardSize
+import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.ui.theme.SearchAppTheme
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
@@ -40,12 +43,14 @@ fun ProductCard(
     onClick: () -> Unit,
     onAdd: (Product) -> Unit,
     onRemove: (Product) -> Unit,
-    isInCart: Boolean = false
 ) {
     val context = LocalContext.current
     val imageUrl = "$CATALOG_URL${product.images}"
 
-    Row(modifier = modifier.clickable { onClick() }) {
+    Row(modifier = modifier
+        .clickable { onClick() }
+        .fillMaxWidth()
+    ) {
         AsyncImage(
             modifier = Modifier
                 .size(ProductCardSize)
@@ -65,17 +70,9 @@ fun ProductCard(
             modifier = Modifier
                 .padding(start = MediumPadding1, end = ExtraSmallPadding)
                 .height(ProductCardSize)
+                .weight(1f)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.qr_code),
-                    contentDescription = null,
-                    modifier = Modifier.size(IconSize),
-                    tint = colorResource(id = R.color.body)
-                )
-
-                Spacer(modifier = Modifier.width(ExtraSmallPadding))
-
                 Text(
                     text = product.code,
                     style = MaterialTheme.typography.bodyMedium,
@@ -86,15 +83,6 @@ fun ProductCard(
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.shape),
-                    contentDescription = null,
-                    modifier = Modifier.size(smallIconSize),
-                    tint = colorResource(id = R.color.body)
-                )
-
-                Spacer(modifier = Modifier.width(ExtraSmallPadding))
-
                 Text(
                     text = "Shape: ",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
@@ -109,35 +97,31 @@ fun ProductCard(
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.straighten),
-                    contentDescription = null,
-                    modifier = Modifier.size(smallIconSize),
-                    tint = colorResource(id = R.color.body)
-                )
-
-                Spacer(modifier = Modifier.width(ExtraSmallPadding))
-
                 Text(
                     text = "Dimensions: ",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                     color = colorResource(id = R.color.body),
                 )
             }
-
             Text(
                 text = product.dimensions,
                 style = MaterialTheme.typography.labelSmall,
                 color = colorResource(id = R.color.body),
             )
-
-            if (isInCart) {
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(end = SmallPadding)
+        ) {
+            if (product.isInCart) {
                 IconButton(
-                    onClick = { onRemove.invoke(product) },
+                    onClick = { onRemove.invoke(product) }
                 ) {
                     Icon(
                         painterResource(id = R.drawable.delete),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             } else {
@@ -146,10 +130,33 @@ fun ProductCard(
                 ) {
                     Icon(
                         painterResource(id = R.drawable.add_shopping_cart),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ProductCardPreview() {
+    SearchAppTheme {
+        Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+            ProductCard(
+                onClick = {  },
+                onAdd = {  },
+                onRemove = {  },
+                product = Product(
+                    code = "3G3042",
+                    dimensions = "100x10x2.3x4x20",
+                    images = painterResource(id = R.drawable.placeholder_image).toString(),
+                    shape = "12V9-20",
+                    isInCart = true
+                )
+            )
         }
     }
 }

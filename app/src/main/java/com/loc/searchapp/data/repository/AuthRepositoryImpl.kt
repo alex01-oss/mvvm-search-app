@@ -3,7 +3,7 @@ package com.loc.searchapp.data.repository
 import com.loc.searchapp.data.network.AuthApi
 import com.loc.searchapp.data.network.dto.AuthResponse
 import com.loc.searchapp.data.network.dto.LoginRequest
-import com.loc.searchapp.data.network.dto.RefreshRequest
+import com.loc.searchapp.data.network.dto.LogoutRequest
 import com.loc.searchapp.data.network.dto.RegisterRequest
 import com.loc.searchapp.domain.repository.AuthRepository
 import retrofit2.Response
@@ -34,8 +34,18 @@ class AuthRepositoryImpl(
     override suspend fun refresh(
         token: String
     ): Response<AuthResponse> {
-        return api.refresh(
-            RefreshRequest(token).toString()
-        )
+        return api.refresh(token)
+    }
+
+    override suspend fun getUser(
+        token: String
+    ): Response<AuthResponse> {
+        return api.getUser(token)
+    }
+
+    override suspend fun logout(
+        refreshToken: String
+    ): Response<AuthResponse> {
+        return api.logout(refreshToken)
     }
 }

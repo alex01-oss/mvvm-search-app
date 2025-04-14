@@ -109,7 +109,7 @@ fun AccountScreen(
 
             Button(
                 onClick = {
-                    viewModel.onEvent(AuthEvent.LogoutUser())
+                    viewModel.onEvent(AuthEvent.LogoutUser(""))
                     onLogoutClick()
                 },
                 modifier = Modifier.fillMaxWidth(),

@@ -20,7 +20,7 @@ class AuthInterceptor @Inject constructor(
         val requestBuilder = originalRequest.newBuilder()
             .addHeader("Accept", "application/json")
 
-        if (!token.isNullOrEmpty()) {
+        if (token?.isNotBlank() == true) {
             requestBuilder.addHeader("Authorization", "Bearer $token")
             Log.d("AuthInterceptor", "Adding token to request: ${token.take(10)}...")
         } else {

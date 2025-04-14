@@ -21,7 +21,6 @@ fun ProductsList(
     onClick: (ListItem) -> Unit,
     onAdd: (ListItem) -> Unit,
     onRemove: (ListItem) -> Unit,
-    onDelete: (ListItem) -> Unit
 ) {
     val isLoading = false
 
@@ -40,14 +39,14 @@ fun ProductsList(
                     is ListItem.CartListItem -> CartItemCard(
                         cartItem = item.cartItem,
                         onClick = { onClick(item) },
-                        onDelete = {  }
+                        onRemove = { onRemove(item) }
                     )
 
                     is ListItem.CatalogListItem -> ProductCard(
                         product = item.product,
                         onClick = { onClick(item) },
-                        onAdd = {  },
-                        onRemove = {  },
+                        onAdd = { onAdd(item) },
+                        onRemove = { onRemove(item) },
                     )
                 }
             }

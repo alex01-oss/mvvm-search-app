@@ -3,7 +3,6 @@ package com.loc.searchapp.presentation.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.data.preferences.UserPreferences
-import com.loc.searchapp.domain.model.User
 import com.loc.searchapp.domain.usecases.auth.AuthUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,12 +25,23 @@ class AuthViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userPreferences.user.collect { savedUser ->
-                if (savedUser != null) {
-                    _authState.value = AuthState.Authenticated(savedUser)
-                } else {
+            val token = userPreferences.getToken()
+
+            if (!token.isNullOrEmpty()) {
+                try {
+                    val response = authUseCases.getUser(token)
+                    val user = response.body()?.user
+
+                    if (response.isSuccessful) {
+                        _authState.value = AuthState.Authenticated(user)
+                    } else {
+                        _authState.value = AuthState.Unauthenticated
+                    }
+                } catch (_: Exception) {
                     _authState.value = AuthState.Unauthenticated
                 }
+            } else {
+                _authState.value = AuthState.Unauthenticated
             }
         }
     }
@@ -41,25 +51,23 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.LoginUser -> {
                 viewModelScope.launch {
                     _authState.value = AuthState.Loading
+
                     try {
                         val response = authUseCases.loginUser(
                             event.email,
                             event.password
                         )
 
-                        val data = response.body()
-
-                        val fullUser = User(
-                            id = data?.user?.id.toString(),
-                            username = data?.user?.username.toString(),
-                            email = data?.user?.email.toString(),
-                            token = data?.token.toString(),
-                            refreshToken = data?.refreshToken.toString()
-                        )
-
                         if (response.isSuccessful) {
-                            userPreferences.saveUser(fullUser)
-                            _authState.value = AuthState.Authenticated(fullUser)
+                            val data = response.body()
+                            val token = data?.token.orEmpty()
+                            val refreshToken = data?.refreshToken.orEmpty()
+                            val user = data?.user
+
+                            userPreferences.saveTokens(token, refreshToken)
+                            _authState.value = AuthState.Authenticated(user)
+                        } else {
+                            _authState.value = AuthState.Error("Invalid credentials")
                         }
                     } catch (e: Exception) {
                         _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
@@ -78,11 +86,18 @@ class AuthViewModel @Inject constructor(
                             event.password
                         )
 
-                        val user = response.body()?.user
-
                         if (response.isSuccessful) {
-                            userPreferences.saveUser(user)
+                            val data = response.body()
+                            val token = data?.token.orEmpty()
+                            val refreshToken = data?.refreshToken.orEmpty()
+                            val user = data?.user
+
+                            userPreferences.saveTokens(token, refreshToken)
                             _authState.value = AuthState.Authenticated(user)
+
+                            _authState.value = AuthState.Authenticated(user)
+                        } else {
+                            _authState.value = AuthState.Error("Registration failed")
                         }
                     } catch (e: Exception) {
                         _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
@@ -92,7 +107,13 @@ class AuthViewModel @Inject constructor(
 
             is AuthEvent.LogoutUser -> {
                 viewModelScope.launch {
-                    userPreferences.clearUser()
+                    val refreshToken = userPreferences.getRefreshToken()
+
+                    if(!refreshToken.isNullOrEmpty()) {
+                        authUseCases.logoutUser(refreshToken)
+                    }
+
+                    userPreferences.clearTokens()
                     _authState.value = AuthState.Unauthenticated
                     _logoutCompleted.value = true
                 }

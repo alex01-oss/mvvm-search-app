@@ -18,5 +18,13 @@ interface AuthRepository {
 
     suspend fun refresh(
         token: String
-    ) : Response<AuthResponse>
+    ): Response<AuthResponse>
+
+    suspend fun getUser(
+        token: String
+    ): Response<AuthResponse>
+
+    suspend fun logout(
+        refreshToken: String
+    ): Response<AuthResponse>
 }

@@ -28,4 +28,26 @@ class HomeViewModel @Inject constructor(
             _products.value = catalogUseCases.getCatalog()
         }
     }
+
+    fun addToCart(product: Product, onCartUpdated: () -> Unit) {
+        viewModelScope.launch {
+            catalogUseCases.addProduct(product)
+            val updatedList = _products.value.map {
+                if (it.code == product.code) it.copy(isInCart = true) else it
+            }
+            _products.value = updatedList
+            onCartUpdated()
+        }
+    }
+
+    fun removeFromCart(code: String, onCartUpdated: () -> Unit) {
+        viewModelScope.launch {
+            catalogUseCases.deleteProduct(code)
+            val updatedList = _products.value.map {
+                if (it.code == code) it.copy(isInCart = false) else it
+            }
+            _products.value = updatedList
+            onCartUpdated()
+        }
+    }
 }

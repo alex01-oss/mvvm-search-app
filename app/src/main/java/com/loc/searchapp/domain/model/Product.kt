@@ -8,5 +8,6 @@ data class Product(
     val code: String,
     val dimensions: String,
     val images: String,
-    val shape: String
+    val shape: String,
+    var isInCart: Boolean
 ): Parcelable
