@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.loc.searchapp.domain.model.ListItem
+import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.cart.CartViewModel
 import com.loc.searchapp.presentation.common.ProductsList
 import com.loc.searchapp.presentation.common.SearchBar
 import com.loc.searchapp.presentation.home.components.HomeTopBar
@@ -21,11 +19,11 @@ import com.loc.searchapp.presentation.home.components.HomeTopBar
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    products: State<List<Product>>,
+    products: LazyPagingItems<Product>,
     navigateToSearch: () -> Unit,
     navigateToDetails: (Product) -> Unit,
 ) {
-    val cartViewModel: CartViewModel = hiltViewModel()
+    val localCartChanges = viewModel.localCartChanges.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -51,26 +49,13 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(MediumPadding1))
 
-        val catalogListItems = products.value.map { ListItem.CatalogListItem(it) }
-
         ProductsList(
             modifier = Modifier.padding(horizontal = MediumPadding1),
-            items = catalogListItems,
-            onClick = { navigateToDetails },
-            onAdd = {
-                if (it is ListItem.CatalogListItem) {
-                    viewModel.addToCart(it.product) {
-                        cartViewModel.updateCart()
-                    }
-                }
-            },
-            onRemove = {
-                if (it is ListItem.CatalogListItem) {
-                    viewModel.removeFromCart(it.product.code) {
-                        cartViewModel.updateCart()
-                    }
-                }
-            }
+            items = products,
+            onClick = { product -> navigateToDetails(product) },
+            onAdd = { product -> viewModel.addToCart(product.code) },
+            onRemove = { product -> viewModel.removeFromCart(product.code) },
+            localCartChanges = localCartChanges,
         )
     }
 }

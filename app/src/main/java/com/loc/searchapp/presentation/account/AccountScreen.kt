@@ -65,89 +65,94 @@ fun AccountScreen(
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (authState is AuthState.Authenticated) {
-            val user = authState.user
 
-            Avatar(
-                firstName = user?.username?.substringBefore(" ").toString(),
-                lastName = user?.username?.substringAfter(" ").toString(),
-                size = AvatarHeight,
-                textStyle = MaterialTheme.typography.labelLarge
-            )
+        when (authState) {
+            is AuthState.Authenticated -> {
+                val user = authState.user
 
-            Spacer(modifier = Modifier.height(SmallPadding))
-
-            Text(
-                text = user?.username.toString(),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Text(
-                text = user?.email.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(MediumPadding1))
-
-            Text(
-                text = "Cart: empty",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(MediumPadding1))
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                AccountOption(icon = Icons.Default.Settings, text = "Settings")
-                AccountOption(icon = Icons.Default.Lock, text = "Change password")
-                AccountOption(icon = Icons.Default.Info, text = "Help")
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Button(
-                onClick = {
-                    viewModel.onEvent(AuthEvent.LogoutUser(""))
-                    onLogoutClick()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
+                Avatar(
+                    firstName = user?.username?.substringBefore(" ").toString(),
+                    lastName = user?.username?.substringAfter(" ").toString(),
+                    size = AvatarHeight,
+                    textStyle = MaterialTheme.typography.labelLarge
                 )
-            ) {
-                Text(text = "Log out", color = Color.White)
-            }
 
-        } else {
-            Avatar(
-                firstName = "",
-                lastName = "",
-                size = AvatarHeight,
-                textStyle = MaterialTheme.typography.labelLarge,
-                placeholder = {
-                    Image(
-                        painter = painterResource(R.drawable.person),
-                        contentDescription = "User Avatar",
-                        modifier = Modifier.size(40.dp)
-                    )
+                Spacer(modifier = Modifier.height(SmallPadding))
+
+                Text(
+                    text = user?.username.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Text(
+                    text = user?.email.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+
+                Spacer(modifier = Modifier.height(MediumPadding1))
+
+                Text(
+                    text = "Cart: empty",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+
+                Spacer(modifier = Modifier.height(MediumPadding1))
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    AccountOption(icon = Icons.Default.Settings, text = "Settings")
+                    AccountOption(icon = Icons.Default.Lock, text = "Change password")
+                    AccountOption(icon = Icons.Default.Info, text = "Help")
                 }
-            )
 
-            Text(text = "To be able to create a cart and place an order, you must log in or create an account.")
+                Spacer(modifier = Modifier.weight(1f))
 
-            Spacer(modifier = Modifier.height(MediumPadding1))
-
-            Button(
-                onClick = onAuthClick,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Text(text = "Auth", color = Color.White)
+                Button(
+                    onClick = {
+                        viewModel.onEvent(AuthEvent.LogoutUser(""))
+                        onLogoutClick()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(text = "Log out", color = Color.White)
+                }
             }
+            is AuthState.Unauthenticated -> {
+                Avatar(
+                    firstName = "",
+                    lastName = "",
+                    size = AvatarHeight,
+                    textStyle = MaterialTheme.typography.labelLarge,
+                    placeholder = {
+                        Image(
+                            painter = painterResource(R.drawable.person),
+                            contentDescription = "User Avatar",
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                )
+
+                Text(text = "To be able to create a cart and place an order, you must log in or create an account.")
+
+                Spacer(modifier = Modifier.height(MediumPadding1))
+
+                Button(
+                    onClick = onAuthClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(text = "Auth", color = Color.White)
+                }
+            }
+            is AuthState.Loading -> {}
+            is AuthState.Error -> {}
         }
     }
 }

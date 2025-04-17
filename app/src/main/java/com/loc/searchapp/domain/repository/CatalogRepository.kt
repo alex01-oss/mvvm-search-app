@@ -10,6 +10,7 @@ interface CatalogRepository {
         searchQuery: String = "",
         searchType: String = "code",
         page: Int = 1,
+        token: String?
     ): Catalog
 
     suspend fun getCart(
@@ -17,7 +18,7 @@ interface CatalogRepository {
     ): CartResponse
 
     suspend fun addProduct(
-        product: Product
+        code: String
     ): ItemCartResponse
 
     suspend fun deleteProduct(

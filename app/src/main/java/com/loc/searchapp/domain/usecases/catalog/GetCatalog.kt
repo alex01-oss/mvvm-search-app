@@ -11,11 +11,13 @@ class GetCatalog @Inject constructor(
         searchQuery: String = "",
         searchType: String = "code",
         page: Int = 1,
+        token: String?
     ): List<Product> {
         val response = catalogRepository.getCatalog(
             searchQuery = searchQuery,
             searchType = searchType,
             page = page,
+            token = token?.let { "Bearer $it" }
         )
         return response.items
     }

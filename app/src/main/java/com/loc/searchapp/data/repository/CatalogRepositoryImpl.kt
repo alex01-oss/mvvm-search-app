@@ -1,9 +1,9 @@
 package com.loc.searchapp.data.repository
 
 import com.loc.searchapp.data.network.CatalogApi
-import com.loc.searchapp.data.network.dto.CartRemoveRequest
 import com.loc.searchapp.data.network.dto.CartResponse
 import com.loc.searchapp.data.network.dto.Catalog
+import com.loc.searchapp.data.network.dto.ItemCartRequest
 import com.loc.searchapp.data.network.dto.ItemCartResponse
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.repository.CatalogRepository
@@ -17,11 +17,13 @@ class CatalogRepositoryImpl @Inject constructor(
         searchQuery: String,
         searchType: String,
         page: Int,
+        token: String?
     ): Catalog {
         val response = api.getCatalog(
             searchQuery = searchQuery,
             searchType = searchType,
             page = page,
+            token = token
         )
 
         if (response.isSuccessful) {
@@ -31,21 +33,31 @@ class CatalogRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCart(token: String): CartResponse {
+    override suspend fun getCart(
+        token: String
+    ): CartResponse {
         return api.getCart(token)
     }
 
-    override suspend fun addProduct(product: Product): ItemCartResponse {
-        return api.addToCart(product)
-    }
-
-    override suspend fun deleteProduct(code: String): ItemCartResponse {
-        return api.removeFromCart(
-            CartRemoveRequest(code)
+    override suspend fun addProduct(
+        code: String
+    ): ItemCartResponse {
+        return api.addToCart(
+            ItemCartRequest(code)
         )
     }
 
-    override suspend fun getProduct(code: String): Product? {
+    override suspend fun deleteProduct(
+        code: String
+    ): ItemCartResponse {
+        return api.removeFromCart(
+            ItemCartRequest(code)
+        )
+    }
+
+    override suspend fun getProduct(
+        code: String
+    ): Product? {
         return getProduct(code = code)
     }
 

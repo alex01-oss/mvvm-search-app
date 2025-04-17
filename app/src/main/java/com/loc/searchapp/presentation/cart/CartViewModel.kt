@@ -2,6 +2,7 @@ package com.loc.searchapp.presentation.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.loc.searchapp.data.preferences.UserPreferences
 import com.loc.searchapp.domain.model.CartItem
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,23 +14,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val catalogUseCases: CatalogUseCases
+    private val catalogUseCases: CatalogUseCases,
+    private val userPreferences: UserPreferences
 ) : ViewModel() {
 
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> = _cartItems.asStateFlow()
 
-    init {
-        getCart()
-    }
-
     fun getCart() {
         viewModelScope.launch {
-            _cartItems.value = catalogUseCases.getCart()
+            val token = userPreferences.getToken()
+            if (!token.isNullOrBlank()) {
+                try {
+                    _cartItems.value = catalogUseCases.getCart(token)
+                } catch (_: Exception) {
+                    _cartItems.value = emptyList()
+                }
+            }
         }
-    }
-
-    fun updateCart() {
-        getCart()
     }
 }

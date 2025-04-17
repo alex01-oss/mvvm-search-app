@@ -39,12 +39,12 @@ import com.loc.searchapp.utils.Constants.CATALOG_URL
 @Composable
 fun CartItemCard(
     modifier: Modifier = Modifier,
-    cartItem: CartItem,
+    item: CartItem,
     onClick: () -> Unit,
     onRemove: (CartItem) -> Unit
 ) {
     val context = LocalContext.current
-    val imageUrl = "$CATALOG_URL${cartItem.images}"
+    val imageUrl = "$CATALOG_URL${item.images}"
 
     Row(
         modifier = modifier
@@ -74,7 +74,7 @@ fun CartItemCard(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = cartItem.code,
+                    text = item.code,
                     style = MaterialTheme.typography.bodyMedium,
                     color = colorResource(id = R.color.text_title),
                     maxLines = 2,
@@ -90,7 +90,7 @@ fun CartItemCard(
                 )
 
                 Text(
-                    text = cartItem.shape,
+                    text = item.shape,
                     style = MaterialTheme.typography.labelSmall,
                     color = colorResource(id = R.color.body),
                 )
@@ -104,7 +104,7 @@ fun CartItemCard(
                 )
             }
             Text(
-                text = cartItem.dimensions,
+                text = item.dimensions,
                 style = MaterialTheme.typography.labelSmall,
                 color = colorResource(id = R.color.body),
             )
@@ -115,7 +115,7 @@ fun CartItemCard(
                 .padding(end = SmallPadding)
         ) {
             IconButton(
-                onClick = { onRemove.invoke(cartItem) },
+                onClick = { onRemove.invoke(item) },
             ) {
                 Icon(
                     painterResource(id = R.drawable.delete),
@@ -135,7 +135,7 @@ fun ProductCardPreview() {
         Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             CartItemCard(
                 onClick = { },
-                cartItem = CartItem(
+                item = CartItem(
                     code = "3G3042",
                     dimensions = "100x10x2.3x4x20",
                     images = painterResource(id = R.drawable.placeholder_image).toString(),

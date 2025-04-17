@@ -39,26 +39,30 @@ fun HomeTopBar(
                 .height(60.dp)
         )
 
-        if (authState is AuthState.Authenticated) {
-            val user = authState.user
+        when (authState) {
+            is AuthState.Authenticated -> {
+                val user = authState.user
 
-            Avatar(
-                firstName = user?.username?.substringBefore(" ") ?: "Guest",
-                lastName = user?.username?.substringAfter(" ") ?: "Guest"
-            )
-        } else {
-            Avatar(
-                firstName = "",
-                lastName = "",
-                placeholder = {
-                    Image(
-                        painter = painterResource(R.drawable.person),
-                        contentDescription = "User Avatar",
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
-            )
-
+                Avatar(
+                    firstName = user?.username?.substringBefore(" ") ?: "Guest",
+                    lastName = user?.username?.substringAfter(" ") ?: "Guest"
+                )
+            }
+            is AuthState.Unauthenticated -> {
+                Avatar(
+                    firstName = "",
+                    lastName = "",
+                    placeholder = {
+                        Image(
+                            painter = painterResource(R.drawable.person),
+                            contentDescription = "User Avatar",
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                )
+            }
+            is AuthState.Loading -> {}
+            is AuthState.Error -> {}
         }
     }
 }

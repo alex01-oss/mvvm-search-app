@@ -10,6 +10,6 @@ data class ItemCartResponse(
     val message: String
 )
 
-data class CartRemoveRequest(
+data class ItemCartRequest(
     val code: String
 )

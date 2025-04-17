@@ -30,6 +30,7 @@ import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.domain.usecases.catalog.DeleteProduct
 import com.loc.searchapp.domain.usecases.catalog.GetCart
 import com.loc.searchapp.domain.usecases.catalog.GetCatalog
+import com.loc.searchapp.domain.usecases.catalog.GetCatalogPaging
 import com.loc.searchapp.domain.usecases.catalog.GetMenu
 import com.loc.searchapp.domain.usecases.catalog.SelectProduct
 import com.loc.searchapp.utils.Constants.CATALOG_URL
@@ -123,15 +124,15 @@ object AppModule {
     @Singleton
     fun provideCatalogUseCases(
         catalogRepository: CatalogRepository,
-        userPreferences: UserPreferences
     ): CatalogUseCases {
         return CatalogUseCases(
             getCatalog = GetCatalog(catalogRepository),
-            getCart = GetCart(catalogRepository, userPreferences),
+            getCart = GetCart(catalogRepository),
             addProduct = AddProduct(catalogRepository),
             deleteProduct = DeleteProduct(catalogRepository),
             selectProduct = SelectProduct(catalogRepository),
-            getMenu = GetMenu(catalogRepository)
+            getMenu = GetMenu(catalogRepository),
+            getCatalogPaging = GetCatalogPaging(catalogRepository)
         )
     }
 

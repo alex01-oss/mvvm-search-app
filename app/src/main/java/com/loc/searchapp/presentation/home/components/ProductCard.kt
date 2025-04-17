@@ -1,10 +1,7 @@
 package com.loc.searchapp.presentation.home.components
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +21,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
@@ -33,7 +29,6 @@ import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.ProductCardSize
 import com.loc.searchapp.presentation.Dimens.SmallPadding
-import com.loc.searchapp.ui.theme.SearchAppTheme
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
@@ -43,9 +38,12 @@ fun ProductCard(
     onClick: () -> Unit,
     onAdd: (Product) -> Unit,
     onRemove: (Product) -> Unit,
+    localCartChanges: Map<String, Boolean>,
 ) {
     val context = LocalContext.current
     val imageUrl = "$CATALOG_URL${product.images}"
+
+    val isInCart = localCartChanges[product.code] ?: product.isInCart
 
     Row(modifier = modifier
         .clickable { onClick() }
@@ -114,7 +112,7 @@ fun ProductCard(
                 .align(Alignment.CenterVertically)
                 .padding(end = SmallPadding)
         ) {
-            if (product.isInCart) {
+            if (isInCart) {
                 IconButton(
                     onClick = { onRemove.invoke(product) }
                 ) {
@@ -135,28 +133,6 @@ fun ProductCard(
                     )
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ProductCardPreview() {
-    SearchAppTheme {
-        Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-            ProductCard(
-                onClick = {  },
-                onAdd = {  },
-                onRemove = {  },
-                product = Product(
-                    code = "3G3042",
-                    dimensions = "100x10x2.3x4x20",
-                    images = painterResource(id = R.drawable.placeholder_image).toString(),
-                    shape = "12V9-20",
-                    isInCart = true
-                )
-            )
         }
     }
 }

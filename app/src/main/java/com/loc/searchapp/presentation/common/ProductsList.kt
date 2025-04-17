@@ -6,48 +6,83 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.loc.searchapp.domain.model.ListItem
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.cart.components.CartItemCard
 import com.loc.searchapp.presentation.home.components.ProductCard
 
 @Composable
 fun ProductsList(
     modifier: Modifier = Modifier,
-    items: List<ListItem>,
-    onClick: (ListItem) -> Unit,
-    onAdd: (ListItem) -> Unit,
-    onRemove: (ListItem) -> Unit,
+    items: LazyPagingItems<Product>,
+    onClick: (Product) -> Unit,
+    onAdd: (Product) -> Unit,
+    onRemove: (Product) -> Unit,
+    localCartChanges: Map<String, Boolean>,
 ) {
-    val isLoading = false
+    val loadState = items.loadState
 
-    if (isLoading) {
-        ShimmerEffect()
-    } else if (items.isEmpty()) {
-        EmptyScreen()
-    } else {
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(MediumPadding1),
-            contentPadding = PaddingValues(all = ExtraSmallPadding2)
-        ) {
-            items(items.size) { index ->
-                when (val item = items[index]) {
-                    is ListItem.CartListItem -> CartItemCard(
-                        cartItem = item.cartItem,
-                        onClick = { onClick(item) },
-                        onRemove = { onRemove(item) }
-                    )
+    when {
+        loadState.refresh is LoadState.Loading -> {
+            ShimmerEffect()
+        }
 
-                    is ListItem.CatalogListItem -> ProductCard(
-                        product = item.product,
-                        onClick = { onClick(item) },
-                        onAdd = { onAdd(item) },
-                        onRemove = { onRemove(item) },
-                    )
+        loadState.refresh is LoadState.Error -> {
+            EmptyScreen(error = (loadState.refresh as LoadState.Error).error)
+        }
+
+        loadState.refresh is LoadState.NotLoading && items.itemCount == 0 -> {
+            EmptyScreen(
+                error = error(
+                    message = "error"
+                )
+            )
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(MediumPadding1),
+                contentPadding = PaddingValues(all = ExtraSmallPadding2)
+            ) {
+                items(items.itemCount) { index ->
+                    items[index]?.let { product ->
+                        ProductCard(
+                            product = product,
+                            localCartChanges = localCartChanges,
+                            onClick = { onClick(product) },
+                            onAdd = { onAdd(product) },
+                            onRemove = { onRemove(product) },
+                        )
+                    }
+                }
+
+                when (items.loadState.append) {
+                    is LoadState.Loading -> {
+                        item {
+                            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                        }
+                    }
+
+                    is LoadState.Error -> {
+                        item {
+                            Text(
+                                text = "Loading error",
+                                color = Color.Red,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+
+                    else -> Unit
                 }
             }
         }

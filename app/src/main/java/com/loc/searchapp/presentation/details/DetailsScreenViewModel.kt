@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +26,7 @@ class DetailsScreenViewModel @Inject constructor(
                     val product = catalogUseCases.selectProduct(code = event.product.code)
 
                     if(product == null) {
-                        upsertArticle(product = event.product)
+                        upsertArticle(code = event.product.code)
                     } else {
                         deleteArticle(code = event.product.code)
                     }
@@ -40,8 +39,8 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun upsertArticle(product: Product) {
-        catalogUseCases.addProduct(product = product)
+    private suspend fun upsertArticle(code: String) {
+        catalogUseCases.addProduct(code = code)
         sideEffect = "Product inserted"
     }
 

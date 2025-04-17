@@ -7,7 +7,7 @@ import javax.inject.Inject
 class AddProduct @Inject constructor(
     private val catalogRepository: CatalogRepository
 ) {
-    suspend operator fun invoke(product: Product) {
-        catalogRepository.addProduct(product = product)
+    suspend operator fun invoke(code: String) {
+        catalogRepository.addProduct(code = code)
     }
 }

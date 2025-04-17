@@ -38,13 +38,12 @@ class SearchViewModel @Inject constructor(
 
     private fun searchProducts() {
         viewModelScope.launch {
-            val products = catalogUseCases.getCatalog(
+            val products = catalogUseCases.getCatalogPaging(
                 searchQuery = state.value.searchQuery,
                 searchType = state.value.searchType,
-                page = state.value.page
+                token = state.value.token
             )
-            val listItems = products.map { ListItem.CatalogListItem(it) }
-            _state.value = state.value.copy(products = listItems)
+            _state.value = state.value.copy(products = products)
         }
     }
 }

@@ -27,20 +27,23 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             val token = userPreferences.getToken()
 
-            if (!token.isNullOrEmpty()) {
-                try {
-                    val response = authUseCases.getUser(token)
-                    val user = response.body()?.user
+            if (token.isNullOrEmpty()) {
+                _authState.value = AuthState.Unauthenticated
+                return@launch
+            }
 
-                    if (response.isSuccessful) {
-                        _authState.value = AuthState.Authenticated(user)
-                    } else {
-                        _authState.value = AuthState.Unauthenticated
-                    }
-                } catch (_: Exception) {
+            try {
+                val response = authUseCases.getUser(token)
+                val user = response.body()?.user
+
+                if (response.isSuccessful) {
+                    _authState.value = AuthState.Authenticated(user)
+                } else if (response.code() == 401) {
+                    _authState.value = AuthState.Unauthenticated
+                } else {
                     _authState.value = AuthState.Unauthenticated
                 }
-            } else {
+            } catch (_: Exception) {
                 _authState.value = AuthState.Unauthenticated
             }
         }
@@ -109,7 +112,7 @@ class AuthViewModel @Inject constructor(
                 viewModelScope.launch {
                     val refreshToken = userPreferences.getRefreshToken()
 
-                    if(!refreshToken.isNullOrEmpty()) {
+                    if (!refreshToken.isNullOrEmpty()) {
                         authUseCases.logoutUser(refreshToken)
                     }
 
