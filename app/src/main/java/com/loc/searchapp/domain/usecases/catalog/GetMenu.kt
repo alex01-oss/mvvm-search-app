@@ -1,6 +1,6 @@
 package com.loc.searchapp.domain.usecases.catalog
 
-import com.loc.searchapp.data.network.dto.MenuResponse
+import com.loc.searchapp.data.remote.dto.MenuResponse
 import com.loc.searchapp.domain.repository.CatalogRepository
 import javax.inject.Inject
 

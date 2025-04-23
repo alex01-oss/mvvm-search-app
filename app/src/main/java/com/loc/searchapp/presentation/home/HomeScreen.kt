@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.auth.AuthViewModel
-import com.loc.searchapp.presentation.common.ProductsList
-import com.loc.searchapp.presentation.common.SearchBar
+import com.loc.searchapp.presentation.common.base.AuthViewModel
+import com.loc.searchapp.presentation.common.components.ProductsList
+import com.loc.searchapp.presentation.common.components.SearchBar
 import com.loc.searchapp.presentation.home.components.HomeTopBar
-import com.loc.searchapp.presentation.shared_vm.ProductViewModel
+import com.loc.searchapp.presentation.common.base.ProductViewModel
 
 @Composable
 fun HomeScreen(

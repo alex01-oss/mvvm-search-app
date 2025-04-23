@@ -23,16 +23,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.loc.searchapp.data.network.dto.MenuResponse
+import com.loc.searchapp.data.remote.dto.MenuResponse
 
 @Composable
 fun BurgerMenu(
@@ -69,9 +67,10 @@ fun BurgerMenu(
                 menu.axialTool,
                 menu.grindingTool,
                 menu.constructionTool
-            ).forEach { category ->
+            ).forEachIndexed { index, category ->
                 item {
-                    var expanded by remember { mutableStateOf(false) }
+                    val expandedIndex = remember { mutableStateOf<Int?>(null) }
+                    val expanded = expandedIndex.value == index
 
                     Column(
                         modifier = Modifier.padding(4.dp)
@@ -84,7 +83,9 @@ fun BurgerMenu(
                             Row(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .clickable { expanded = !expanded }
+                                    .clickable {
+                                        expandedIndex.value = if (expanded) null else index
+                                    }
                                     .padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {

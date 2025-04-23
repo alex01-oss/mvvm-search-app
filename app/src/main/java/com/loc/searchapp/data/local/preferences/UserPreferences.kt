@@ -1,4 +1,4 @@
-package com.loc.searchapp.data.preferences
+package com.loc.searchapp.data.local.preferences
 
 import android.content.Context
 import androidx.datastore.core.DataStore

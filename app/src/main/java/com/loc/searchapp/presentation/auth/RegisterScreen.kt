@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +35,7 @@ import com.loc.searchapp.presentation.Dimens.SmallPadding
 import com.loc.searchapp.presentation.Dimens.TitleSize
 import com.loc.searchapp.presentation.auth.components.CustomTextField
 import com.loc.searchapp.presentation.auth.components.PasswordTextField
+import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.nvgraph.Route
 
 @Composable
@@ -116,6 +118,13 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Register")
+        }
+
+        Spacer(modifier = Modifier.height(MediumPadding1))
+
+        when (authState) {
+            is AuthState.Error -> Text(text = authState.message, color = Color.Red)
+            else -> Text(text = "Login successful", color = Color.Green)
         }
 
         Spacer(modifier = Modifier.height(MediumPadding1))

@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.shared_vm
+package com.loc.searchapp.presentation.common.base
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.loc.searchapp.data.preferences.UserPreferences
+import com.loc.searchapp.data.local.preferences.UserPreferences
 import com.loc.searchapp.domain.model.CartItem
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,6 @@ class ProductViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases,
     private val userPreferences: UserPreferences
 ) : ViewModel() {
-
     private val _localCartChanges = MutableStateFlow<Map<String, Boolean>>(emptyMap())
     val localCartChanges = _localCartChanges.asStateFlow()
 
@@ -60,8 +59,10 @@ class ProductViewModel @Inject constructor(
             if (!token.isNullOrBlank()) {
                 try {
                     _cartItems.value = catalogUseCases.getCart(token)
+                    cartModified = false
                 } catch (_: Exception) {
                     _cartItems.value = emptyList()
+                    cartModified = false
                 }
             }
         }

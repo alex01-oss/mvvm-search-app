@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.loc.searchapp.data.preferences.UserPreferences
+import com.loc.searchapp.data.local.preferences.UserPreferences
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel

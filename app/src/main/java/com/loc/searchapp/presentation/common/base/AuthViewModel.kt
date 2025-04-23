@@ -1,10 +1,11 @@
-package com.loc.searchapp.presentation.auth
+package com.loc.searchapp.presentation.common.base
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.loc.searchapp.data.preferences.UserPreferences
+import com.loc.searchapp.data.local.preferences.UserPreferences
 import com.loc.searchapp.domain.usecases.auth.AuthUseCases
+import com.loc.searchapp.presentation.auth.AuthEvent
+import com.loc.searchapp.presentation.auth.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,20 +38,13 @@ class AuthViewModel @Inject constructor(
                 val body = response.body()
                 val user = body?.user
 
-                Log.d("AuthDebug", "Code: ${response.code()}, Success: ${response.isSuccessful}")
-                Log.d("AuthDebug", "Full body: $body")
-                Log.d("AuthDebug", "Parsed user: $user")
-
                 if (response.isSuccessful && user != null) {
                     _authState.value = AuthState.Authenticated(user)
-                    Log.d("AuthDebug", "AuthState = Authenticated")
                 } else {
                     _authState.value = AuthState.Unauthenticated
-                    Log.d("AuthDebug", "AuthState = Unauthenticated (empty user or not successful)")
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _authState.value = AuthState.Unauthenticated
-                Log.d("AuthDebug", "Exception: ${e.message}")
             }
 
         }

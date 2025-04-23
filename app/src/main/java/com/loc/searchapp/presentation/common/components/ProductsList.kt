@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.common
+package com.loc.searchapp.presentation.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

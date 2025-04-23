@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,22 +23,21 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.account.AccountScreen
-import com.loc.searchapp.presentation.auth.AuthViewModel
+import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.auth.LoginScreen
 import com.loc.searchapp.presentation.auth.RegisterScreen
 import com.loc.searchapp.presentation.cart.CartScreen
-import com.loc.searchapp.presentation.product_details.DetailsScreen
-import com.loc.searchapp.presentation.product_details.DetailsEvent
-import com.loc.searchapp.presentation.product_details.DetailsViewModel
 import com.loc.searchapp.presentation.home.HomeScreen
 import com.loc.searchapp.presentation.home.HomeViewModel
 import com.loc.searchapp.presentation.nvgraph.Route
+import com.loc.searchapp.presentation.product_details.DetailsEvent
+import com.loc.searchapp.presentation.product_details.DetailsScreen
+import com.loc.searchapp.presentation.product_details.DetailsViewModel
 import com.loc.searchapp.presentation.products_navigator.components.BottomNavigationItem
 import com.loc.searchapp.presentation.products_navigator.components.NewsBottomNavigation
 import com.loc.searchapp.presentation.search.SearchScreen
 import com.loc.searchapp.presentation.search.SearchViewModel
-import com.loc.searchapp.presentation.shared_vm.ProductViewModel
-import kotlinx.coroutines.launch
+import com.loc.searchapp.presentation.common.base.ProductViewModel
 
 @Composable
 fun ProductsNavigator() {
@@ -73,12 +71,9 @@ fun ProductsNavigator() {
                 backstackState?.destination?.route == Route.AccountScreen.route
     }
 
-//    LOCAL VM
     val homeViewModel: HomeViewModel = hiltViewModel()
     val searchViewModel: SearchViewModel = hiltViewModel()
-    val catalogDetailsViewModel: DetailsViewModel = hiltViewModel()
-
-//    GLOBAL VM
+    val detailsViewModel: DetailsViewModel = hiltViewModel()
     val authViewModel: AuthViewModel = hiltViewModel()
     val productViewModel: ProductViewModel = hiltViewModel()
 
@@ -149,18 +144,14 @@ fun ProductsNavigator() {
 
                 SearchScreen(
                     state = state,
-                    event = { event ->
-                        searchViewModel.viewModelScope.launch {
-                            searchViewModel.onEvent(event)
-                        }
-                    },
+                    event = searchViewModel::onEvent,
                     navigateToDetails = {
                         navigateToDetails(
                             navController = navController,
                             product = it
                         )
                     },
-                    searchViewModel = searchViewModel,
+                    viewModel = searchViewModel,
                     productViewModel = productViewModel
                 )
             }
@@ -196,18 +187,18 @@ fun ProductsNavigator() {
             }
 
             composable(route = Route.ProductDetailsScreen.route) {
-                if (catalogDetailsViewModel.sideEffect != null) {
+                if (detailsViewModel.sideEffect != null) {
                     Toast.makeText(
                         LocalContext.current,
-                        catalogDetailsViewModel.sideEffect,
+                        detailsViewModel.sideEffect,
                         Toast.LENGTH_SHORT).show()
                 }
-                catalogDetailsViewModel.onEvent(DetailsEvent.RemoveSideEffect)
+                detailsViewModel.onEvent(DetailsEvent.RemoveSideEffect)
 
                 navController.previousBackStackEntry?.savedStateHandle?.get<Product?>("product")
                     ?.let { product ->
                         DetailsScreen(
-                            event = catalogDetailsViewModel::onEvent,
+                            event = detailsViewModel::onEvent,
                             navigateUp = { navController.navigateUp() },
                             product = product,
                         )

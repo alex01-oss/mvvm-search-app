@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.common
+package com.loc.searchapp.presentation.common.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

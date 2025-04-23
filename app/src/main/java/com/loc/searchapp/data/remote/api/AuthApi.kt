@@ -1,10 +1,10 @@
-package com.loc.searchapp.data.network
+package com.loc.searchapp.data.remote.api
 
-import com.loc.searchapp.data.network.dto.AuthResponse
-import com.loc.searchapp.data.network.dto.LoginRequest
-import com.loc.searchapp.data.network.dto.LogoutResponse
-import com.loc.searchapp.data.network.dto.RegisterRequest
-import com.loc.searchapp.data.network.dto.UserResponse
+import com.loc.searchapp.data.remote.dto.AuthResponse
+import com.loc.searchapp.data.remote.dto.LoginRequest
+import com.loc.searchapp.data.remote.dto.LogoutResponse
+import com.loc.searchapp.data.remote.dto.RegisterRequest
+import com.loc.searchapp.data.remote.dto.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

@@ -1,6 +1,5 @@
 package com.loc.searchapp.presentation.auth
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,13 +34,14 @@ import com.loc.searchapp.presentation.Dimens.SmallPadding
 import com.loc.searchapp.presentation.Dimens.TitleSize
 import com.loc.searchapp.presentation.auth.components.CustomTextField
 import com.loc.searchapp.presentation.auth.components.PasswordTextField
+import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.nvgraph.Route
 
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel,
     navController: NavController,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
 ) {
     val authState = viewModel.authState.collectAsState().value
 
@@ -107,6 +107,20 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Login")
+        }
+
+        Spacer(modifier = Modifier.height(MediumPadding1))
+
+        when (authState) {
+            is AuthState.Error -> Text(
+                text = authState.message,
+                color = MaterialTheme.colorScheme.error
+            )
+            AuthState.Unauthenticated -> {}
+            else -> Text(
+                text = "Login successful",
+                color = MaterialTheme.colorScheme.primary
+            )
         }
 
         Spacer(modifier = Modifier.height(MediumPadding1))

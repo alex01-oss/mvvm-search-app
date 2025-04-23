@@ -1,4 +1,4 @@
-package com.loc.searchapp.data.network.dto
+package com.loc.searchapp.data.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

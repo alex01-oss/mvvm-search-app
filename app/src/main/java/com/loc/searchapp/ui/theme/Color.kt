@@ -12,3 +12,9 @@ val LightBlack = Color(0xFF3A3B3C) //Dark Surface
 
 val BlueGray = Color(0xFFA0A3BD)
 val WhiteGray = Color(0xFFB0B3B8)
+
+val CorporativeRed = Color(0xFF950A3D)
+val CorporativeLightRed = Color(0xFFC40052)
+val CorporativeGray = Color(0xFF98A0A2)
+val CorporativeBlack = Color(0xFF000002)
+val CorporativeBlue = Color(0xFF074A7F)

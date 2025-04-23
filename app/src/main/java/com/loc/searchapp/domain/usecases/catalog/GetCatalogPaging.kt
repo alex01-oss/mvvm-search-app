@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.repository.CatalogRepository
-import com.loc.searchapp.presentation.common.CatalogPagingSource
+import com.loc.searchapp.presentation.common.base.CatalogPagingSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

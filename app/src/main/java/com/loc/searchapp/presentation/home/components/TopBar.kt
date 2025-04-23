@@ -1,6 +1,7 @@
 package com.loc.searchapp.presentation.home.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,8 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.auth.AuthState
-import com.loc.searchapp.presentation.auth.AuthViewModel
-import com.loc.searchapp.presentation.common.Avatar
+import com.loc.searchapp.presentation.common.base.AuthViewModel
+import com.loc.searchapp.presentation.common.components.Avatar
 
 @Composable
 fun HomeTopBar(
@@ -31,7 +32,10 @@ fun HomeTopBar(
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.ic_logo),
+            painter = painterResource(id =
+                if (isSystemInDarkTheme()) R.drawable.ic_logo_dark
+                else R.drawable.ic_logo_light
+            ),
             contentDescription = null,
             modifier = Modifier
                 .width(150.dp)

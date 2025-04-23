@@ -1,11 +1,11 @@
-package com.loc.searchapp.data.network.dto
+package com.loc.searchapp.data.remote.dto
 
 import com.loc.searchapp.domain.model.Product
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Catalog(
+data class CatalogDto(
     val items: List<Product> = emptyList(),
     @SerialName("current_page") val currentPage: Int = 1,
     @SerialName("items_per_page") val itemsPerPage: Int = 8,

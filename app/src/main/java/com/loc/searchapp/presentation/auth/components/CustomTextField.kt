@@ -28,8 +28,10 @@ fun CustomTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = { onValueChange(it) },
+        onValueChange = { if (it.length <= 64) onValueChange(it) },
         placeholder = { Text(text = placeholder, color = Color.Gray) },
+        singleLine = true,
+        maxLines = 1,
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = MaterialTheme.colorScheme.primary,
             unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
@@ -58,8 +60,10 @@ fun PasswordTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = { onValueChange(it) },
+        onValueChange = { if (it.length <= 22) onValueChange(it) },
         placeholder = { Text(text = placeholder, color = Color.Gray) },
+        singleLine = true,
+        maxLines = 1,
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = MaterialTheme.colorScheme.primary,
             unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,

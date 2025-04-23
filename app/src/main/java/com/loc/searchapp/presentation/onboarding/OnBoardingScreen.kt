@@ -17,8 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.loc.searchapp.presentation.common.NewsButton
-import com.loc.searchapp.presentation.common.NewsTextButton
+import com.loc.searchapp.presentation.common.components.NewsButton
+import com.loc.searchapp.presentation.common.components.NewsTextButton
 import com.loc.searchapp.presentation.Dimens.MediumPadding2
 import com.loc.searchapp.presentation.Dimens.PageIndicatorWidth
 import com.loc.searchapp.presentation.onboarding.components.OnBoardingPage

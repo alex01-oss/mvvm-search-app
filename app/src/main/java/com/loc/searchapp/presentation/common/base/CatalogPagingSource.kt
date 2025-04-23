@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.common
+package com.loc.searchapp.presentation.common.base
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

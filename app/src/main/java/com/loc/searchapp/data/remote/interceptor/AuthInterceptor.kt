@@ -1,7 +1,7 @@
-package com.loc.searchapp.data.authenticator
+package com.loc.searchapp.data.remote.interceptor
 
 import android.util.Log
-import com.loc.searchapp.data.preferences.UserPreferences
+import com.loc.searchapp.data.local.preferences.UserPreferences
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -1,11 +1,11 @@
 package com.loc.searchapp.data.repository
 
-import com.loc.searchapp.data.network.CatalogApi
-import com.loc.searchapp.data.network.dto.CartResponse
-import com.loc.searchapp.data.network.dto.Catalog
-import com.loc.searchapp.data.network.dto.ItemCartRequest
-import com.loc.searchapp.data.network.dto.ItemCartResponse
-import com.loc.searchapp.data.network.dto.MenuResponse
+import com.loc.searchapp.data.remote.api.CatalogApi
+import com.loc.searchapp.data.remote.dto.CartResponse
+import com.loc.searchapp.data.remote.dto.CatalogDto
+import com.loc.searchapp.data.remote.dto.ItemCartRequest
+import com.loc.searchapp.data.remote.dto.ItemCartResponse
+import com.loc.searchapp.data.remote.dto.MenuResponse
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.repository.CatalogRepository
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class CatalogRepositoryImpl @Inject constructor(
         searchType: String,
         page: Int,
         token: String?
-    ): Catalog {
+    ): CatalogDto {
         val response = api.getCatalog(
             searchQuery = searchQuery,
             searchType = searchType,
@@ -28,7 +28,7 @@ class CatalogRepositoryImpl @Inject constructor(
         )
 
         if (response.isSuccessful) {
-            return response.body() ?: Catalog()
+            return response.body() ?: CatalogDto()
         } else {
             throw Exception("API error: ${response.code()}")
         }

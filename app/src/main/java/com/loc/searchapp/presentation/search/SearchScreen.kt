@@ -2,6 +2,7 @@ package com.loc.searchapp.presentation.search
 
 import android.content.Intent
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -32,15 +34,17 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.common.ProductsList
-import com.loc.searchapp.presentation.common.SearchBar
+import com.loc.searchapp.presentation.common.components.ProductsList
+import com.loc.searchapp.presentation.common.components.SearchBar
 import com.loc.searchapp.presentation.search.components.BurgerMenu
-import com.loc.searchapp.presentation.shared_vm.ProductViewModel
+import com.loc.searchapp.presentation.common.base.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,17 +52,21 @@ fun SearchScreen(
     state: SearchState,
     event: (SearchEvent) -> Unit,
     navigateToDetails: (Product) -> Unit,
-    searchViewModel: SearchViewModel,
+    viewModel: SearchViewModel,
     productViewModel: ProductViewModel
 ) {
-    val lazyProducts = state.products.collectAsLazyPagingItems()
+    val lazyProducts = viewModel.products.collectAsLazyPagingItems()
     val localCartChanges = productViewModel.localCartChanges.collectAsState().value
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val menu = searchViewModel.menu.collectAsState().value
+    val menu = viewModel.menu.collectAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.onSearchOpened()
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -102,7 +110,9 @@ fun SearchScreen(
                         .size(56.dp)
                         .clip(RoundedCornerShape(4.dp))
                         .burgerButtonBorder(),
-                    color = Color.Transparent,
+                    color =
+                        if (isSystemInDarkTheme()) colorResource(id = R.color.input_background)
+                        else Color.Transparent,
                     tonalElevation = 0.dp,
                     shape = MaterialTheme.shapes.medium
                 ) {
@@ -130,8 +140,8 @@ fun SearchScreen(
                     },
                     onSearch = { event(SearchEvent.SearchProducts) }
                 )
-
             }
+
             Spacer(modifier = Modifier.height(MediumPadding1))
 
             ProductsList(
@@ -140,16 +150,21 @@ fun SearchScreen(
                 onAdd = { productViewModel.addToCart(it.code) },
                 onRemove = { productViewModel.removeFromCart(it.code) },
                 localCartChanges = localCartChanges,
-                showShimmerOnFirstLoad = false
+                showShimmerOnFirstLoad = false,
+                modifier = Modifier.padding(horizontal = MediumPadding1),
             )
         }
     }
 }
 
 fun Modifier.burgerButtonBorder() = composed {
-    border(
-        width = 1.dp,
-        color = Color.Black,
-        shape = MaterialTheme.shapes.medium
-    )
+    if (!isSystemInDarkTheme()) {
+        border(
+            width = 1.dp,
+            color = Color.Black,
+            shape = MaterialTheme.shapes.medium
+        )
+    } else {
+        this
+    }
 }

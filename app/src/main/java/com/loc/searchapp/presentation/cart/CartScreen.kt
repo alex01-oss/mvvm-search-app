@@ -19,6 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,10 +35,10 @@ import com.loc.searchapp.domain.model.CartItem
 import com.loc.searchapp.presentation.Dimens.AvatarHeight
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.auth.AuthState
-import com.loc.searchapp.presentation.auth.AuthViewModel
-import com.loc.searchapp.presentation.common.Avatar
-import com.loc.searchapp.presentation.common.CartList
-import com.loc.searchapp.presentation.shared_vm.ProductViewModel
+import com.loc.searchapp.presentation.common.base.AuthViewModel
+import com.loc.searchapp.presentation.common.components.Avatar
+import com.loc.searchapp.presentation.common.components.CartList
+import com.loc.searchapp.presentation.common.base.ProductViewModel
 
 @Composable
 fun CartScreen(
@@ -47,6 +51,19 @@ fun CartScreen(
     onAuthClick: () -> Unit
 ) {
     val authState = authViewModel.authState.collectAsState().value
+    var cartInitialized by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(authState, cartModified) {
+        if (authState is AuthState.Authenticated) {
+            if (!cartInitialized) {
+                viewModel.getCart()
+                cartInitialized = true
+            } else if (cartModified) {
+                viewModel.getCart()
+                onCartUpdated()
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -61,17 +78,6 @@ fun CartScreen(
     ) {
         when (authState) {
             is AuthState.Authenticated -> {
-                LaunchedEffect(Unit) {
-                    viewModel.getCart()
-                }
-
-                LaunchedEffect(cartModified) {
-                    if (cartModified == true) {
-                        viewModel.getCart()
-                        onCartUpdated()
-                    }
-                }
-
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {

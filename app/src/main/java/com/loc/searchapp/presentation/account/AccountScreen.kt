@@ -34,8 +34,8 @@ import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.SmallPadding
 import com.loc.searchapp.presentation.auth.AuthEvent
 import com.loc.searchapp.presentation.auth.AuthState
-import com.loc.searchapp.presentation.auth.AuthViewModel
-import com.loc.searchapp.presentation.common.Avatar
+import com.loc.searchapp.presentation.common.base.AuthViewModel
+import com.loc.searchapp.presentation.common.components.Avatar
 
 @Composable
 fun AccountScreen(

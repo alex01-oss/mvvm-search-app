@@ -5,16 +5,16 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.loc.searchapp.data.authenticator.AuthInterceptor
-import com.loc.searchapp.data.authenticator.TokenRefreshInterceptor
-import com.loc.searchapp.data.manger.LocalUserMangerImpl
-import com.loc.searchapp.data.network.AuthApi
-import com.loc.searchapp.data.network.CatalogApi
-import com.loc.searchapp.data.preferences.UserPreferences
-import com.loc.searchapp.data.preferences.dataStore
+import com.loc.searchapp.data.remote.interceptor.AuthInterceptor
+import com.loc.searchapp.data.remote.interceptor.TokenRefreshInterceptor
+import com.loc.searchapp.data.local.manager.LocalUserManagerImpl
+import com.loc.searchapp.data.remote.api.AuthApi
+import com.loc.searchapp.data.remote.api.CatalogApi
+import com.loc.searchapp.data.local.preferences.UserPreferences
+import com.loc.searchapp.data.local.preferences.dataStore
 import com.loc.searchapp.data.repository.AuthRepositoryImpl
 import com.loc.searchapp.data.repository.CatalogRepositoryImpl
-import com.loc.searchapp.domain.manger.LocalUserManger
+import com.loc.searchapp.domain.manager.LocalUserManger
 import com.loc.searchapp.domain.repository.AuthRepository
 import com.loc.searchapp.domain.repository.CatalogRepository
 import com.loc.searchapp.domain.usecases.app_entry.AppEntryUseCases
@@ -180,7 +180,7 @@ object AppModule {
     @Singleton
     fun provideLocalUserManger(
         application: Application
-    ): LocalUserManger = LocalUserMangerImpl(application)
+    ): LocalUserManger = LocalUserManagerImpl(application)
 
     @Provides
     @Singleton

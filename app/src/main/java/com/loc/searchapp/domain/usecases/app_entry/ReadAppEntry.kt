@@ -1,6 +1,6 @@
 package com.loc.searchapp.domain.usecases.app_entry
 
-import com.loc.searchapp.domain.manger.LocalUserManger
+import com.loc.searchapp.domain.manager.LocalUserManger
 import kotlinx.coroutines.flow.Flow
 
 class ReadAppEntry(

@@ -1,4 +1,4 @@
-package com.loc.searchapp.domain.manger
+package com.loc.searchapp.domain.manager
 
 import kotlinx.coroutines.flow.Flow
 
