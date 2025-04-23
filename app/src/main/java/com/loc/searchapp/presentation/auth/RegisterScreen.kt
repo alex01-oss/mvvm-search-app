@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
@@ -39,7 +38,7 @@ import com.loc.searchapp.presentation.nvgraph.Route
 
 @Composable
 fun RegisterScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
+    viewModel: AuthViewModel,
     navController: NavController,
     onLoginClick: () -> Unit
 ) {

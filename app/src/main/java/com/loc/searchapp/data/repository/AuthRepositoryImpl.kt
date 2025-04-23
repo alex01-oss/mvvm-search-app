@@ -3,9 +3,11 @@ package com.loc.searchapp.data.repository
 import com.loc.searchapp.data.network.AuthApi
 import com.loc.searchapp.data.network.dto.AuthResponse
 import com.loc.searchapp.data.network.dto.LoginRequest
-import com.loc.searchapp.data.network.dto.LogoutRequest
 import com.loc.searchapp.data.network.dto.RegisterRequest
+import com.loc.searchapp.data.network.dto.UserResponse
 import com.loc.searchapp.domain.repository.AuthRepository
+import com.loc.searchapp.data.network.dto.LogoutResponse
+
 import retrofit2.Response
 
 class AuthRepositoryImpl(
@@ -39,13 +41,13 @@ class AuthRepositoryImpl(
 
     override suspend fun getUser(
         token: String
-    ): Response<AuthResponse> {
+    ): Response<UserResponse> {
         return api.getUser(token)
     }
 
     override suspend fun logout(
         refreshToken: String
-    ): Response<AuthResponse> {
+    ): Response<LogoutResponse> {
         return api.logout(refreshToken)
     }
 }

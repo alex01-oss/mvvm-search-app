@@ -3,6 +3,7 @@ package com.loc.searchapp.domain.repository
 import com.loc.searchapp.data.network.dto.CartResponse
 import com.loc.searchapp.data.network.dto.Catalog
 import com.loc.searchapp.data.network.dto.ItemCartResponse
+import com.loc.searchapp.data.network.dto.MenuResponse
 import com.loc.searchapp.domain.model.Product
 
 interface CatalogRepository {
@@ -29,5 +30,5 @@ interface CatalogRepository {
         code: String
     ): Product?
 
-    suspend fun getMenu(): Map<String, Any>
+    suspend fun getMenu(): MenuResponse
 }

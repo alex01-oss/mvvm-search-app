@@ -4,6 +4,7 @@ import com.loc.searchapp.data.network.dto.CartResponse
 import com.loc.searchapp.data.network.dto.Catalog
 import com.loc.searchapp.data.network.dto.ItemCartRequest
 import com.loc.searchapp.data.network.dto.ItemCartResponse
+import com.loc.searchapp.data.network.dto.MenuResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,7 +23,7 @@ interface CatalogApi {
     ): Response<Catalog>
 
     @GET("api/menu")
-    suspend fun getMenu(): Map<String, Any>
+    suspend fun getMenu(): MenuResponse
 
     @GET("/api/cart")
     suspend fun getCart(

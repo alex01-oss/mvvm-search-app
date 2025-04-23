@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.details
+package com.loc.searchapp.presentation.product_details
 
 import com.loc.searchapp.domain.model.Product
 

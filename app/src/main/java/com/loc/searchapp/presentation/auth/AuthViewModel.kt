@@ -1,5 +1,6 @@
 package com.loc.searchapp.presentation.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.data.preferences.UserPreferences
@@ -21,7 +22,6 @@ class AuthViewModel @Inject constructor(
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
     private val _logoutCompleted = MutableStateFlow(false)
-    val logoutCompleted: StateFlow<Boolean> = _logoutCompleted
 
     init {
         viewModelScope.launch {
@@ -34,18 +34,25 @@ class AuthViewModel @Inject constructor(
 
             try {
                 val response = authUseCases.getUser(token)
-                val user = response.body()?.user
+                val body = response.body()
+                val user = body?.user
 
-                if (response.isSuccessful) {
+                Log.d("AuthDebug", "Code: ${response.code()}, Success: ${response.isSuccessful}")
+                Log.d("AuthDebug", "Full body: $body")
+                Log.d("AuthDebug", "Parsed user: $user")
+
+                if (response.isSuccessful && user != null) {
                     _authState.value = AuthState.Authenticated(user)
-                } else if (response.code() == 401) {
-                    _authState.value = AuthState.Unauthenticated
+                    Log.d("AuthDebug", "AuthState = Authenticated")
                 } else {
                     _authState.value = AuthState.Unauthenticated
+                    Log.d("AuthDebug", "AuthState = Unauthenticated (empty user or not successful)")
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 _authState.value = AuthState.Unauthenticated
+                Log.d("AuthDebug", "Exception: ${e.message}")
             }
+
         }
     }
 
@@ -67,8 +74,12 @@ class AuthViewModel @Inject constructor(
                             val refreshToken = data?.refreshToken.orEmpty()
                             val user = data?.user
 
-                            userPreferences.saveTokens(token, refreshToken)
-                            _authState.value = AuthState.Authenticated(user)
+                            if (response.isSuccessful && user != null) {
+                                userPreferences.saveTokens(token, refreshToken)
+                                _authState.value = AuthState.Authenticated(user)
+                            } else {
+                                _authState.value = AuthState.Error("Invalid login or missing user data")
+                            }
                         } else {
                             _authState.value = AuthState.Error("Invalid credentials")
                         }
@@ -95,8 +106,12 @@ class AuthViewModel @Inject constructor(
                             val refreshToken = data?.refreshToken.orEmpty()
                             val user = data?.user
 
-                            userPreferences.saveTokens(token, refreshToken)
-                            _authState.value = AuthState.Authenticated(user)
+                            if (response.isSuccessful && user != null) {
+                                userPreferences.saveTokens(token, refreshToken)
+                                _authState.value = AuthState.Authenticated(user)
+                            } else {
+                                _authState.value = AuthState.Error("Invalid registration or missing user data")
+                            }
 
                             _authState.value = AuthState.Authenticated(user)
                         } else {

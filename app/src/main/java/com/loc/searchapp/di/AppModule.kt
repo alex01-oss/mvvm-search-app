@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.loc.searchapp.data.authenticator.AuthInterceptor
 import com.loc.searchapp.data.authenticator.TokenRefreshInterceptor
 import com.loc.searchapp.data.manger.LocalUserMangerImpl
@@ -29,7 +30,6 @@ import com.loc.searchapp.domain.usecases.catalog.AddProduct
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.domain.usecases.catalog.DeleteProduct
 import com.loc.searchapp.domain.usecases.catalog.GetCart
-import com.loc.searchapp.domain.usecases.catalog.GetCatalog
 import com.loc.searchapp.domain.usecases.catalog.GetCatalogPaging
 import com.loc.searchapp.domain.usecases.catalog.GetMenu
 import com.loc.searchapp.domain.usecases.catalog.SelectProduct
@@ -42,14 +42,23 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
+
+    private val contentType = "application/json".toMediaType()
 
     @Provides
     @Singleton
@@ -70,7 +79,7 @@ object AppModule {
         return Retrofit.Builder()
             .baseUrl(CATALOG_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 
@@ -109,7 +118,7 @@ object AppModule {
         return Retrofit.Builder()
             .baseUrl(CATALOG_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory(contentType))
             .build()
             .create(CatalogApi::class.java)
     }
@@ -126,7 +135,6 @@ object AppModule {
         catalogRepository: CatalogRepository,
     ): CatalogUseCases {
         return CatalogUseCases(
-            getCatalog = GetCatalog(catalogRepository),
             getCart = GetCart(catalogRepository),
             addProduct = AddProduct(catalogRepository),
             deleteProduct = DeleteProduct(catalogRepository),

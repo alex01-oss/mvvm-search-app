@@ -5,6 +5,7 @@ import com.loc.searchapp.data.network.dto.CartResponse
 import com.loc.searchapp.data.network.dto.Catalog
 import com.loc.searchapp.data.network.dto.ItemCartRequest
 import com.loc.searchapp.data.network.dto.ItemCartResponse
+import com.loc.searchapp.data.network.dto.MenuResponse
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.repository.CatalogRepository
 import javax.inject.Inject
@@ -61,7 +62,7 @@ class CatalogRepositoryImpl @Inject constructor(
         return getProduct(code = code)
     }
 
-    override suspend fun getMenu(): Map<String, Any> {
+    override suspend fun getMenu(): MenuResponse {
         return api.getMenu()
     }
 }

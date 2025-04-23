@@ -1,11 +1,14 @@
 package com.loc.searchapp.data.network.dto
 
 import com.loc.searchapp.domain.model.Product
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Catalog(
-    val current_page: Int = 1,
     val items: List<Product> = emptyList(),
-    val items_per_page: Int = 10,
-    val total_items: Int = 0,
-    val total_pages: Int = 1
+    @SerialName("current_page") val currentPage: Int = 1,
+    @SerialName("items_per_page") val itemsPerPage: Int = 8,
+    @SerialName("total_items") val totalItems: Int = 0,
+    @SerialName("total_pages") val totalPages: Int = 1
 )

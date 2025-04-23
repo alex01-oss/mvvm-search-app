@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.details.components
+package com.loc.searchapp.presentation.product_details.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,7 +17,7 @@ import com.loc.searchapp.R
 @Composable
 fun DetailsTopBar(
     onBackClick: () -> Unit,
-    onAddToCartClick: () -> Unit,
+    onToggleCart: () -> Unit,
 ) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
@@ -37,7 +37,7 @@ fun DetailsTopBar(
         },
         actions = {
             IconButton(
-                onClick = onAddToCartClick
+                onClick = onToggleCart
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_shopping_cart),

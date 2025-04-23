@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,36 +29,35 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
-fun EmptyScreen(error: Throwable) {
-
-    var message by remember {
-        mutableStateOf(parseErrorMessage(error))
+fun EmptyScreen(
+    message: String? = null,
+    iconId: Int = R.drawable.ic_network_error,
+    error: Throwable? = null
+) {
+    val finalMessage = remember {
+        message ?: error?.let { parseErrorMessage(it) } ?: "Unknown state."
     }
 
-    var icon by remember {
-        mutableIntStateOf(R.drawable.ic_network_error)
+    val finalIcon = remember {
+        if (message != null) iconId else R.drawable.ic_network_error
     }
 
-    if (false){
-        message = "You have not saved products so far !"
-        icon = R.drawable.ic_search_document
-    }
-
-    var startAnimation by remember {
-        mutableStateOf(false)
-    }
+    var startAnimation by remember { mutableStateOf(false) }
 
     val alphaAnimation by animateFloatAsState(
         targetValue = if (startAnimation) 0.3f else 0f,
-        animationSpec = tween(durationMillis = 1500)
+        animationSpec = tween(durationMillis = 1500), label = ""
     )
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         startAnimation = true
     }
 
-    EmptyContent(alphaAnim = alphaAnimation, message = message, iconId = icon)
-
+    EmptyContent(
+        alphaAnim = alphaAnimation,
+        message = finalMessage,
+        iconId = finalIcon
+    )
 }
 
 @Composable

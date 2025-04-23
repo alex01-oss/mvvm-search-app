@@ -34,28 +34,32 @@ import com.loc.searchapp.presentation.auth.AuthState
 import com.loc.searchapp.presentation.auth.AuthViewModel
 import com.loc.searchapp.presentation.common.Avatar
 import com.loc.searchapp.presentation.common.CartList
+import com.loc.searchapp.presentation.shared_vm.ProductViewModel
 
 @Composable
 fun CartScreen(
     cartItems: State<List<CartItem>>,
     navigateToDetails: (CartItem) -> Unit,
-    onRemove: (CartItem) -> Unit,
-    viewModel: CartViewModel,
     authViewModel: AuthViewModel,
+    viewModel: ProductViewModel,
     cartModified: Boolean,
     onCartUpdated: () -> Unit,
     onAuthClick: () -> Unit
 ) {
-
     val authState = authViewModel.authState.collectAsState().value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(
+                top = MediumPadding1,
+                start = MediumPadding1,
+                end = MediumPadding1
+            )
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        when(authState) {
+        when (authState) {
             is AuthState.Authenticated -> {
                 LaunchedEffect(Unit) {
                     viewModel.getCart()
@@ -69,13 +73,7 @@ fun CartScreen(
                 }
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = MediumPadding1,
-                            start = MediumPadding1,
-                            end = MediumPadding1
-                        )
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "Cart",
@@ -90,11 +88,12 @@ fun CartScreen(
                     CartList(
                         modifier = Modifier.padding(horizontal = MediumPadding1),
                         items = cartItems.value,
-                        onClick = { item -> navigateToDetails(item) },
-                        onRemove = { item -> onRemove(item) },
+                        onClick = { cartItem -> navigateToDetails(cartItem) },
+                        onRemove = { cartItem -> viewModel.removeFromCart(cartItem.product.code) },
                     )
                 }
             }
+
             AuthState.Unauthenticated -> {
                 Avatar(
                     firstName = "",
@@ -124,6 +123,7 @@ fun CartScreen(
                     Text(text = "Auth", color = Color.White)
                 }
             }
+
             AuthState.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -132,6 +132,7 @@ fun CartScreen(
                     CircularProgressIndicator()
                 }
             }
+
             is AuthState.Error -> {
                 Text("Something went wrong: ${authState.message}")
             }

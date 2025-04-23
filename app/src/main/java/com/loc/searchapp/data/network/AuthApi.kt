@@ -2,7 +2,9 @@ package com.loc.searchapp.data.network
 
 import com.loc.searchapp.data.network.dto.AuthResponse
 import com.loc.searchapp.data.network.dto.LoginRequest
+import com.loc.searchapp.data.network.dto.LogoutResponse
 import com.loc.searchapp.data.network.dto.RegisterRequest
+import com.loc.searchapp.data.network.dto.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,7 +25,7 @@ interface AuthApi {
     @POST("api/logout")
     suspend fun logout(
         @Header("Authorization") refreshToken: String
-    ): Response<AuthResponse>
+    ): Response<LogoutResponse>
 
     @POST("api/refresh")
     suspend fun refresh(
@@ -33,5 +35,5 @@ interface AuthApi {
     @GET("api/user")
     suspend fun getUser(
         @Header("Authorization") token: String
-    ): Response<AuthResponse>
+    ): Response<UserResponse>
 }

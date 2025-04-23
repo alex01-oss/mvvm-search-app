@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.details
+package com.loc.searchapp.presentation.product_details
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailsScreenViewModel @Inject constructor(
+class DetailsViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases
 ): ViewModel() {
 

@@ -33,7 +33,8 @@ fun SearchBar(
     readOnly: Boolean,
     onClick: (() -> Unit)? = null,
     onValueChange: (String) -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    placeholder: String
 ) {
     val interactionSource = remember {
         MutableInteractionSource()
@@ -63,7 +64,7 @@ fun SearchBar(
             },
             placeholder = {
                 Text(
-                    text = "Search",
+                    text = placeholder,
                     style = MaterialTheme.typography.bodySmall,
                     color = colorResource(id = R.color.placeholder)
                 )

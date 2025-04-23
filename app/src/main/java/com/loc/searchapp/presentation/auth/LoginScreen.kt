@@ -1,5 +1,6 @@
 package com.loc.searchapp.presentation.auth
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
@@ -39,7 +39,7 @@ import com.loc.searchapp.presentation.nvgraph.Route
 
 @Composable
 fun LoginScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
+    viewModel: AuthViewModel,
     navController: NavController,
     onRegisterClick: () -> Unit
 ) {

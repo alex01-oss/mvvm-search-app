@@ -12,18 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.auth.AuthViewModel
 import com.loc.searchapp.presentation.common.ProductsList
 import com.loc.searchapp.presentation.common.SearchBar
 import com.loc.searchapp.presentation.home.components.HomeTopBar
+import com.loc.searchapp.presentation.shared_vm.ProductViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
+    authViewModel: AuthViewModel,
+    productViewModel: ProductViewModel,
     products: LazyPagingItems<Product>,
     navigateToSearch: () -> Unit,
     navigateToDetails: (Product) -> Unit,
 ) {
-    val localCartChanges = viewModel.localCartChanges.collectAsState().value
+    val localCartChanges = productViewModel.localCartChanges.collectAsState().value
 
     Column(
         modifier = Modifier
@@ -35,7 +38,9 @@ fun HomeScreen(
             )
             .statusBarsPadding()
     ) {
-        HomeTopBar()
+        HomeTopBar(
+            viewModel = authViewModel
+        )
 
         Spacer(modifier = Modifier.height(MediumPadding1))
 
@@ -44,7 +49,8 @@ fun HomeScreen(
             readOnly = false,
             onValueChange = {},
             onClick = { navigateToSearch() },
-            onSearch = {}
+            onSearch = {},
+            placeholder = "Search..."
         )
 
         Spacer(modifier = Modifier.height(MediumPadding1))
@@ -53,9 +59,10 @@ fun HomeScreen(
             modifier = Modifier.padding(horizontal = MediumPadding1),
             items = products,
             onClick = { product -> navigateToDetails(product) },
-            onAdd = { product -> viewModel.addToCart(product.code) },
-            onRemove = { product -> viewModel.removeFromCart(product.code) },
+            onAdd = { product -> productViewModel.addToCart(product.code) },
+            onRemove = { product -> productViewModel.removeFromCart(product.code) },
             localCartChanges = localCartChanges,
+            showShimmerOnFirstLoad = true
         )
     }
 }

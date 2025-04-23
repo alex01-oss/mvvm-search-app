@@ -28,10 +28,9 @@ import com.loc.searchapp.presentation.auth.AuthViewModel
 import com.loc.searchapp.presentation.auth.LoginScreen
 import com.loc.searchapp.presentation.auth.RegisterScreen
 import com.loc.searchapp.presentation.cart.CartScreen
-import com.loc.searchapp.presentation.cart.CartViewModel
-import com.loc.searchapp.presentation.details.DetailsEvent
-import com.loc.searchapp.presentation.details.DetailsScreen
-import com.loc.searchapp.presentation.details.DetailsScreenViewModel
+import com.loc.searchapp.presentation.product_details.DetailsScreen
+import com.loc.searchapp.presentation.product_details.DetailsEvent
+import com.loc.searchapp.presentation.product_details.DetailsViewModel
 import com.loc.searchapp.presentation.home.HomeScreen
 import com.loc.searchapp.presentation.home.HomeViewModel
 import com.loc.searchapp.presentation.nvgraph.Route
@@ -39,6 +38,7 @@ import com.loc.searchapp.presentation.products_navigator.components.BottomNaviga
 import com.loc.searchapp.presentation.products_navigator.components.NewsBottomNavigation
 import com.loc.searchapp.presentation.search.SearchScreen
 import com.loc.searchapp.presentation.search.SearchViewModel
+import com.loc.searchapp.presentation.shared_vm.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -73,11 +73,14 @@ fun ProductsNavigator() {
                 backstackState?.destination?.route == Route.AccountScreen.route
     }
 
+//    LOCAL VM
     val homeViewModel: HomeViewModel = hiltViewModel()
     val searchViewModel: SearchViewModel = hiltViewModel()
-    val cartViewModel: CartViewModel = hiltViewModel()
-    val detailsViewModel: DetailsScreenViewModel = hiltViewModel()
+    val catalogDetailsViewModel: DetailsViewModel = hiltViewModel()
+
+//    GLOBAL VM
     val authViewModel: AuthViewModel = hiltViewModel()
+    val productViewModel: ProductViewModel = hiltViewModel()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -135,8 +138,9 @@ fun ProductsNavigator() {
                             product = product
                         )
                     },
-                    viewModel = homeViewModel,
-                    products = products
+                    products = products,
+                    authViewModel = authViewModel,
+                    productViewModel = productViewModel
                 )
             }
 
@@ -156,25 +160,25 @@ fun ProductsNavigator() {
                             product = it
                         )
                     },
-                    homeViewModel = homeViewModel
+                    searchViewModel = searchViewModel,
+                    productViewModel = productViewModel
                 )
             }
 
             composable(route = Route.CartScreen.route) {
-                val cartItems = cartViewModel.cartItems.collectAsState()
+                val cartItems = productViewModel.cartItems.collectAsState()
 
                 CartScreen(
                     navigateToDetails = { cartItem ->
                         navigateToDetails(
                             navController = navController,
-                            product = cartItem as Product
+                            product = cartItem.product
                         )
                     },
                     cartItems = cartItems,
-                    onRemove = {},
-                    viewModel = cartViewModel,
-                    cartModified = homeViewModel.cartModified,
-                    onCartUpdated = { homeViewModel.cartModified = false },
+                    viewModel = productViewModel,
+                    cartModified = productViewModel.cartModified,
+                    onCartUpdated = { productViewModel.cartModified = false },
                     authViewModel = authViewModel,
                     onAuthClick = {
                         navController.navigate(Route.LoginScreen.route)
@@ -187,26 +191,25 @@ fun ProductsNavigator() {
                     onAuthClick = {
                         navController.navigate(Route.LoginScreen.route)
                     },
-                    onLogoutClick = {
-                        navController.navigate(Route.LoginScreen.route)
-                    },
                     viewModel = authViewModel
                 )
             }
 
-            composable(route = Route.DetailsScreen.route) {
-                if (detailsViewModel.sideEffect != null) {
-                    Toast.makeText(LocalContext.current, detailsViewModel.sideEffect, Toast.LENGTH_SHORT)
-                        .show()
+            composable(route = Route.ProductDetailsScreen.route) {
+                if (catalogDetailsViewModel.sideEffect != null) {
+                    Toast.makeText(
+                        LocalContext.current,
+                        catalogDetailsViewModel.sideEffect,
+                        Toast.LENGTH_SHORT).show()
                 }
-                detailsViewModel.onEvent(DetailsEvent.RemoveSideEffect)
+                catalogDetailsViewModel.onEvent(DetailsEvent.RemoveSideEffect)
 
                 navController.previousBackStackEntry?.savedStateHandle?.get<Product?>("product")
                     ?.let { product ->
                         DetailsScreen(
-                            product = product,
-                            event = detailsViewModel::onEvent,
+                            event = catalogDetailsViewModel::onEvent,
                             navigateUp = { navController.navigateUp() },
+                            product = product,
                         )
                     }
             }
@@ -216,7 +219,8 @@ fun ProductsNavigator() {
                     navController = navController,
                     onRegisterClick = {
                         navController.navigate(Route.RegisterScreen.route)
-                    }
+                    },
+                    viewModel = authViewModel
                 )
             }
 
@@ -225,7 +229,8 @@ fun ProductsNavigator() {
                     navController = navController,
                     onLoginClick = {
                         navController.navigate(Route.LoginScreen.route)
-                    }
+                    },
+                    viewModel = authViewModel
                 )
             }
         }
@@ -254,6 +259,6 @@ private fun navigateToDetails(
 ) {
     navController.currentBackStackEntry?.savedStateHandle?.set("product", product)
     navController.navigate(
-        route = Route.DetailsScreen.route
+        route = Route.ProductDetailsScreen.route
     )
 }

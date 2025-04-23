@@ -1,10 +1,7 @@
 package com.loc.searchapp.presentation.cart.components
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +21,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
@@ -33,18 +29,17 @@ import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.ProductCardSize
 import com.loc.searchapp.presentation.Dimens.SmallPadding
-import com.loc.searchapp.ui.theme.SearchAppTheme
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
 fun CartItemCard(
     modifier: Modifier = Modifier,
-    item: CartItem,
+    cartItem: CartItem,
     onClick: () -> Unit,
     onRemove: (CartItem) -> Unit
 ) {
     val context = LocalContext.current
-    val imageUrl = "$CATALOG_URL${item.images}"
+    val imageUrl = "$CATALOG_URL${cartItem.product.images}"
 
     Row(
         modifier = modifier
@@ -74,7 +69,7 @@ fun CartItemCard(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = item.code,
+                    text = cartItem.product.code,
                     style = MaterialTheme.typography.bodyMedium,
                     color = colorResource(id = R.color.text_title),
                     maxLines = 2,
@@ -90,7 +85,7 @@ fun CartItemCard(
                 )
 
                 Text(
-                    text = item.shape,
+                    text = cartItem.product.shape,
                     style = MaterialTheme.typography.labelSmall,
                     color = colorResource(id = R.color.body),
                 )
@@ -104,7 +99,7 @@ fun CartItemCard(
                 )
             }
             Text(
-                text = item.dimensions,
+                text = cartItem.product.dimensions,
                 style = MaterialTheme.typography.labelSmall,
                 color = colorResource(id = R.color.body),
             )
@@ -115,7 +110,7 @@ fun CartItemCard(
                 .padding(end = SmallPadding)
         ) {
             IconButton(
-                onClick = { onRemove.invoke(item) },
+                onClick = { onRemove.invoke(cartItem) },
             ) {
                 Icon(
                     painterResource(id = R.drawable.delete),
@@ -123,27 +118,6 @@ fun CartItemCard(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ProductCardPreview() {
-    SearchAppTheme {
-        Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-            CartItemCard(
-                onClick = { },
-                item = CartItem(
-                    code = "3G3042",
-                    dimensions = "100x10x2.3x4x20",
-                    images = painterResource(id = R.drawable.placeholder_image).toString(),
-                    shape = "12V9-20",
-                    quantity = 1
-                ),
-                onRemove = { }
-            )
         }
     }
 }

@@ -2,12 +2,11 @@ package com.loc.searchapp.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class CartItem(
-    val code: String,
-    val shape: String,
-    val dimensions: String,
+    val product: Product,
     val quantity: Int?,
-    val images: String,
 ): Parcelable

@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.details
+package com.loc.searchapp.presentation.product_details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,14 +22,14 @@ import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.ArticleImageHeight
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.details.components.DetailsTopBar
+import com.loc.searchapp.presentation.product_details.components.DetailsTopBar
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
 fun DetailsScreen(
     product: Product,
     event: (DetailsEvent) -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
 ) {
     val context = LocalContext.current
     val imageUrl = "$CATALOG_URL${product.images}"
@@ -40,7 +40,7 @@ fun DetailsScreen(
             .statusBarsPadding()
     ) {
         DetailsTopBar(
-            onAddToCartClick = { event(DetailsEvent.UpsertDeleteProduct(product)) },
+            onToggleCart = { event(DetailsEvent.UpsertDeleteProduct(product)) },
             onBackClick = navigateUp
         )
 

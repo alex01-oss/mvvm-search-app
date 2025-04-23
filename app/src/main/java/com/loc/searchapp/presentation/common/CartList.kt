@@ -41,9 +41,9 @@ fun CartList(
             ) {
                 items(items) { cartItem ->
                     CartItemCard(
-                        item = cartItem,
                         onClick = { onClick(cartItem) },
-                        onRemove = { onRemove(cartItem) }
+                        onRemove = { onRemove(cartItem) },
+                        cartItem = cartItem
                     )
                 }
             }

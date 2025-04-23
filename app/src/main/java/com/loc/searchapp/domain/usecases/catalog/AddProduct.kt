@@ -1,6 +1,5 @@
 package com.loc.searchapp.domain.usecases.catalog
 
-import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.repository.CatalogRepository
 import javax.inject.Inject
 
