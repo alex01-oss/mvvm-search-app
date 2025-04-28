@@ -67,4 +67,8 @@ class ProductViewModel @Inject constructor(
             }
         }
     }
+
+    fun clearLocalCart() {
+        _localCartChanges.value = emptyMap()
+    }
 }

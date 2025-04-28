@@ -124,7 +124,7 @@ fun SearchScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Open menu"
+                            contentDescription = null
                         )
                     }
                 }

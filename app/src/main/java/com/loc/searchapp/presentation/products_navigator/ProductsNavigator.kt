@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -38,14 +39,27 @@ import com.loc.searchapp.presentation.products_navigator.components.NewsBottomNa
 import com.loc.searchapp.presentation.search.SearchScreen
 import com.loc.searchapp.presentation.search.SearchViewModel
 import com.loc.searchapp.presentation.common.base.ProductViewModel
+import com.loc.searchapp.presentation.language.LanguageScreen
 
 @Composable
 fun ProductsNavigator() {
     val bottomNavigationItems = listOf(
-        BottomNavigationItem(icon = R.drawable.home, text = "Home"),
-        BottomNavigationItem(icon = R.drawable.search, text = "Search"),
-        BottomNavigationItem(icon = R.drawable.shopping_cart, text = "Cart"),
-        BottomNavigationItem(icon = R.drawable.person, text = "Account"),
+        BottomNavigationItem(
+            icon = R.drawable.home,
+            text = stringResource(id = R.string.home)
+        ),
+        BottomNavigationItem(
+            icon = R.drawable.search,
+            text = stringResource(id = R.string.search)
+        ),
+        BottomNavigationItem(
+            icon = R.drawable.shopping_cart,
+            text = stringResource(id = R.string.cart)
+        ),
+        BottomNavigationItem(
+            icon = R.drawable.person,
+            text = stringResource(id = R.string.account)
+        ),
     )
 
     val navController = rememberNavController()
@@ -135,7 +149,10 @@ fun ProductsNavigator() {
                     },
                     products = products,
                     authViewModel = authViewModel,
-                    productViewModel = productViewModel
+                    productViewModel = productViewModel,
+                    onAuthClick = {
+                        navController.navigate(Route.LoginScreen.route)
+                    },
                 )
             }
 
@@ -182,7 +199,11 @@ fun ProductsNavigator() {
                     onAuthClick = {
                         navController.navigate(Route.LoginScreen.route)
                     },
-                    viewModel = authViewModel
+                    onLanguageClick = {
+                        navController.navigate(Route.LanguageScreen.route)
+                    },
+                    viewModel = authViewModel,
+                    productViewModel = productViewModel,
                 )
             }
 
@@ -191,7 +212,8 @@ fun ProductsNavigator() {
                     Toast.makeText(
                         LocalContext.current,
                         detailsViewModel.sideEffect,
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 detailsViewModel.onEvent(DetailsEvent.RemoveSideEffect)
 
@@ -222,6 +244,14 @@ fun ProductsNavigator() {
                         navController.navigate(Route.LoginScreen.route)
                     },
                     viewModel = authViewModel
+                )
+            }
+
+            composable(route = Route.LanguageScreen.route) {
+                LanguageScreen(
+                    navigateUp = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

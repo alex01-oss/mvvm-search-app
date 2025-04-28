@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -31,7 +32,7 @@ fun ProductsList(
     onAdd: (Product) -> Unit,
     onRemove: (Product) -> Unit,
     localCartChanges: Map<String, Boolean>,
-    showShimmerOnFirstLoad: Boolean
+    showShimmerOnFirstLoad: Boolean,
 ) {
     val loadState = items.loadState
 
@@ -85,7 +86,7 @@ fun ProductsList(
                     is LoadState.Error -> {
                         item {
                             Text(
-                                text = "Loading error",
+                                text = stringResource(id = R.string.loading_error),
                                 color = Color.Red,
                                 modifier = Modifier.padding(16.dp)
                             )

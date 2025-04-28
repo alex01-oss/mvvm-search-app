@@ -1,23 +1,21 @@
 package com.loc.searchapp.presentation.account
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,22 +23,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.AvatarHeight
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.account.components.AccountOption
 import com.loc.searchapp.presentation.auth.AuthEvent
 import com.loc.searchapp.presentation.auth.AuthState
+import com.loc.searchapp.presentation.auth.components.GuestUser
 import com.loc.searchapp.presentation.common.base.AuthViewModel
+import com.loc.searchapp.presentation.common.base.ProductViewModel
 import com.loc.searchapp.presentation.common.components.Avatar
 
 @Composable
 fun AccountScreen(
     onAuthClick: () -> Unit,
-    viewModel: AuthViewModel
+    onLanguageClick: () -> Unit,
+    viewModel: AuthViewModel,
+    productViewModel: ProductViewModel
 ) {
     val authState = viewModel.authState.collectAsState().value
 
@@ -84,7 +85,7 @@ fun AccountScreen(
                 Spacer(modifier = Modifier.height(MediumPadding1))
 
                 Text(
-                    text = "Cart: empty",
+                    text = stringResource(id = R.string.cart_count),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -92,9 +93,23 @@ fun AccountScreen(
                 Spacer(modifier = Modifier.height(MediumPadding1))
 
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    AccountOption(icon = Icons.Default.Settings, text = "Settings")
-                    AccountOption(icon = Icons.Default.Lock, text = "Change password")
-                    AccountOption(icon = Icons.Default.Info, text = "Help")
+                    AccountOption(
+                        icon = Icons.Default.Settings,
+                        text = stringResource(id = R.string.settings)
+                    )
+                    AccountOption(
+                        icon = Icons.Default.Lock,
+                        text = stringResource(id = R.string.change_password)
+                    )
+                    AccountOption(
+                        icon = Icons.Default.Language,
+                        text = stringResource(id = R.string.change_language),
+                        onClick = onLanguageClick
+                    )
+                    AccountOption(
+                        icon = Icons.Default.Info,
+                        text = stringResource(id = R.string.help)
+                    )
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -102,73 +117,36 @@ fun AccountScreen(
                 Button(
                     onClick = {
                         viewModel.onEvent(AuthEvent.LogoutUser(""))
+                        productViewModel.clearLocalCart()
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Text(text = "Log out", color = Color.White)
+                    Text(
+                        text = stringResource(id = R.string.logout),
+                        color = Color.White
+                    )
                 }
             }
+
             is AuthState.Unauthenticated -> {
-                Avatar(
-                    firstName = "",
-                    lastName = "",
-                    size = AvatarHeight,
-                    textStyle = MaterialTheme.typography.labelLarge,
-                    placeholder = {
-                        Image(
-                            painter = painterResource(R.drawable.person),
-                            contentDescription = "User Avatar",
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-                )
+                GuestUser(onAuthClick = onAuthClick)
+            }
 
-                Text(text = "To be able to create a cart and place an order, you must log in or create an account.")
-
-                Spacer(modifier = Modifier.height(MediumPadding1))
-
-                Button(
-                    onClick = onAuthClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
-                    )
+            is AuthState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Auth", color = Color.White)
+                    CircularProgressIndicator()
                 }
             }
-            is AuthState.Loading -> {}
-            is AuthState.Error -> {}
+
+            is AuthState.Error -> {
+                Text(stringResource(id = R.string.error, authState.message))
+            }
         }
-    }
-}
-
-@Composable
-fun AccountOption(
-    icon: ImageVector,
-    text: String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = SmallPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            tint = Color.Gray,
-            contentDescription = null,
-        )
-
-        Spacer(modifier = Modifier.width(SmallPadding))
-
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
     }
 }

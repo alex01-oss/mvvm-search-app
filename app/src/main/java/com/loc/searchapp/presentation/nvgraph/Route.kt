@@ -11,7 +11,6 @@ sealed class Route(
     data object AccountScreen : Route(route = "accountScreen")
 
     data object ProductDetailsScreen : Route(route = "catalogDetailsScreen")
-    data object CartDetailsScreen : Route(route = "cartDetailsScreen")
 
     data object AppStartNavigation : Route(route = "appStartNavigation")
     data object ProductsNavigation : Route(route = "productsNavigation")
@@ -19,4 +18,6 @@ sealed class Route(
 
     data object LoginScreen : Route(route = "loginScreen")
     data object RegisterScreen : Route(route = "registerScreen")
+
+    data object LanguageScreen : Route(route = "languageScreen")
 }

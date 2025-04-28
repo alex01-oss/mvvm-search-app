@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.loc.searchapp.ui.theme.WhiteGray
 
 @Composable
-fun NewsButton(
+fun ProductButton(
     text: String,
     onClick: () -> Unit
 ) {
@@ -32,7 +32,7 @@ fun NewsButton(
 }
 
 @Composable
-fun NewsTextButton(
+fun ProductTextButton(
     text: String,
     onClick: () -> Unit
 ) {

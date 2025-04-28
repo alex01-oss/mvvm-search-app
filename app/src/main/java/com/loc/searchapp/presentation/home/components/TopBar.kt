@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.auth.AuthState
@@ -32,9 +32,10 @@ fun HomeTopBar(
     ) {
 
         Image(
-            painter = painterResource(id =
-                if (isSystemInDarkTheme()) R.drawable.ic_logo_dark
-                else R.drawable.ic_logo_light
+            painter = painterResource(
+                id =
+                    if (isSystemInDarkTheme()) R.drawable.ic_logo_dark
+                    else R.drawable.ic_logo_light
             ),
             contentDescription = null,
             modifier = Modifier
@@ -47,23 +48,20 @@ fun HomeTopBar(
                 val user = authState.user
 
                 Avatar(
-                    firstName = user?.username?.substringBefore(" ") ?: "Guest",
-                    lastName = user?.username?.substringAfter(" ") ?: "Guest"
+                    firstName = user?.username?.substringBefore(" ")
+                        ?: stringResource(id = R.string.guest),
+                    lastName = user?.username?.substringAfter(" ")
+                        ?: stringResource(id = R.string.guest)
                 )
             }
+
             is AuthState.Unauthenticated -> {
                 Avatar(
                     firstName = "",
                     lastName = "",
-                    placeholder = {
-                        Image(
-                            painter = painterResource(R.drawable.person),
-                            contentDescription = "User Avatar",
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
                 )
             }
+
             is AuthState.Loading -> {}
             is AuthState.Error -> {}
         }

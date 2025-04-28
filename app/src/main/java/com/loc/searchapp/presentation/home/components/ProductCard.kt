@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
@@ -82,7 +83,7 @@ fun ProductCard(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Shape: ",
+                    text = stringResource(id = R.string.shape),
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                     color = colorResource(id = R.color.body),
                 )
@@ -96,7 +97,7 @@ fun ProductCard(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Dimensions: ",
+                    text = stringResource(id = R.string.dimensions),
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                     color = colorResource(id = R.color.body),
                 )

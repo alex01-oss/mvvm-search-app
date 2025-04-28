@@ -17,8 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,9 +30,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.loc.searchapp.R
 import com.loc.searchapp.data.remote.dto.MenuResponse
 
 @Composable
@@ -38,6 +43,8 @@ fun BurgerMenu(
     onOpenUrl: (String) -> Unit,
     onNavigateToSearch: (String) -> Unit,
 ) {
+    val expandedIndex = remember { mutableStateOf<Int?>(null) }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +52,7 @@ fun BurgerMenu(
     ) {
         item {
             Text(
-                text = "Categories",
+                text = stringResource(id = R.string.categories),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -69,7 +76,6 @@ fun BurgerMenu(
                 menu.constructionTool
             ).forEachIndexed { index, category ->
                 item {
-                    val expandedIndex = remember { mutableStateOf<Int?>(null) }
                     val expanded = expandedIndex.value == index
 
                     Column(
@@ -119,23 +125,38 @@ fun BurgerMenu(
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .clickable {
-                                                    if (item.type == "button" && item.url != null) {
-                                                        onOpenUrl(item.url)
-                                                    } else if (item.searchType != null) {
-                                                        onNavigateToSearch(item.searchType)
-                                                    } else {
-                                                        null
+                                                    when {
+                                                        item.type == "button" && item.url != null -> {
+                                                            onOpenUrl(item.url)
+                                                        }
+
+                                                        item.searchType != null -> {
+                                                            onNavigateToSearch(item.searchType)
+                                                        }
                                                     }
                                                 }
                                                 .padding(vertical = 6.dp, horizontal = 8.dp),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
+                                            val icon = when {
+                                                item.url != null -> Icons.Default.PictureAsPdf
+                                                item.searchType != null -> Icons.Default.Search
+                                                else -> Icons.AutoMirrored.Filled.ArrowRight
+                                            }
+
                                             Icon(
-                                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                                imageVector = icon,
                                                 contentDescription = null,
-                                                modifier = Modifier.size(16.dp)
+                                                modifier = Modifier.size(18.dp),
+                                                tint = when {
+                                                    item.url != null -> MaterialTheme.colorScheme.error
+                                                    item.searchType != null -> MaterialTheme.colorScheme.primary
+                                                    else -> LocalContentColor.current
+                                                }
                                             )
+
                                             Spacer(modifier = Modifier.width(8.dp))
+
                                             Text(
                                                 text = item.text,
                                                 fontSize = 14.sp

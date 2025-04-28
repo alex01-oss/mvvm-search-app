@@ -17,8 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.loc.searchapp.presentation.common.components.NewsButton
-import com.loc.searchapp.presentation.common.components.NewsTextButton
+import androidx.compose.ui.res.stringResource
+import com.loc.searchapp.R
+import com.loc.searchapp.domain.model.Page
+import com.loc.searchapp.presentation.common.components.ProductButton
+import com.loc.searchapp.presentation.common.components.ProductTextButton
 import com.loc.searchapp.presentation.Dimens.MediumPadding2
 import com.loc.searchapp.presentation.Dimens.PageIndicatorWidth
 import com.loc.searchapp.presentation.onboarding.components.OnBoardingPage
@@ -32,16 +35,38 @@ fun OnBoardingScreen(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
+        val pages = listOf(
+            Page(
+                title = stringResource(id = R.string.first_title),
+                description = stringResource(id = R.string.first_description),
+                image = R.drawable.onboarding1
+            ),
+            Page(
+                title = stringResource(id = R.string.second_title),
+                description = stringResource(id = R.string.second_description),
+                image = R.drawable.onboarding2
+            ),
+            Page(
+                title = stringResource(id = R.string.third_title),
+                description = stringResource(id = R.string.third_description),
+                image = R.drawable.onboarding3
+            )
+        )
+
         val pagerState = rememberPagerState(initialPage = 0) {
             pages.size
         }
 
+        val next = stringResource(id = R.string.next)
+        val back = stringResource(id = R.string.back)
+        val getStarted = stringResource(id = R.string.get_started)
+
         val buttonState = remember {
             derivedStateOf {
                 when (pagerState.currentPage) {
-                    0 -> listOf("", "Next")
-                    1 -> listOf("Back", "Next")
-                    2 -> listOf("Back", "Get started")
+                    0 -> listOf("", next)
+                    1 -> listOf(back, next)
+                    2 -> listOf(back, getStarted)
                     else -> listOf("", "")
                 }
             }
@@ -72,18 +97,16 @@ fun OnBoardingScreen(
                 val scope = rememberCoroutineScope()
 
                 if (buttonState.value[0].isNotEmpty()) {
-                    NewsTextButton(text = buttonState.value[0],
-                        onClick = {
+                    ProductTextButton(
+                        text = buttonState.value[0], onClick = {
                             scope.launch {
                                 pagerState.animateScrollToPage(page = pagerState.currentPage - 1)
                             }
-                        }
-                    )
+                        })
                 }
 
-                NewsButton(
-                    text = buttonState.value[1],
-                    onClick = {
+                ProductButton(
+                    text = buttonState.value[1], onClick = {
                         scope.launch {
                             if (pagerState.currentPage == 2) {
                                 event(OnBoardingEvent.SaveAppEntry)
@@ -91,8 +114,7 @@ fun OnBoardingScreen(
                                 pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
                             }
                         }
-                    }
-                )
+                    })
             }
         }
 

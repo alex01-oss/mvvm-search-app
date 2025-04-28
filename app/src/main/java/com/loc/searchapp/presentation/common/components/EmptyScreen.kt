@@ -1,5 +1,6 @@
 package com.loc.searchapp.presentation.common.components
 
+import android.content.Context
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
@@ -34,11 +36,14 @@ fun EmptyScreen(
     iconId: Int = R.drawable.ic_network_error,
     error: Throwable? = null
 ) {
-    val finalMessage = remember {
-        message ?: error?.let { parseErrorMessage(it) } ?: "Unknown state."
+    val context = LocalContext.current
+
+    val finalMessage = remember(message, error, context) {
+        message ?: error?.let { parseErrorMessage(it, context) }
+        ?: context.getString(R.string.unknown_state)
     }
 
-    val finalIcon = remember {
+    val finalIcon = remember(message) {
         if (message != null) iconId else R.drawable.ic_network_error
     }
 
@@ -86,19 +91,10 @@ fun EmptyContent(alphaAnim: Float, message: String, iconId: Int) {
     }
 }
 
-
-fun parseErrorMessage(error: Throwable): String {
+fun parseErrorMessage(error: Throwable, context: Context): String {
     return when (error) {
-        is SocketTimeoutException -> {
-            "Server Unavailable."
-        }
-
-        is ConnectException -> {
-            "Internet Unavailable."
-        }
-
-        else -> {
-            "Unknown Error."
-        }
+        is SocketTimeoutException -> context.getString(R.string.server_unavailable)
+        is ConnectException -> context.getString(R.string.internet_unavailable)
+        else -> context.getString(R.string.unknown_state)
     }
 }

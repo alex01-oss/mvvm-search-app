@@ -16,9 +16,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
+import com.loc.searchapp.domain.model.Page
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.MediumPadding2
-import com.loc.searchapp.presentation.onboarding.Page
 
 @Composable
 fun OnBoardingPage(

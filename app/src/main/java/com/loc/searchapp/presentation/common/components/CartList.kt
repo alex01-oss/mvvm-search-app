@@ -13,6 +13,8 @@ import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.cart.components.CartItemCard
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.res.stringResource
+import com.loc.searchapp.R
 
 
 @Composable
@@ -30,7 +32,7 @@ fun CartList(
         }
 
         items.isEmpty() -> {
-            EmptyScreen(error = Throwable("Cart is empty"))
+            EmptyScreen(message = stringResource(id = R.string.empty_cart))
         }
 
         else -> {
