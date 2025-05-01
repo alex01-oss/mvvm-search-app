@@ -20,7 +20,7 @@ data class RegisterRequest(
 data class AuthResponse (
     val message: String? = null,
     val user: User,
-    val token: String,
+    val accessToken: String,
     val refreshToken: String
 )
 
@@ -30,6 +30,16 @@ data class UserResponse (
 )
 
 @Serializable
+data class LogoutRequest(
+    val refreshToken: String
+)
+
+@Serializable
 data class LogoutResponse(
     val message: String
+)
+
+@Serializable
+data class RefreshTokenRequest(
+    val refreshToken: String
 )

@@ -26,15 +26,15 @@ class AuthViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val token = userPreferences.getToken()
+            val accessToken = userPreferences.getAccessToken()
 
-            if (token.isNullOrEmpty()) {
+            if (accessToken.isNullOrEmpty()) {
                 _authState.value = AuthState.Unauthenticated
                 return@launch
             }
 
             try {
-                val response = authUseCases.getUser(token)
+                val response = authUseCases.getUser(accessToken)
                 val body = response.body()
                 val user = body?.user
 
@@ -64,12 +64,12 @@ class AuthViewModel @Inject constructor(
 
                         if (response.isSuccessful) {
                             val data = response.body()
-                            val token = data?.token.orEmpty()
+                            val accessToken = data?.accessToken.orEmpty()
                             val refreshToken = data?.refreshToken.orEmpty()
                             val user = data?.user
 
                             if (response.isSuccessful && user != null) {
-                                userPreferences.saveTokens(token, refreshToken)
+                                userPreferences.saveTokens(accessToken, refreshToken)
                                 _authState.value = AuthState.Authenticated(user)
                             } else {
                                 _authState.value = AuthState.Error("Invalid login or missing user data")
@@ -96,12 +96,12 @@ class AuthViewModel @Inject constructor(
 
                         if (response.isSuccessful) {
                             val data = response.body()
-                            val token = data?.token.orEmpty()
+                            val accessToken = data?.accessToken.orEmpty()
                             val refreshToken = data?.refreshToken.orEmpty()
                             val user = data?.user
 
                             if (response.isSuccessful && user != null) {
-                                userPreferences.saveTokens(token, refreshToken)
+                                userPreferences.saveTokens(accessToken, refreshToken)
                                 _authState.value = AuthState.Authenticated(user)
                             } else {
                                 _authState.value = AuthState.Error("Invalid registration or missing user data")
@@ -119,10 +119,11 @@ class AuthViewModel @Inject constructor(
 
             is AuthEvent.LogoutUser -> {
                 viewModelScope.launch {
+                    val accessToken = userPreferences.getAccessToken()
                     val refreshToken = userPreferences.getRefreshToken()
 
-                    if (!refreshToken.isNullOrEmpty()) {
-                        authUseCases.logoutUser(refreshToken)
+                    if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
+                        authUseCases.logoutUser(accessToken, refreshToken)
                     }
 
                     userPreferences.clearTokens()

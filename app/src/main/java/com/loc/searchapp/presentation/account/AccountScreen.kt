@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
@@ -40,6 +40,7 @@ import com.loc.searchapp.presentation.common.components.Avatar
 fun AccountScreen(
     onAuthClick: () -> Unit,
     onLanguageClick: () -> Unit,
+    onAddPostClick: () -> Unit,
     viewModel: AuthViewModel,
     productViewModel: ProductViewModel
 ) {
@@ -107,8 +108,9 @@ fun AccountScreen(
                         onClick = onLanguageClick
                     )
                     AccountOption(
-                        icon = Icons.Default.Info,
-                        text = stringResource(id = R.string.help)
+                        icon = Icons.Default.AdminPanelSettings,
+                        text = stringResource(id = R.string.addpost),
+                        onClick = onAddPostClick
                     )
                 }
 
@@ -116,7 +118,7 @@ fun AccountScreen(
 
                 Button(
                     onClick = {
-                        viewModel.onEvent(AuthEvent.LogoutUser(""))
+                        viewModel.onEvent(AuthEvent.LogoutUser)
                         productViewModel.clearLocalCart()
                     },
                     modifier = Modifier.fillMaxWidth(),

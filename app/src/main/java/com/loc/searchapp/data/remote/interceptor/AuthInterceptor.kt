@@ -13,16 +13,16 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
-        val token = runBlocking {
-            userPreferences.getToken()
+        val accessToken = runBlocking {
+            userPreferences.getAccessToken()
         }
 
         val requestBuilder = originalRequest.newBuilder()
             .addHeader("Accept", "application/json")
 
-        if (token?.isNotBlank() == true) {
-            requestBuilder.addHeader("Authorization", "Bearer $token")
-            Log.d("AuthInterceptor", "Adding token to request: ${token.take(10)}...")
+        if (accessToken?.isNotBlank() == true) {
+            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
+            Log.d("AuthInterceptor", "Adding token to request: ${accessToken.take(10)}...")
         } else {
             Log.d("AuthInterceptor", "No token available")
         }

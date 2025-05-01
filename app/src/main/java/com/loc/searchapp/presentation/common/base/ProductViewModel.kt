@@ -33,7 +33,7 @@ class ProductViewModel @Inject constructor(
     fun addToCart(code: String) {
         viewModelScope.launch {
             try {
-                val token = userPreferences.getToken()
+                val token = userPreferences.getAccessToken()
                 if (!token.isNullOrBlank()) {
                     catalogUseCases.addProduct(code)
                     _localCartChanges.value = _localCartChanges.value + (code to true)
@@ -55,7 +55,7 @@ class ProductViewModel @Inject constructor(
 
     fun getCart() {
         viewModelScope.launch {
-            val token = userPreferences.getToken()
+            val token = userPreferences.getAccessToken()
             if (!token.isNullOrBlank()) {
                 try {
                     _cartItems.value = catalogUseCases.getCart(token)

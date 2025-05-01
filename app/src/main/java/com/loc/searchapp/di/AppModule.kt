@@ -12,11 +12,14 @@ import com.loc.searchapp.data.remote.api.AuthApi
 import com.loc.searchapp.data.remote.api.CatalogApi
 import com.loc.searchapp.data.local.preferences.UserPreferences
 import com.loc.searchapp.data.local.preferences.dataStore
+import com.loc.searchapp.data.remote.api.PostsApi
 import com.loc.searchapp.data.repository.AuthRepositoryImpl
 import com.loc.searchapp.data.repository.CatalogRepositoryImpl
+import com.loc.searchapp.data.repository.PostsRepositoryImpl
 import com.loc.searchapp.domain.manager.LocalUserManger
 import com.loc.searchapp.domain.repository.AuthRepository
 import com.loc.searchapp.domain.repository.CatalogRepository
+import com.loc.searchapp.domain.repository.PostsRepository
 import com.loc.searchapp.domain.usecases.app_entry.AppEntryUseCases
 import com.loc.searchapp.domain.usecases.app_entry.ReadAppEntry
 import com.loc.searchapp.domain.usecases.app_entry.SaveAppEntry
@@ -33,6 +36,13 @@ import com.loc.searchapp.domain.usecases.catalog.GetCart
 import com.loc.searchapp.domain.usecases.catalog.GetCatalogPaging
 import com.loc.searchapp.domain.usecases.catalog.GetMenu
 import com.loc.searchapp.domain.usecases.catalog.SelectProduct
+import com.loc.searchapp.domain.usecases.posts.CreatePost
+import com.loc.searchapp.domain.usecases.posts.DeletePost
+import com.loc.searchapp.domain.usecases.posts.EditPost
+import com.loc.searchapp.domain.usecases.posts.GetAllPosts
+import com.loc.searchapp.domain.usecases.posts.GetPost
+import com.loc.searchapp.domain.usecases.posts.PostsUseCases
+import com.loc.searchapp.domain.usecases.posts.UploadImage
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 import dagger.Module
 import dagger.Provides
@@ -161,6 +171,38 @@ object AppModule {
             refreshToken = RefreshToken(authRepository),
             logoutUser = LogoutUser(authRepository),
             getUser = GetUser(authRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providePostsApi(okHttpClient: OkHttpClient): PostsApi {
+        return Retrofit.Builder()
+            .baseUrl(CATALOG_URL)
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+            .create(PostsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostsRepository(
+        postsApi: PostsApi
+    ): PostsRepository = PostsRepositoryImpl(postsApi)
+
+    @Provides
+    @Singleton
+    fun providePostsUseCases(
+        postsRepository: PostsRepository,
+    ): PostsUseCases {
+        return PostsUseCases(
+            createPost = CreatePost(postsRepository),
+            editPost = EditPost(postsRepository),
+            deletePost = DeletePost(postsRepository),
+            uploadImage = UploadImage(postsRepository),
+            getPost = GetPost(postsRepository),
+            getAllPosts = GetAllPosts(postsRepository)
         )
     }
 

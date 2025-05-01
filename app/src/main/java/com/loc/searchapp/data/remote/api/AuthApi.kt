@@ -2,7 +2,9 @@ package com.loc.searchapp.data.remote.api
 
 import com.loc.searchapp.data.remote.dto.AuthResponse
 import com.loc.searchapp.data.remote.dto.LoginRequest
+import com.loc.searchapp.data.remote.dto.LogoutRequest
 import com.loc.searchapp.data.remote.dto.LogoutResponse
+import com.loc.searchapp.data.remote.dto.RefreshTokenRequest
 import com.loc.searchapp.data.remote.dto.RegisterRequest
 import com.loc.searchapp.data.remote.dto.UserResponse
 import retrofit2.Response
@@ -24,16 +26,17 @@ interface AuthApi {
 
     @POST("api/logout")
     suspend fun logout(
-        @Header("Authorization") refreshToken: String
+        @Header("Authorization") accessToken: String,
+        @Body request: LogoutRequest
     ): Response<LogoutResponse>
 
     @POST("api/refresh")
     suspend fun refresh(
-        @Header("Authorization") refreshToken: String
+        @Body request: RefreshTokenRequest
     ): Response<AuthResponse>
 
     @GET("api/user")
     suspend fun getUser(
-        @Header("Authorization") token: String
+        @Header("Authorization") accessToken: String
     ): Response<UserResponse>
 }

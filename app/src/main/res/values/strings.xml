@@ -79,10 +79,10 @@
 
     <!--    settings-->
     <string name="select_language">"Select language: "</string>
-    <string name="language">Language</string>
     <string name="system_language">System language</string>
     <string name="language_settings">Language settings</string>
     <string name="restart_app_message">Press OK to apply the language</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="addpost">Add post</string>
 </resources>

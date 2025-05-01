@@ -20,4 +20,8 @@ sealed class Route(
     data object RegisterScreen : Route(route = "registerScreen")
 
     data object LanguageScreen : Route(route = "languageScreen")
+
+    data object PostEditorScreen : Route(route = "postEditorScreen")
+    data object PostsScreen : Route(route = "postsScreen")
+    data object PostDetailedScreen : Route(route = "postDetailedScreen")
 }

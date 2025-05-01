@@ -2,6 +2,7 @@ package com.loc.searchapp.data.remote.interceptor
 
 import com.loc.searchapp.data.remote.api.AuthApi
 import com.loc.searchapp.data.local.preferences.UserPreferences
+import com.loc.searchapp.data.remote.dto.RefreshTokenRequest
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -22,14 +23,18 @@ class TokenRefreshInterceptor @Inject constructor(
 
             val refreshResponse = runBlocking {
                 try {
-                    authApi.refresh("Bearer $refreshToken")
+                    authApi.refresh(
+                        RefreshTokenRequest(
+                            refreshToken = refreshToken.toString()
+                        )
+                    )
                 } catch (_: Exception) {
                     null
                 }
             }
 
             if (refreshResponse?.isSuccessful == true) {
-                val newAccessToken = refreshResponse.body()?.token ?: return response
+                val newAccessToken = refreshResponse.body()?.accessToken ?: return response
 
                 runBlocking {
                     userPreferences.saveTokens(newAccessToken, refreshToken.toString())

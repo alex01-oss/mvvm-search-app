@@ -47,7 +47,7 @@ class SearchViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest { (query, type, _) ->
             flow {
-                val token = userPreferences.getToken()
+                val token = userPreferences.getAccessToken()
                 emitAll(
                     catalogUseCases.getCatalogPaging(
                         searchQuery = query,

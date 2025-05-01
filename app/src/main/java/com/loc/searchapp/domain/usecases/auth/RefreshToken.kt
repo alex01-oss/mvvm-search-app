@@ -9,8 +9,8 @@ class RefreshToken @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        token: String
+        refreshToken: String
     ): Response<AuthResponse> {
-        return authRepository.refresh("Bearer $token")
+        return authRepository.refresh(refreshToken)
     }
 }

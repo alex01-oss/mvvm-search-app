@@ -12,7 +12,5 @@ sealed class AuthEvent {
         val password: String
     ) : AuthEvent()
 
-    class LogoutUser(
-        val token: String
-    ) : AuthEvent()
+    object LogoutUser : AuthEvent()
 }

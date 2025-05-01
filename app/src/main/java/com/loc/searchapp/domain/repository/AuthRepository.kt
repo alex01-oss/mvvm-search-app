@@ -14,19 +14,19 @@ interface AuthRepository {
     suspend fun register(
         username: String,
         email: String,
-        password:
-        String
+        password: String
     ): Response<AuthResponse>
 
     suspend fun refresh(
-        token: String
+        refreshToken: String
     ): Response<AuthResponse>
 
     suspend fun getUser(
-        token: String
+        accessToken: String
     ): Response<UserResponse>
 
     suspend fun logout(
+        accessToken: String,
         refreshToken: String
     ): Response<LogoutResponse>
 }

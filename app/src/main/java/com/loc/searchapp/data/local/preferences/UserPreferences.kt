@@ -17,22 +17,22 @@ class UserPreferences @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
     internal object Keys {
-        val TOKEN = stringPreferencesKey("token")
+        val ACCESS_TOKEN = stringPreferencesKey("accessToken")
         val REFRESH_TOKEN = stringPreferencesKey("refreshToken")
     }
 
     val tokenFlow: Flow<String?> = dataStore.data
-        .map { it[Keys.TOKEN] }
+        .map { it[Keys.ACCESS_TOKEN] }
 
-    suspend fun saveTokens(token: String, refreshToken: String) {
+    suspend fun saveTokens(accessToken: String, refreshToken: String) {
         dataStore.edit {
-            it[Keys.TOKEN] = token
+            it[Keys.ACCESS_TOKEN] = accessToken
             it[Keys.REFRESH_TOKEN] = refreshToken
         }
     }
 
-    suspend fun getToken(): String? {
-        return dataStore.data.first()[Keys.TOKEN]
+    suspend fun getAccessToken(): String? {
+        return dataStore.data.first()[Keys.ACCESS_TOKEN]
     }
 
     suspend fun getRefreshToken(): String? {

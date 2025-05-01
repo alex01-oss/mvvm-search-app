@@ -52,6 +52,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 }
 
 dependencies {
@@ -103,4 +108,7 @@ dependencies {
 
     //Icons
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+    //Rich Text Editor
+    implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc12")
 }

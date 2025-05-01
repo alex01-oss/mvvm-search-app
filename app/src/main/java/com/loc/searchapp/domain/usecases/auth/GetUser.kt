@@ -9,8 +9,8 @@ class GetUser @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        token: String
+        accessToken: String
     ): Response<UserResponse> {
-        return authRepository.getUser("Bearer $token")
+        return authRepository.getUser("Bearer $accessToken")
     }
 }

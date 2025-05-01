@@ -11,6 +11,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -77,30 +78,36 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(MediumPadding1))
 
-            ProductsList(
-                modifier = Modifier.padding(horizontal = MediumPadding1),
-                items = products,
-                onClick = { product -> navigateToDetails(product) },
-                onAdd = { product ->
-                    if (authState !is AuthState.Authenticated) {
-                        scope.launch {
-                            val result = snackbarHostState.showSnackbar(
-                                message = mustLoginMessage,
-                                actionLabel = loginActionLabel,
-                                duration = SnackbarDuration.Short
-                            )
-                            if (result == SnackbarResult.ActionPerformed) {
-                                onAuthClick()
-                            }
-                        }
-                    } else {
-                        productViewModel.addToCart(product.code)
-                    }
-                },
-                onRemove = { product -> productViewModel.removeFromCart(product.code) },
-                localCartChanges = localCartChanges,
-                showShimmerOnFirstLoad = true,
-            )
+//            ProductsList(
+//                modifier = Modifier.padding(horizontal = MediumPadding1),
+//                items = products,
+//                onClick = { product -> navigateToDetails(product) },
+//                onAdd = { product ->
+//                    if (authState !is AuthState.Authenticated) {
+//                        scope.launch {
+//                            val result = snackbarHostState.showSnackbar(
+//                                message = mustLoginMessage,
+//                                actionLabel = loginActionLabel,
+//                                duration = SnackbarDuration.Short
+//                            )
+//                            if (result == SnackbarResult.ActionPerformed) {
+//                                onAuthClick()
+//                            }
+//                        }
+//                    } else {
+//                        productViewModel.addToCart(product.code)
+//                    }
+//                },
+//                onRemove = { product -> productViewModel.removeFromCart(product.code) },
+//                localCartChanges = localCartChanges,
+//                showShimmerOnFirstLoad = true,
+//            )
+
+            Text(text = "З 1966 року ПрАТ «ПОЛТАВСЬКИЙ АЛМАЗНИЙ ІНСТРУМЕНТ» продовжує традиції якості та інновацій у виробництві алмазного та CBN інструменту. Наша компанія пройшла шлях від розробника перших алмазних порошків у СРСР до сучасного підприємства, що виготовляє складні рішення для промисловості по всьому світу.") // translate
+
+            Spacer(modifier = Modifier.height(MediumPadding1))
+
+
         }
 
         SnackbarHost(
