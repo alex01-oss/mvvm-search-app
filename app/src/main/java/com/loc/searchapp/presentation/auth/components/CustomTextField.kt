@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun CustomTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     painterResource: Painter,
@@ -43,7 +44,7 @@ fun CustomTextField(
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
         ),
         keyboardOptions = KeyboardOptions.Default,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         leadingIcon = {
             Icon(
                 painter = painterResource,
@@ -58,6 +59,7 @@ fun CustomTextField(
 
 @Composable
 fun PasswordTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     painterResource: Painter,
@@ -82,7 +84,7 @@ fun PasswordTextField(
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         leadingIcon = {
             Icon(
                 painter = painterResource,

@@ -5,6 +5,7 @@ import com.loc.searchapp.data.remote.dto.LoginRequest
 import com.loc.searchapp.data.remote.dto.LogoutRequest
 import com.loc.searchapp.data.remote.dto.LogoutResponse
 import com.loc.searchapp.data.remote.dto.RefreshTokenRequest
+import com.loc.searchapp.data.remote.dto.RefreshTokenResponse
 import com.loc.searchapp.data.remote.dto.RegisterRequest
 import com.loc.searchapp.data.remote.dto.UserResponse
 import retrofit2.Response
@@ -33,7 +34,7 @@ interface AuthApi {
     @POST("api/refresh")
     suspend fun refresh(
         @Body request: RefreshTokenRequest
-    ): Response<AuthResponse>
+    ): Response<RefreshTokenResponse>
 
     @GET("api/user")
     suspend fun getUser(

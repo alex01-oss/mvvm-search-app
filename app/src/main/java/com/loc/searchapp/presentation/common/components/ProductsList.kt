@@ -54,7 +54,7 @@ fun ProductsList(
 
         else -> {
             LazyColumn(
-                modifier = modifier.fillMaxSize(),
+                modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(MediumPadding1),
                 contentPadding = PaddingValues(all = ExtraSmallPadding2)
             ) {
@@ -75,7 +75,7 @@ fun ProductsList(
                     is LoadState.Loading -> {
                         item {
                             CircularProgressIndicator(
-                                modifier = Modifier
+                                modifier
                                     .fillMaxWidth()
                                     .wrapContentWidth(Alignment.CenterHorizontally)
                                     .padding(24.dp)
@@ -88,7 +88,7 @@ fun ProductsList(
                             Text(
                                 text = stringResource(id = R.string.loading_error),
                                 color = Color.Red,
-                                modifier = Modifier.padding(16.dp)
+                                modifier = modifier.padding(16.dp)
                             )
                         }
                     }
@@ -101,13 +101,15 @@ fun ProductsList(
 }
 
 @Composable
-private fun ShimmerEffect() {
+private fun ShimmerEffect(
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MediumPadding1)
     ) {
         repeat(10) {
-            ProductCardShimmerEffect(modifier = Modifier.padding(horizontal = MediumPadding1))
+            ProductCardShimmerEffect(modifier.padding(horizontal = MediumPadding1))
         }
     }
 }

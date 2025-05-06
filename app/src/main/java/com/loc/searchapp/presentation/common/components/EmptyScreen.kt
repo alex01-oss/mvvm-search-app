@@ -66,9 +66,14 @@ fun EmptyScreen(
 }
 
 @Composable
-fun EmptyContent(alphaAnim: Float, message: String, iconId: Int) {
+fun EmptyContent(
+    modifier: Modifier = Modifier,
+    alphaAnim: Float,
+    message: String,
+    iconId: Int
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -76,12 +81,12 @@ fun EmptyContent(alphaAnim: Float, message: String, iconId: Int) {
             painter = painterResource(id = iconId),
             contentDescription = null,
             tint = if (isSystemInDarkTheme()) LightGray else DarkGray,
-            modifier = Modifier
+            modifier = modifier
                 .size(120.dp)
                 .alpha(alphaAnim)
         )
         Text(
-            modifier = Modifier
+            modifier = modifier
                 .padding(10.dp)
                 .alpha(alphaAnim),
             text = message,

@@ -1,6 +1,7 @@
 package com.loc.searchapp.data.remote.dto
 
 import com.loc.searchapp.domain.model.User
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -42,4 +43,11 @@ data class LogoutResponse(
 @Serializable
 data class RefreshTokenRequest(
     val refreshToken: String
+)
+
+@Serializable
+data class RefreshTokenResponse(
+    val accessToken: String,
+    val refreshToken: String,
+    @SerialName("token_type") val tokenType: String
 )

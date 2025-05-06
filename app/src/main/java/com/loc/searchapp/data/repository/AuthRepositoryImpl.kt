@@ -6,6 +6,7 @@ import com.loc.searchapp.data.remote.dto.LoginRequest
 import com.loc.searchapp.data.remote.dto.LogoutRequest
 import com.loc.searchapp.data.remote.dto.LogoutResponse
 import com.loc.searchapp.data.remote.dto.RefreshTokenRequest
+import com.loc.searchapp.data.remote.dto.RefreshTokenResponse
 import com.loc.searchapp.data.remote.dto.RegisterRequest
 import com.loc.searchapp.data.remote.dto.UserResponse
 import com.loc.searchapp.domain.repository.AuthRepository
@@ -36,7 +37,7 @@ class AuthRepositoryImpl(
 
     override suspend fun refresh(
         refreshToken: String
-    ): Response<AuthResponse> {
+    ): Response<RefreshTokenResponse> {
         return api.refresh(
             RefreshTokenRequest(refreshToken)
         )

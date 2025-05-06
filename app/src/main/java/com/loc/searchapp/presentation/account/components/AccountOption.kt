@@ -18,12 +18,13 @@ import com.loc.searchapp.presentation.Dimens.SmallPadding
 
 @Composable
 fun AccountOption(
+    modifier: Modifier = Modifier,
     icon: ImageVector,
     text: String,
     onClick: () -> Unit = {}
 ) {
     Row(
-        modifier = Modifier
+        modifier
             .fillMaxWidth()
             .padding(vertical = SmallPadding)
             .clickable { onClick() },
@@ -35,7 +36,7 @@ fun AccountOption(
             contentDescription = null,
         )
 
-        Spacer(modifier = Modifier.width(SmallPadding))
+        Spacer(modifier.width(SmallPadding))
 
         Text(
             text = text,

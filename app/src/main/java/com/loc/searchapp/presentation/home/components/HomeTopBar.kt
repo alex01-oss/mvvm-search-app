@@ -21,16 +21,16 @@ import com.loc.searchapp.presentation.common.components.Avatar
 
 @Composable
 fun HomeTopBar(
+    modifier: Modifier = Modifier,
     viewModel: AuthViewModel
 ) {
     val authState = viewModel.authState.collectAsState().value
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Image(
             painter = painterResource(
                 id =
@@ -38,9 +38,7 @@ fun HomeTopBar(
                     else R.drawable.ic_logo_light
             ),
             contentDescription = null,
-            modifier = Modifier
-                .width(150.dp)
-                .height(60.dp)
+            modifier.width(120.dp).height(48.dp)
         )
 
         when (authState) {

@@ -19,9 +19,17 @@ sealed class Route(
     data object LoginScreen : Route(route = "loginScreen")
     data object RegisterScreen : Route(route = "registerScreen")
 
+    data object CatalogScreen : Route(route = "catalogScreen")
+
     data object LanguageScreen : Route(route = "languageScreen")
 
-    data object PostEditorScreen : Route(route = "postEditorScreen")
     data object PostsScreen : Route(route = "postsScreen")
-    data object PostDetailedScreen : Route(route = "postDetailedScreen")
+
+    data object PostDetailedScreen : Route(route = "postDetailedScreen/{postId}") {
+        fun createRoute(postId: Int) = "postDetailedScreen/$postId"
+    }
+
+    data object PostEditorScreen : Route(route = "postEditorScreen?postId={postId}") {
+        fun createRoute(postId: Int? = null) = "postEditorScreen?postId=${postId ?: ""}"
+    }
 }

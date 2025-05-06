@@ -38,7 +38,7 @@ interface PostsApi {
 
     @GET("/api/blog/{post_id}")
     suspend fun getPostById(
-        @Path("post_id") postId: Int
+        @Path("post_id") postId: Int?
     ): Response<PostResponse>
 
     @Multipart

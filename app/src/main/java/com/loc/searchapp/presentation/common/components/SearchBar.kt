@@ -29,6 +29,7 @@ import com.loc.searchapp.presentation.Dimens.IconSize
 
 @Composable
 fun SearchBar(
+    modifier: Modifier = Modifier,
     text: String,
     readOnly: Boolean,
     onClick: (() -> Unit)? = null,
@@ -46,9 +47,9 @@ fun SearchBar(
         }
     }
 
-    Box(modifier = Modifier) {
+    Box {
         TextField(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .searchBarBorder(),
             value = text,
@@ -58,7 +59,7 @@ fun SearchBar(
                 Icon(
                     painter = painterResource(id = R.drawable.search),
                     contentDescription = null,
-                    modifier = Modifier.size(IconSize),
+                    modifier.size(IconSize),
                     tint = colorResource(id = R.color.body)
                 )
             },

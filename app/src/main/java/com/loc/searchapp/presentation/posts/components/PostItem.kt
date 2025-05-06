@@ -34,6 +34,7 @@ import com.loc.searchapp.utils.Constants.CATALOG_URL
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostItem(
+    modifier: Modifier = Modifier,
     post: Post,
     onClick: () -> Unit,
     onDeleteClick: () -> Unit
@@ -41,13 +42,13 @@ fun PostItem(
     val fullImageUrl = "$CATALOG_URL${post.imageUrl}"
 
     Card(
-        modifier = Modifier
+        modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-            modifier = Modifier
+            modifier
                 .fillMaxWidth()
                 .height(120.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -57,13 +58,13 @@ fun PostItem(
                     model = fullImageUrl,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
+                    modifier = modifier
                         .width(120.dp)
                         .fillMaxHeight()
                 )
             } else {
                 Box(
-                    modifier = Modifier
+                    modifier
                         .width(120.dp)
                         .fillMaxHeight()
                         .background(MaterialTheme.colorScheme.surfaceVariant),
@@ -78,7 +79,7 @@ fun PostItem(
             }
 
             Column(
-                modifier = Modifier
+                modifier
                     .weight(1f)
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)

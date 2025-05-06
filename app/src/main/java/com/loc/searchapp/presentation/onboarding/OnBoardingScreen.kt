@@ -30,10 +30,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnBoardingScreen(
+    modifier: Modifier = Modifier,
     event: (OnBoardingEvent) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier.fillMaxSize(),
     ) {
         val pages = listOf(
             Page(
@@ -76,10 +77,10 @@ fun OnBoardingScreen(
             OnBoardingPage(page = pages[index])
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier.weight(1f))
 
         Row(
-            modifier = Modifier
+            modifier
                 .fillMaxWidth()
                 .padding(horizontal = MediumPadding2)
                 .navigationBarsPadding(),
@@ -87,7 +88,7 @@ fun OnBoardingScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PageIndicator(
-                modifier = Modifier.width(PageIndicatorWidth),
+                modifier.width(PageIndicatorWidth),
                 pageSize = pages.size,
                 selectedPage = pagerState.currentPage
             )
@@ -118,6 +119,6 @@ fun OnBoardingScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier.weight(0.5f))
     }
 }

@@ -43,12 +43,12 @@ fun CartItemCard(
     val imageUrl = "$CATALOG_URL${cartItem.product.images}"
 
     Row(
-        modifier = modifier
+        modifier
             .clickable { onClick() }
             .fillMaxWidth()
     ) {
         AsyncImage(
-            modifier = Modifier
+            modifier = modifier
                 .size(ProductCardSize)
                 .clip(MaterialTheme.shapes.small),
             model = ImageRequest
@@ -63,7 +63,7 @@ fun CartItemCard(
 
         Column(
             verticalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
+            modifier = modifier
                 .padding(start = MediumPadding1, end = ExtraSmallPadding)
                 .height(ProductCardSize)
                 .weight(1f)
@@ -106,7 +106,7 @@ fun CartItemCard(
             )
         }
         Column(
-            modifier = Modifier
+            modifier
                 .align(Alignment.CenterVertically)
                 .padding(end = SmallPadding)
         ) {

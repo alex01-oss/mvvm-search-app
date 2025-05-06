@@ -27,23 +27,23 @@ fun OnBoardingPage(
 ) {
     Column(modifier = modifier) {
         Image(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .fillMaxHeight(fraction = 0.6f),
             painter = painterResource(id = page.image),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier.height(MediumPadding1))
         Text(
             text = page.title,
-            modifier = Modifier.padding(horizontal = MediumPadding2),
+            modifier.padding(horizontal = MediumPadding2),
             style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
             color = colorResource(id = R.color.display_small)
         )
         Text(
             text = page.description,
-            modifier = Modifier.padding(horizontal = MediumPadding2),
+            modifier.padding(horizontal = MediumPadding2),
             style = MaterialTheme.typography.bodyMedium,
             color = colorResource(id = R.color.text_medium)
         )

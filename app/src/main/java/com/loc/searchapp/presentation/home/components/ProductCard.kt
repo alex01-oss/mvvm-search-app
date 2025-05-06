@@ -46,12 +46,12 @@ fun ProductCard(
 
     val isInCart = localCartChanges[product.code] ?: product.isInCart
 
-    Row(modifier = modifier
+    Row(modifier
         .clickable { onClick() }
         .fillMaxWidth()
     ) {
         AsyncImage(
-            modifier = Modifier
+            modifier = modifier
                 .size(ProductCardSize)
                 .clip(MaterialTheme.shapes.small),
             model = ImageRequest
@@ -66,7 +66,7 @@ fun ProductCard(
 
         Column(
             verticalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
+            modifier = modifier
                 .padding(start = MediumPadding1, end = ExtraSmallPadding)
                 .height(ProductCardSize)
                 .weight(1f)
@@ -109,7 +109,7 @@ fun ProductCard(
             )
         }
         Column(
-            modifier = Modifier
+            modifier
                 .align(Alignment.CenterVertically)
                 .padding(end = SmallPadding)
         ) {

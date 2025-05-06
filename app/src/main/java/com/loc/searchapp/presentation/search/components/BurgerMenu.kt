@@ -39,6 +39,7 @@ import com.loc.searchapp.data.remote.dto.MenuResponse
 
 @Composable
 fun BurgerMenu(
+    modifier: Modifier = Modifier,
     menu: MenuResponse?,
     onOpenUrl: (String) -> Unit,
     onNavigateToSearch: (String) -> Unit,
@@ -46,7 +47,7 @@ fun BurgerMenu(
     val expandedIndex = remember { mutableStateOf<Int?>(null) }
 
     LazyColumn(
-        modifier = Modifier
+        modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
@@ -55,14 +56,14 @@ fun BurgerMenu(
                 text = stringResource(id = R.string.categories),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = modifier.padding(bottom = 16.dp)
             )
         }
 
         if (menu == null) {
             item {
                 CircularProgressIndicator(
-                    modifier = Modifier
+                    modifier
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.CenterHorizontally)
                         .padding(24.dp)
@@ -79,7 +80,7 @@ fun BurgerMenu(
                     val expanded = expandedIndex.value == index
 
                     Column(
-                        modifier = Modifier.padding(4.dp)
+                        modifier.padding(4.dp)
                     ) {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
@@ -87,10 +88,12 @@ fun BurgerMenu(
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Row(
-                                modifier = Modifier
+                                modifier
                                     .fillMaxSize()
                                     .clickable {
-                                        expandedIndex.value = if (expanded) null else index
+                                        expandedIndex.value =
+                                            if (expanded) null
+                                            else index
                                     }
                                     .padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
@@ -98,7 +101,7 @@ fun BurgerMenu(
                                 Text(
                                     text = category.title,
                                     fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.weight(1f)
+                                    modifier = modifier.weight(1f)
                                 )
                                 Icon(
                                     imageVector =
@@ -111,18 +114,18 @@ fun BurgerMenu(
 
                         AnimatedVisibility(visible = expanded) {
                             Column(
-                                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                                modifier.padding(start = 8.dp, top = 4.dp)
                             ) {
                                 category.items.forEach { group ->
                                     Text(
                                         text = group.text,
-                                        modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+                                        modifier.padding(start = 8.dp, bottom = 4.dp),
                                         fontWeight = FontWeight.SemiBold
                                     )
 
                                     group.items.forEach { item ->
                                         Row(
-                                            modifier = Modifier
+                                            modifier
                                                 .fillMaxSize()
                                                 .clickable {
                                                     when {
@@ -147,7 +150,7 @@ fun BurgerMenu(
                                             Icon(
                                                 imageVector = icon,
                                                 contentDescription = null,
-                                                modifier = Modifier.size(18.dp),
+                                                modifier.size(18.dp),
                                                 tint = when {
                                                     item.url != null -> MaterialTheme.colorScheme.error
                                                     item.searchType != null -> MaterialTheme.colorScheme.primary
@@ -155,7 +158,7 @@ fun BurgerMenu(
                                                 }
                                             )
 
-                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Spacer(modifier.width(8.dp))
 
                                             Text(
                                                 text = item.text,

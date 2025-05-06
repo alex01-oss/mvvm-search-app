@@ -37,7 +37,7 @@ class PostsRepositoryImpl(
     }
 
     override suspend fun getPostById(
-        postId: Int
+        postId: Int?
     ): Response<PostResponse> {
         return postsApi.getPostById(postId)
     }

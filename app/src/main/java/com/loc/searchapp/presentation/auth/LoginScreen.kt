@@ -39,12 +39,13 @@ import com.loc.searchapp.presentation.Dimens.TitleSize
 import com.loc.searchapp.presentation.auth.components.CustomTextField
 import com.loc.searchapp.presentation.auth.components.PasswordTextField
 import com.loc.searchapp.presentation.common.base.AuthViewModel
-import com.loc.searchapp.presentation.common.components.ErrorSurface
+import com.loc.searchapp.presentation.common.components.InlineErrorMessage
 import com.loc.searchapp.presentation.nvgraph.Route
 import com.loc.searchapp.utils.FormValidator
 
 @Composable
 fun LoginScreen(
+    modifier: Modifier = Modifier,
     viewModel: AuthViewModel,
     navController: NavController,
     onRegisterClick: () -> Unit,
@@ -74,7 +75,7 @@ fun LoginScreen(
     }
 
     Column(
-        modifier = Modifier
+        modifier
             .fillMaxSize()
             .padding(
                 top = MediumPadding1,
@@ -94,13 +95,13 @@ fun LoginScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier.height(MediumPadding1))
 
         if (authState is AuthState.Error) {
-            ErrorSurface(message = authState.message)
+            InlineErrorMessage(message = authState.message)
         }
 
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier.fillMaxWidth()) {
             CustomTextField(
                 value = email,
                 placeholder = stringResource(id = R.string.email),
@@ -117,14 +118,14 @@ fun LoginScreen(
                     text = emailError!!,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = SmallPadding, top = 4.dp)
+                    modifier = modifier.padding(start = SmallPadding, top = 4.dp)
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(SmallPadding))
+        Spacer(modifier.height(SmallPadding))
 
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier.fillMaxWidth()) {
             PasswordTextField(
                 value = password,
                 placeholder = stringResource(id = R.string.password),
@@ -143,12 +144,12 @@ fun LoginScreen(
                     text = passwordError!!,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = SmallPadding, top = 4.dp)
+                    modifier = modifier.padding(start = SmallPadding, top = 4.dp)
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier.height(MediumPadding1))
 
         Button(
             onClick = {
@@ -156,7 +157,7 @@ fun LoginScreen(
                     viewModel.onEvent(AuthEvent.LoginUser(email, password))
                 }
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier.fillMaxWidth(),
             enabled = authState !is AuthState.Loading
         ) {
             if (authState is AuthState.Loading) {
@@ -173,22 +174,22 @@ fun LoginScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier.height(MediumPadding1))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            HorizontalDivider(modifier = Modifier.weight(1f))
+            HorizontalDivider(modifier.weight(1f))
             Text(
                 text = stringResource(id = R.string.or),
-                modifier = Modifier.padding(horizontal = SmallPadding),
+                modifier.padding(horizontal = SmallPadding),
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             )
-            HorizontalDivider(modifier = Modifier.weight(1f))
+            HorizontalDivider(modifier.weight(1f))
         }
 
-        Spacer(modifier = Modifier.height(SmallPadding))
+        Spacer(modifier.height(SmallPadding))
 
         TextButton(onClick = onRegisterClick) {
             Text(

@@ -8,7 +8,7 @@ class GetPost(
     private val repository: PostsRepository
 ) {
     suspend operator fun invoke(
-        postId: Int
+        postId: Int?
     ): Response<PostResponse> {
         return repository.getPostById(postId)
     }

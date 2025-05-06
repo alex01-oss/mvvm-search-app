@@ -46,7 +46,7 @@ fun ProductCardShimmerEffect(
 ) {
     Row(modifier = modifier) {
         Box(
-            modifier = Modifier
+            modifier
                 .size(ProductCardSize)
                 .clip(MaterialTheme.shapes.medium)
                 .shimmerEffect()
@@ -54,12 +54,12 @@ fun ProductCardShimmerEffect(
 
         Column(
             verticalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
+            modifier = modifier
                 .padding(horizontal = ExtraSmallPadding)
                 .height(ProductCardSize)
         ) {
             Box(
-                modifier = Modifier
+                modifier
                     .fillMaxWidth()
                     .height(30.dp)
                     .padding(horizontal = MediumPadding1)
@@ -68,7 +68,7 @@ fun ProductCardShimmerEffect(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
-                    modifier = Modifier
+                    modifier
                         .fillMaxWidth(0.5f)
                         .height(15.dp)
                         .padding(horizontal = MediumPadding1)

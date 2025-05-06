@@ -1,6 +1,5 @@
 package com.loc.searchapp.presentation.products_navigator.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,19 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.domain.model.BottomNavItem
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.presentation.Dimens.IconSize
 
 @Composable
 fun NewsBottomNavigation(
-    items: List<BottomNavigationItem>,
+    modifier: Modifier = Modifier,
+    items: List<BottomNavItem>,
     selected: Int,
     onItemClick: (Int) -> Unit
 ) {
     NavigationBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier.fillMaxWidth(),
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
@@ -43,10 +43,10 @@ fun NewsBottomNavigation(
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = null,
-                            modifier = Modifier.size(IconSize)
+                            modifier.size(IconSize)
                         )
 
-                        Spacer(modifier = Modifier.height(ExtraSmallPadding2))
+                        Spacer(modifier.height(ExtraSmallPadding2))
 
                         Text(
                             text = item.text,
@@ -61,13 +61,7 @@ fun NewsBottomNavigation(
                     unselectedTextColor = colorResource(id = R.color.body),
                     indicatorColor = Color.Transparent
                 )
-
             )
         }
     }
 }
-
-data class BottomNavigationItem(
-    @DrawableRes val icon: Int,
-    val text: String
-)

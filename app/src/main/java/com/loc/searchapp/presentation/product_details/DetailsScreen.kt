@@ -26,30 +26,31 @@ import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.Dimens.ArticleImageHeight
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.product_details.components.DetailsTopBar
+import com.loc.searchapp.presentation.product_details.components.ProductInfoTopBar
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
 fun DetailsScreen(
+    modifier: Modifier = Modifier,
     product: Product,
     event: (DetailsEvent) -> Unit,
-    navigateUp: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val imageUrl = "$CATALOG_URL${product.images}"
 
     Column(
-        modifier = Modifier
+        modifier
             .fillMaxSize()
             .statusBarsPadding()
     ) {
-        DetailsTopBar(
+        ProductInfoTopBar(
             onToggleCart = { event(DetailsEvent.UpsertDeleteProduct(product)) },
-            onBackClick = navigateUp
+            onBackClick = onBackClick
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier.fillMaxWidth(),
             contentPadding = PaddingValues(
                 top = MediumPadding1,
                 start = MediumPadding1,
@@ -63,14 +64,14 @@ fun DetailsScreen(
                         .data(imageUrl)
                         .build(),
                     contentDescription = null,
-                    modifier = Modifier
+                    modifier
                         .fillMaxWidth()
                         .height(ArticleImageHeight)
                         .clip(MaterialTheme.shapes.medium),
                     contentScale = ContentScale.Fit
                 )
 
-                Spacer(modifier = Modifier.height(MediumPadding1))
+                Spacer(modifier.height(MediumPadding1))
 
                 Text(
                     text = stringResource(id = R.string.detailed),

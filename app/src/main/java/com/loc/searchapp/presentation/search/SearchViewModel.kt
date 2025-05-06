@@ -1,20 +1,15 @@
 package com.loc.searchapp.presentation.search
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.loc.searchapp.data.remote.dto.MenuResponse
 import com.loc.searchapp.data.local.preferences.UserPreferences
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
@@ -31,12 +26,6 @@ class SearchViewModel @Inject constructor(
 
     private val _state = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
-
-    var isLoading by mutableStateOf(false)
-    var error by mutableStateOf<String?>(null)
-
-    private val _menu = MutableStateFlow<MenuResponse?>(null)
-    val menu: StateFlow<MenuResponse?> = _menu.asStateFlow()
 
     private var lastSearchParams: Triple<String, String, Int>? = null
     private val _searchFlow = MutableStateFlow<Triple<String, String, Int>?>(null)
@@ -57,12 +46,6 @@ class SearchViewModel @Inject constructor(
                 )
             }
         }.cachedIn(viewModelScope)
-
-    fun onSearchOpened() {
-        if(_menu.value == null) {
-            fetchMenu()
-        }
-    }
 
     fun onEvent(event: SearchEvent) {
         viewModelScope.launch {
@@ -104,21 +87,6 @@ class SearchViewModel @Inject constructor(
                         placeholder = placeholder
                     )
                 }
-            }
-        }
-    }
-
-    private fun fetchMenu() {
-        viewModelScope.launch {
-            isLoading = true
-            try {
-                val result = catalogUseCases.getMenu()
-                _menu.value = result
-                error = null
-            } catch (e: Exception) {
-                error = e.localizedMessage
-            } finally {
-                isLoading = false
             }
         }
     }

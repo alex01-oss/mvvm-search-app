@@ -3,13 +3,10 @@
     <string name="app_name">Search App</string>
 
     <!--    account screen-->
-    <string name="cart_count">Кошик: порожньо</string>
-
     <string name="settings">Налаштування</string>
     <string name="change_password">Змінити пароль</string>
     <string name="change_language">Змінити мову</string>
     <string name="help">Допомога</string>
-
     <string name="logout">Вихід</string>
 
     <!--    login screen-->
@@ -42,8 +39,9 @@
     <!--    details screen-->
     <string name="detailed">Детально:</string>
 
-    <!--    search bar-->
+    <!--    search screen-->
     <string name="search_placeholder">Пошук…</string>
+    <string name="categories">Категорії</string>
 
     <!--    products list-->
     <string name="must_login">Щоб додати товар до кошика, потрібно увійти в акаунт.</string>
@@ -75,15 +73,45 @@
     <string name="cart">Кошик</string>
     <string name="account">Акаунт</string>
 
-    <!--    search-->
-    <string name="categories">Категорії</string>
-
     <!--    settings-->
     <string name="select_language">"Оберіть мову: "</string>
+
+    <!--    language-->
     <string name="system_language">Системна мова</string>
     <string name="language_settings">Налаштування мови</string>
     <string name="restart_app_message">Натисніть OK, щоб застосувати мову</string>
+
+    <!--    buttons-->
     <string name="yes">Так</string>
     <string name="cancel">Скасувати</string>
-    <string name="addpost">Add post</string>
+    <string name="ok">OK</string>
+    <string name="delete">Видалити</string>
+
+    <!--    news screen -->
+    <string name="add_post">Додати новину</string>
+    <string name="empty_news">Новин поки немає</string>
+    <string name="create_post">Створення новини</string>
+    <string name="edit_post">Редагування новини</string>
+    <string name="add_post_warn">Немає новин. Натисніть +, щоб додати першу новину.</string>
+    <string name="delete_post">Видалити новину?</string>
+    <string name="delete_post_dialog">Ви впевнені, що хочете видалити цю новину? Цю дію неможливо скасувати.</string>
+
+    <!--    detailed post screen-->
+    <string name="post_info">Інформація про публікацію</string>
+
+    <!--    home screen-->
+    <string name="main_text">З 1966 року ПрАТ «ПОЛТАВСЬКИЙ АЛМАЗНИЙ ІНСТРУМЕНТ» продовжує традиції якості та інновацій у виробництві алмазного та CBN інструменту. Наша компанія пройшла шлях від розробника перших алмазних порошків у СРСР до сучасного підприємства, що виготовляє складні рішення для промисловості по всьому світу.</string>
+
+    <!--    catalog screen-->
+    <string name="catalog">Catalog</string>
+
+    <!--    edit post screen-->
+    <string name="image_error">Помилка при обробці зображення: %1$s</string>
+    <string name="title_error">Заголовок не може бути порожнім</string>
+    <string name="upload_error">Не вдалося завантажити зображення</string>
+    <string name="title">Заголовок</string>
+    <string name="image">Зображення</string>
+    <string name="pick_image">Вибрати зображення</string>
+    <string name="delete_image">Видалити зображення</string>
+    <string name="preview">Попередній перегляд</string>
 </resources>

@@ -20,15 +20,15 @@ import com.loc.searchapp.R
 
 @Composable
 fun Avatar(
+    modifier: Modifier = Modifier,
     firstName: String?,
     lastName: String?,
-    modifier: Modifier = Modifier,
     size: Dp = 40.dp,
     textStyle: TextStyle = MaterialTheme.typography.labelMedium,
     placeholder: @Composable (() -> Unit)? = null
 ) {
     Box(
-        modifier = modifier
+        modifier
             .size(size)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary),

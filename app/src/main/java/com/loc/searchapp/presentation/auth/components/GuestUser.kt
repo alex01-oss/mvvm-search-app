@@ -18,6 +18,7 @@ import com.loc.searchapp.presentation.common.components.Avatar
 
 @Composable
 fun GuestUser(
+    modifier: Modifier = Modifier,
     onAuthClick: () -> Unit
 ) {
     Avatar(
@@ -27,15 +28,15 @@ fun GuestUser(
         textStyle = MaterialTheme.typography.labelLarge,
     )
 
-    Spacer(modifier = Modifier.height(MediumPadding1))
+    Spacer(modifier.height(MediumPadding1))
 
     Text(text = stringResource(id = R.string.must_login))
 
-    Spacer(modifier = Modifier.height(MediumPadding1))
+    Spacer(modifier.height(MediumPadding1))
 
     Button(
         onClick = onAuthClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary
         )

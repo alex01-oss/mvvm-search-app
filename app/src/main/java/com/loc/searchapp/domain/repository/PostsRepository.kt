@@ -7,7 +7,6 @@ import com.loc.searchapp.data.remote.dto.ImageUploadResponse
 import com.loc.searchapp.data.remote.dto.PostResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
-import java.io.File
 
 interface PostsRepository {
     suspend fun createPost(
@@ -26,7 +25,7 @@ interface PostsRepository {
     suspend fun getAllPosts(): Response<List<PostResponse>>
 
     suspend fun getPostById(
-        postId: Int
+        postId: Int?
     ): Response<PostResponse>
 
     suspend fun uploadImage(

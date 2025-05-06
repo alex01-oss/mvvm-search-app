@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -16,48 +17,54 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
+import com.loc.searchapp.domain.model.BottomNavItem
+import com.loc.searchapp.domain.model.Post
 import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.account.AccountScreen
 import com.loc.searchapp.presentation.auth.LoginScreen
 import com.loc.searchapp.presentation.auth.RegisterScreen
-import com.loc.searchapp.presentation.posts.PostDetailedScreen
-import com.loc.searchapp.presentation.posts.PostEditorScreen
-import com.loc.searchapp.presentation.posts.PostViewModel
-import com.loc.searchapp.presentation.posts.PostsScreen
 import com.loc.searchapp.presentation.cart.CartScreen
+import com.loc.searchapp.presentation.catalog.CatalogScreen
 import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.common.base.ProductViewModel
 import com.loc.searchapp.presentation.home.HomeScreen
 import com.loc.searchapp.presentation.home.HomeViewModel
 import com.loc.searchapp.presentation.language.LanguageScreen
 import com.loc.searchapp.presentation.nvgraph.Route
+import com.loc.searchapp.presentation.posts.PostDetailedScreen
+import com.loc.searchapp.presentation.posts.PostEditorScreen
+import com.loc.searchapp.presentation.posts.PostViewModel
+import com.loc.searchapp.presentation.posts.PostsScreen
 import com.loc.searchapp.presentation.product_details.DetailsEvent
 import com.loc.searchapp.presentation.product_details.DetailsScreen
 import com.loc.searchapp.presentation.product_details.DetailsViewModel
-import com.loc.searchapp.presentation.products_navigator.components.BottomNavigationItem
 import com.loc.searchapp.presentation.products_navigator.components.NewsBottomNavigation
 import com.loc.searchapp.presentation.search.SearchScreen
 import com.loc.searchapp.presentation.search.SearchViewModel
 
 @Composable
-fun ProductsNavigator() {
+fun ProductsNavigator(
+    modifier: Modifier = Modifier,
+) {
     val bottomNavigationItems = listOf(
-        BottomNavigationItem(
+        BottomNavItem(
             icon = R.drawable.home, text = stringResource(id = R.string.home)
         ),
-        BottomNavigationItem(
+        BottomNavItem(
             icon = R.drawable.search, text = stringResource(id = R.string.search)
         ),
-        BottomNavigationItem(
+        BottomNavItem(
             icon = R.drawable.shopping_cart, text = stringResource(id = R.string.cart)
         ),
-        BottomNavigationItem(
+        BottomNavItem(
             icon = R.drawable.person, text = stringResource(id = R.string.account)
         ),
     )
@@ -90,7 +97,7 @@ fun ProductsNavigator() {
     val postViewModel: PostViewModel = hiltViewModel()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(), bottomBar = {
+        modifier.fillMaxSize(), bottomBar = {
             if (isBottomBarVisible) {
                 NewsBottomNavigation(
                     items = bottomNavigationItems,
@@ -121,27 +128,52 @@ fun ProductsNavigator() {
         NavHost(
             navController = navController,
             startDestination = Route.HomeScreen.route,
-            modifier = Modifier.padding(bottom = bottomPadding)
+            modifier.padding(bottom = bottomPadding)
         ) {
             composable(route = Route.HomeScreen.route) {
+                HomeScreen(
+                    authViewModel = authViewModel,
+                    postViewModel = postViewModel,
+                    viewModel = homeViewModel,
+                    onCategoryClick = {
+                        navController.navigate(
+                            Route.CatalogScreen.route
+                        )
+                    },
+                    onPostClick = { post ->
+                        navController.navigate(
+                            Route.PostDetailedScreen.createRoute(post.id)
+                        )
+                    },
+                )
+            }
+
+            composable(route = Route.CatalogScreen.route) {
                 val products = homeViewModel.catalogFlow.collectAsLazyPagingItems()
 
-                HomeScreen(
+                CatalogScreen(
                     navigateToSearch = {
                         navigateToTab(
-                            navController = navController, route = Route.SearchScreen.route
+                            navController = navController,
+                            route = Route.SearchScreen.route
                         )
                     },
                     navigateToDetails = { product ->
                         navigateToDetails(
-                            navController = navController, product = product
+                            navController = navController,
+                            product = product
                         )
                     },
                     products = products,
                     authViewModel = authViewModel,
                     productViewModel = productViewModel,
                     onAuthClick = {
-                        navController.navigate(Route.LoginScreen.route)
+                        navController.navigate(
+                            Route.LoginScreen.route
+                        )
+                    },
+                    onBackClick = {
+                        navController.popBackStack()
                     },
                 )
             }
@@ -150,11 +182,15 @@ fun ProductsNavigator() {
                 val state = searchViewModel.state.value
 
                 SearchScreen(
-                    state = state, event = searchViewModel::onEvent, navigateToDetails = {
+                    state = state, event = searchViewModel::onEvent,
+                    navigateToDetails = {
                         navigateToDetails(
                             navController = navController, product = it
                         )
-                    }, viewModel = searchViewModel, productViewModel = productViewModel
+                    },
+                    viewModel = searchViewModel,
+                    productViewModel = productViewModel,
+                    homeViewModel = homeViewModel,
                 )
             }
 
@@ -206,7 +242,7 @@ fun ProductsNavigator() {
                     ?.let { product ->
                         DetailsScreen(
                             event = detailsViewModel::onEvent,
-                            navigateUp = { navController.navigateUp() },
+                            onBackClick = { navController.navigateUp() },
                             product = product,
                         )
                     }
@@ -230,16 +266,7 @@ fun ProductsNavigator() {
 
             composable(route = Route.LanguageScreen.route) {
                 LanguageScreen(
-                    navigateUp = {
-                        navController.popBackStack()
-                    })
-            }
-
-            composable(route = Route.PostEditorScreen.route) {
-                PostEditorScreen(
-                    post = null,
-                    viewModel = postViewModel,
-                    onFinish = {
+                    onBackClick = {
                         navController.popBackStack()
                     },
                 )
@@ -249,31 +276,75 @@ fun ProductsNavigator() {
                 val posts by postViewModel.posts.collectAsState()
 
                 PostsScreen(
-                    onPostClick = {
+                    posts = posts,
+                    viewModel = postViewModel,
+                    onPostClick = { post ->
                         navController.navigate(
-                            Route.PostDetailedScreen.route
+                            Route.PostDetailedScreen.createRoute(post.id)
                         )
                     },
-                    posts = posts,
                     onBackClick = {
                         navController.popBackStack()
                     },
                     onAddNewPost = {
                         navController.navigate(
-                            Route.PostEditorScreen.route
+                            Route.PostEditorScreen.createRoute()
                         )
-                    },
-                    onDeleteClick = { },
+                    }
                 )
             }
 
-            composable(route = Route.PostDetailedScreen.route) {
-                PostDetailedScreen(
-                    onEditClick = {
-                        navController.navigate(
-                            Route.PostEditorScreen.route
-                        )
-                    })
+            composable(
+                route = Route.PostDetailedScreen.route,
+                arguments = listOf(
+                    navArgument("postId") { type = NavType.IntType }
+                )
+            ) { backStackEntry ->
+                val postId = backStackEntry.arguments?.getInt("postId") ?: -1
+
+                val post by produceState<Post?>(initialValue = null, postId) {
+                    value = if (postId != -1) postViewModel.getPostById(postId) else null
+                }
+
+                post?.let { post ->
+                    PostDetailedScreen(
+                        post = post,
+                        onEditClick = {
+                            navController.navigate(
+                                Route.PostEditorScreen.createRoute(post.id)
+                            )
+                        },
+                        onBackClick = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+
+            composable(
+                route = Route.PostEditorScreen.route,
+                arguments = listOf(navArgument("postId") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                })
+            ) { backStackEntry ->
+                val postId = backStackEntry.arguments?.getInt("postId")?.takeIf { it != -1 }
+
+                val post by produceState<Post?>(initialValue = null, postId) {
+                    value = postId?.let { postViewModel.getPostById(it) }
+                }
+
+                PostEditorScreen(
+                    post = post,
+                    viewModel = postViewModel,
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onFinish = {
+                        navController.navigate(Route.PostsScreen.route)
+                    }
+
+                )
             }
         }
     }

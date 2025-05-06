@@ -106,9 +106,12 @@ dependencies {
     implementation('androidx.paging:paging-runtime-ktx:3.3.6')
     implementation('androidx.paging:paging-compose:3.3.6')
 
-    //Icons
+    // Icons
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
-    //Rich Text Editor
+    // Rich Text Editor
     implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc12")
+
+    // youtube player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
 }

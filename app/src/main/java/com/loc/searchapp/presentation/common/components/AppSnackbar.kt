@@ -55,7 +55,7 @@ fun AppSnackbar(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier.padding(end = 8.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(data.visuals.message)

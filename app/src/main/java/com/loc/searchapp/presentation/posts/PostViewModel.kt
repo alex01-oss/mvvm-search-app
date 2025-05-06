@@ -26,11 +26,7 @@ class PostViewModel @Inject constructor(
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
     val posts: StateFlow<List<Post>> = _posts.asStateFlow()
 
-    init {
-        loadPosts()
-    }
-
-    private fun loadPosts() {
+    suspend fun loadPosts() {
         viewModelScope.launch {
             val response = postsUseCases.getAllPosts()
 
@@ -46,18 +42,18 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun prepareFilePart(partName: String, file: File): MultipartBody.Part {
+    suspend fun prepareFilePart(partName: String, file: File): MultipartBody.Part {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
 
-    fun uploadImage(file: File, onResult: (ImageUploadResponse?) -> Unit) {
+    suspend fun uploadImage(file: File, onResult: (ImageUploadResponse?) -> Unit) {
         viewModelScope.launch {
             val imagePart = prepareFilePart("file", file)
 
             val response = postsUseCases.uploadImage(imagePart)
 
-            if(response.isSuccessful) {
+            if (response.isSuccessful) {
                 onResult(response.body())
             } else {
                 onResult(null)
@@ -65,7 +61,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun createPost(title: String, content: String, imageUrl: String?) {
+    suspend fun createPost(title: String, content: String, imageUrl: String?) {
         viewModelScope.launch {
             val request = CreatePostRequest(title, content, imageUrl)
             postsUseCases.createPost(request)
@@ -73,7 +69,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun editPost(postId: Int, title: String, content: String, imageUrl: String?) {
+    suspend fun editPost(postId: Int, title: String, content: String, imageUrl: String?) {
         viewModelScope.launch {
             val request = EditPostRequest(title, content, imageUrl)
             postsUseCases.editPost(postId, request)
@@ -81,14 +77,19 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun deletePost(postId: Int) {
+    suspend fun deletePost(postId: Int) {
         viewModelScope.launch {
             postsUseCases.deletePost(postId)
             loadPosts()
         }
     }
 
-    fun PostResponse.toDomain(): Post {
+    suspend fun getPostById(postId: Int?): Post? {
+        val response = postsUseCases.getPost(postId)
+        return if (response.isSuccessful) response.body()?.toDomain() else null
+    }
+
+    suspend fun PostResponse.toDomain(): Post {
         return Post(
             id = this.id,
             title = this.title,

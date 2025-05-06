@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
+@Parcelize
 data class CartItem(
     val product: Product,
     val quantity: Int?,

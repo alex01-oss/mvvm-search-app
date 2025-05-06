@@ -12,13 +12,13 @@ data class CreatePostRequest(
 
 @Serializable
 data class PostResponse(
-    val id: String,
+    val id: Int,
     val title: String,
     val content: String,
     val image: String? = null,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String,
-    @SerialName("user_id") val userId: String
+    @SerialName("user_id") val userId: Int
 )
 
 @Serializable
