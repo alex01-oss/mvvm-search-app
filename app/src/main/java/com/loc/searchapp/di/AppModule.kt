@@ -5,14 +5,14 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.loc.searchapp.data.remote.interceptor.AuthInterceptor
-import com.loc.searchapp.data.remote.interceptor.TokenRefreshInterceptor
 import com.loc.searchapp.data.local.manager.LocalUserManagerImpl
-import com.loc.searchapp.data.remote.api.AuthApi
-import com.loc.searchapp.data.remote.api.CatalogApi
 import com.loc.searchapp.data.local.preferences.UserPreferences
 import com.loc.searchapp.data.local.preferences.dataStore
+import com.loc.searchapp.data.remote.api.AuthApi
+import com.loc.searchapp.data.remote.api.CatalogApi
 import com.loc.searchapp.data.remote.api.PostsApi
+import com.loc.searchapp.data.remote.authenticator.TokenAuthenticator
+import com.loc.searchapp.data.remote.interceptor.AuthInterceptor
 import com.loc.searchapp.data.repository.AuthRepositoryImpl
 import com.loc.searchapp.data.repository.CatalogRepositoryImpl
 import com.loc.searchapp.data.repository.PostsRepositoryImpl
@@ -49,14 +49,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
 import okhttp3.ConnectionSpec
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 
 
 @Module
@@ -72,13 +73,24 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
+
+    @Provides
+    @Singleton
     @Named("authClient")
-    fun provideAuthOkHttpClient(): OkHttpClient {
+    fun provideAuthOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
@@ -101,17 +113,43 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideAuthRepository(
+        authApi: AuthApi,
+    ): AuthRepository = AuthRepositoryImpl(authApi)
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(
+        userPreferences: UserPreferences
+    ): AuthInterceptor {
+        return AuthInterceptor(userPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(
+        userPreferences: UserPreferences,
+        authApi: AuthApi
+    ): TokenAuthenticator {
+        return TokenAuthenticator(userPreferences, authApi)
+    }
+
+    @Provides
+    @Singleton
+    @Named("mainClient")
     fun provideMainOkHttpClient(
         authInterceptor: AuthInterceptor,
-        tokenRefreshInterceptor: TokenRefreshInterceptor
+        tokenAuthenticator: TokenAuthenticator,
+        loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
-            .writeTimeout(120, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
+            .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
-            .addInterceptor(tokenRefreshInterceptor)
+            .authenticator(tokenAuthenticator)
             .connectionSpecs(
                 listOf(
                     ConnectionSpec.MODERN_TLS,
@@ -124,13 +162,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCatalogApi(okHttpClient: OkHttpClient): CatalogApi {
+    @Named("mainRetrofit")
+    fun provideMainRetrofit(@Named("mainClient") okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(CATALOG_URL)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
-            .create(CatalogApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCatalogApi(@Named("mainRetrofit") retrofit: Retrofit): CatalogApi {
+        return retrofit.create(CatalogApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostsApi(@Named("mainRetrofit") retrofit: Retrofit): PostsApi {
+        return retrofit.create(PostsApi::class.java)
     }
 
     @Provides
@@ -156,12 +206,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        authApi: AuthApi
-    ): AuthRepository = AuthRepositoryImpl(authApi)
-
-    @Provides
-    @Singleton
     fun provideAuthUseCases(
         authRepository: AuthRepository
     ): AuthUseCases {
@@ -172,17 +216,6 @@ object AppModule {
             logoutUser = LogoutUser(authRepository),
             getUser = GetUser(authRepository)
         )
-    }
-
-    @Provides
-    @Singleton
-    fun providePostsApi(okHttpClient: OkHttpClient): PostsApi {
-        return Retrofit.Builder()
-            .baseUrl(CATALOG_URL)
-            .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-            .create(PostsApi::class.java)
     }
 
     @Provides

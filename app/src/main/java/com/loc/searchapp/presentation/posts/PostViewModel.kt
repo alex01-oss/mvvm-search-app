@@ -26,7 +26,11 @@ class PostViewModel @Inject constructor(
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
     val posts: StateFlow<List<Post>> = _posts.asStateFlow()
 
-    suspend fun loadPosts() {
+    init {
+        loadPosts()
+    }
+
+    fun loadPosts() {
         viewModelScope.launch {
             val response = postsUseCases.getAllPosts()
 
@@ -42,12 +46,12 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    suspend fun prepareFilePart(partName: String, file: File): MultipartBody.Part {
+    fun prepareFilePart(partName: String, file: File): MultipartBody.Part {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
 
-    suspend fun uploadImage(file: File, onResult: (ImageUploadResponse?) -> Unit) {
+    fun uploadImage(file: File, onResult: (ImageUploadResponse?) -> Unit) {
         viewModelScope.launch {
             val imagePart = prepareFilePart("file", file)
 
@@ -61,7 +65,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    suspend fun createPost(title: String, content: String, imageUrl: String?) {
+    fun createPost(title: String, content: String, imageUrl: String?) {
         viewModelScope.launch {
             val request = CreatePostRequest(title, content, imageUrl)
             postsUseCases.createPost(request)
@@ -69,7 +73,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    suspend fun editPost(postId: Int, title: String, content: String, imageUrl: String?) {
+    fun editPost(postId: Int, title: String, content: String, imageUrl: String?) {
         viewModelScope.launch {
             val request = EditPostRequest(title, content, imageUrl)
             postsUseCases.editPost(postId, request)
@@ -77,7 +81,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    suspend fun deletePost(postId: Int) {
+    fun deletePost(postId: Int) {
         viewModelScope.launch {
             postsUseCases.deletePost(postId)
             loadPosts()
@@ -89,7 +93,7 @@ class PostViewModel @Inject constructor(
         return if (response.isSuccessful) response.body()?.toDomain() else null
     }
 
-    suspend fun PostResponse.toDomain(): Post {
+    fun PostResponse.toDomain(): Post {
         return Post(
             id = this.id,
             title = this.title,

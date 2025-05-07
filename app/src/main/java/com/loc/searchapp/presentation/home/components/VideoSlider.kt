@@ -35,11 +35,7 @@ fun YouTubeVideoSlider(
     val coroutineScope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    Box(
-        modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
+    Box(modifier.fillMaxWidth()) {
         HorizontalPager(
             state = pagerState,
             modifier
