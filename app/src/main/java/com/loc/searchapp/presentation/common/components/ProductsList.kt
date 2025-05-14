@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
-import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.home.components.ProductCard
 
@@ -56,7 +56,7 @@ fun ProductsList(
             LazyColumn(
                 modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(MediumPadding1),
-                contentPadding = PaddingValues(all = ExtraSmallPadding2)
+                contentPadding = PaddingValues(top = MediumPadding1)
             ) {
                 items(items.itemCount) { index ->
                     val product = items[index]
@@ -78,7 +78,8 @@ fun ProductsList(
                                 modifier
                                     .fillMaxWidth()
                                     .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(24.dp)
+                                    .padding(24.dp),
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }

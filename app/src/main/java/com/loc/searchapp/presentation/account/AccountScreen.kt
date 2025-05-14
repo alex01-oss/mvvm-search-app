@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,9 +26,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.AvatarHeight
+import com.loc.searchapp.presentation.Dimens.IconSize
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.SmallPadding
 import com.loc.searchapp.presentation.account.components.AccountOption
@@ -51,13 +55,15 @@ fun AccountScreen(
     val authState = viewModel.authState.collectAsState().value
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             SharedTopBar(
                 title = stringResource(id = R.string.account),
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null
+                        painter = painterResource(id = R.drawable.person),
+                        contentDescription = null,
+                        modifier.size(IconSize)
                     )
                 }
             )
@@ -66,23 +72,21 @@ fun AccountScreen(
         Column(
             modifier
                 .fillMaxSize()
-                .padding(top = MediumPadding1)
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    start = MediumPadding1,
-                    end = MediumPadding1
-                ),
+                .padding(top = paddingValues.calculateTopPadding() + MediumPadding1)
+                .padding(horizontal = MediumPadding1),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (authState) {
                 is AuthState.Authenticated -> {
                     val user = authState.user
 
+                    Spacer(modifier = Modifier.height(MediumPadding1))
+
                     Avatar(
                         firstName = user?.username?.substringBefore(" ").toString(),
                         lastName = user?.username?.substringAfter(" ").toString(),
                         size = AvatarHeight,
-                        textStyle = MaterialTheme.typography.labelLarge
+                        textStyle = MaterialTheme.typography.titleLarge
                     )
 
                     Spacer(modifier.height(SmallPadding))
@@ -122,7 +126,7 @@ fun AccountScreen(
                         )
                     }
 
-                    Spacer(modifier.weight(1f))
+                    Spacer(modifier.height(MediumPadding1))
 
                     Button(
                         onClick = {
@@ -132,7 +136,8 @@ fun AccountScreen(
                         modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
-                        )
+                        ),
+                        shape = RoundedCornerShape(16.dp),
                     ) {
                         Text(
                             text = stringResource(id = R.string.logout),

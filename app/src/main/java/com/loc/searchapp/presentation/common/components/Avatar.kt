@@ -1,7 +1,7 @@
 package com.loc.searchapp.presentation.common.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -24,14 +24,18 @@ fun Avatar(
     firstName: String?,
     lastName: String?,
     size: Dp = 40.dp,
-    textStyle: TextStyle = MaterialTheme.typography.labelMedium,
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     placeholder: @Composable (() -> Unit)? = null
 ) {
     Box(
         modifier
             .size(size)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primary),
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onBackground,
+                shape = CircleShape
+            ),
         contentAlignment = Alignment.Center
     ) {
         val hasName = !firstName.isNullOrBlank() && !lastName.isNullOrBlank()
@@ -47,9 +51,16 @@ fun Avatar(
 
 @Composable
 fun DefaultPlaceholder(size: Dp) {
-    Image(
-        painter = painterResource(id = R.drawable.avatar),
-        contentDescription = null,
-        modifier = Modifier.size(size).clip(CircleShape)
-    )
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clip(CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.person),
+            contentDescription = null,
+            modifier = Modifier.size(size * 0.55f)
+        )
+    }
 }

@@ -19,13 +19,14 @@ fun YouTubeVideoPlayer(videoId: String, lifecycleOwner: LifecycleOwner) {
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
-            .clip(RoundedCornerShape(16.dp)),
+            .clip(RoundedCornerShape(4.dp)),
         factory = { context ->
             YouTubePlayerView(context).apply {
                 lifecycleOwner.lifecycle.addObserver(this)
 
                 addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(player: YouTubePlayer) {
+                        player.mute()
                         player.loadVideo(videoId, 0f)
                     }
                 })

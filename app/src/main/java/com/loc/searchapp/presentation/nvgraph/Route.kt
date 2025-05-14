@@ -10,7 +10,9 @@ sealed class Route(
     data object CartScreen : Route(route = "cartScreen")
     data object AccountScreen : Route(route = "accountScreen")
 
-    data object ProductDetailsScreen : Route(route = "catalogDetailsScreen")
+    data object ProductDetailsScreen : Route(route = "catalogDetailsScreen/{code}") {
+        fun createRoute(code: String) = "catalogDetailsScreen/$code"
+    }
 
     data object AppStartNavigation : Route(route = "appStartNavigation")
     data object ProductsNavigation : Route(route = "productsNavigation")

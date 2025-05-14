@@ -50,6 +50,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun clearError() {
+        _authState.value = AuthState.Unauthenticated
+    }
+
     fun onEvent(event: AuthEvent) {
         when (event) {
             is AuthEvent.LoginUser -> {

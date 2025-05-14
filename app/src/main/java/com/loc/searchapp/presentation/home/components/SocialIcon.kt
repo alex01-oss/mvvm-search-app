@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -16,7 +17,7 @@ import androidx.core.net.toUri
 @Composable
 fun SocialIcon(
     @DrawableRes iconRes: Int,
-    link: String
+    link: String,
 ) {
     val context = LocalContext.current
     IconButton(
@@ -30,7 +31,8 @@ fun SocialIcon(
             contentDescription = null,
             modifier = Modifier
                 .padding(8.dp)
-                .size(32.dp)
+                .size(32.dp),
+            tint = MaterialTheme.colorScheme.onBackground
         )
     }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,11 +34,11 @@ fun SearchTopSection(
     onBurgerClick: () -> Unit
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Surface(
-            modifier
+            modifier = Modifier
                 .size(56.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .burgerButtonBorder(),
@@ -57,9 +56,10 @@ fun SearchTopSection(
             }
         }
 
-        Spacer(modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         SearchBar(
+            modifier = Modifier.weight(1f),
             text = searchQuery,
             placeholder = placeholder,
             readOnly = false,

@@ -2,6 +2,7 @@ package com.loc.searchapp.data.remote.api
 
 import com.loc.searchapp.data.remote.dto.CartResponse
 import com.loc.searchapp.data.remote.dto.CatalogDto
+import com.loc.searchapp.data.remote.dto.CatalogItemDetailedResponse
 import com.loc.searchapp.data.remote.dto.ItemCartRequest
 import com.loc.searchapp.data.remote.dto.ItemCartResponse
 import com.loc.searchapp.data.remote.dto.MenuResponse
@@ -11,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CatalogApi {
@@ -21,6 +23,11 @@ interface CatalogApi {
         @Query("page") page: Int = 1,
         @Header("Authorization") token: String? = null
     ): Response<CatalogDto>
+
+    @GET("api/catalog/{code}")
+    suspend fun getCatalogItem(
+        @Path("code") code: String
+    ): CatalogItemDetailedResponse
 
     @GET("api/menu")
     suspend fun getMenu(): MenuResponse

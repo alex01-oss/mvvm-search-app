@@ -2,6 +2,7 @@ package com.loc.searchapp.domain.repository
 
 import com.loc.searchapp.data.remote.dto.CartResponse
 import com.loc.searchapp.data.remote.dto.CatalogDto
+import com.loc.searchapp.data.remote.dto.CatalogItemDetailedResponse
 import com.loc.searchapp.data.remote.dto.ItemCartResponse
 import com.loc.searchapp.data.remote.dto.MenuResponse
 import com.loc.searchapp.domain.model.Product
@@ -13,6 +14,10 @@ interface CatalogRepository {
         page: Int = 1,
         token: String?
     ): CatalogDto
+
+    suspend fun getCatalogItem(
+        code: String
+    ): CatalogItemDetailedResponse
 
     suspend fun getCart(
         token: String,

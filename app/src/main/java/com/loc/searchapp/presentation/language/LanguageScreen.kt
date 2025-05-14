@@ -61,7 +61,8 @@ fun LanguageScreen(
         Text(
             text = stringResource(id = R.string.select_language),
             style = MaterialTheme.typography.labelLarge,
-            modifier = modifier.padding(horizontal = MediumPadding1)
+            modifier = modifier.padding(horizontal = MediumPadding1),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier.height(16.dp))

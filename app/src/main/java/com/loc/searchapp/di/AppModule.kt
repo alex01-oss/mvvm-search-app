@@ -33,6 +33,7 @@ import com.loc.searchapp.domain.usecases.catalog.AddProduct
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.domain.usecases.catalog.DeleteProduct
 import com.loc.searchapp.domain.usecases.catalog.GetCart
+import com.loc.searchapp.domain.usecases.catalog.GetCatalogItem
 import com.loc.searchapp.domain.usecases.catalog.GetCatalogPaging
 import com.loc.searchapp.domain.usecases.catalog.GetMenu
 import com.loc.searchapp.domain.usecases.catalog.SelectProduct
@@ -81,57 +82,56 @@ object AppModule {
 
     @Provides
     @Singleton
-    @Named("authClient")
-    fun provideAuthOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient {
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.dataStore
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferences(dataStore: DataStore<Preferences>): UserPreferences {
+        return UserPreferences(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(userPreferences: UserPreferences): AuthInterceptor {
+        return AuthInterceptor(userPreferences)
+    }
+
+    @Provides
+    @Singleton
+    @Named("refreshClient")
+    fun provideRefreshOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
             .addInterceptor(loggingInterceptor)
             .build()
     }
 
     @Provides
     @Singleton
-    @Named("authRetrofit")
-    fun provideAuthRetrofit(@Named("authClient") okHttpClient: OkHttpClient): Retrofit {
+    @Named("refreshRetrofit")
+    fun provideRefreshRetrofit(@Named("refreshClient") client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(CATALOG_URL)
-            .client(okHttpClient)
+            .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideAuthApi(@Named("authRetrofit") retrofit: Retrofit): AuthApi {
+    @Named("refreshAuthApi")
+    fun provideRefreshAuthApi(@Named("refreshRetrofit") retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthRepository(
-        authApi: AuthApi,
-    ): AuthRepository = AuthRepositoryImpl(authApi)
-
-    @Provides
-    @Singleton
-    fun provideAuthInterceptor(
-        userPreferences: UserPreferences
-    ): AuthInterceptor {
-        return AuthInterceptor(userPreferences)
     }
 
     @Provides
     @Singleton
     fun provideTokenAuthenticator(
         userPreferences: UserPreferences,
-        authApi: AuthApi
+        @Named("refreshAuthApi") refreshAuthApi: AuthApi
     ): TokenAuthenticator {
-        return TokenAuthenticator(userPreferences, authApi)
+        return TokenAuthenticator(userPreferences, refreshAuthApi)
     }
 
     @Provides
@@ -173,6 +173,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideAuthApi(@Named("mainRetrofit") retrofit: Retrofit): AuthApi {
+        return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideCatalogApi(@Named("mainRetrofit") retrofit: Retrofit): CatalogApi {
         return retrofit.create(CatalogApi::class.java)
     }
@@ -182,6 +188,38 @@ object AppModule {
     fun providePostsApi(@Named("mainRetrofit") retrofit: Retrofit): PostsApi {
         return retrofit.create(PostsApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    @Named("authClient")
+    fun provideAuthOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("authRetrofit")
+    fun provideAuthRetrofit(@Named("authClient") okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(CATALOG_URL)
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        authApi: AuthApi,
+    ): AuthRepository = AuthRepositoryImpl(authApi)
 
     @Provides
     @Singleton
@@ -200,7 +238,8 @@ object AppModule {
             deleteProduct = DeleteProduct(catalogRepository),
             selectProduct = SelectProduct(catalogRepository),
             getMenu = GetMenu(catalogRepository),
-            getCatalogPaging = GetCatalogPaging(catalogRepository)
+            getCatalogPaging = GetCatalogPaging(catalogRepository),
+            getCatalogItem = GetCatalogItem(catalogRepository)
         )
     }
 
@@ -237,18 +276,6 @@ object AppModule {
             getPost = GetPost(postsRepository),
             getAllPosts = GetAllPosts(postsRepository)
         )
-    }
-
-    @Provides
-    @Singleton
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
-        return context.dataStore
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserPreferences(dataStore: DataStore<Preferences>): UserPreferences {
-        return UserPreferences(dataStore)
     }
 
     @Provides

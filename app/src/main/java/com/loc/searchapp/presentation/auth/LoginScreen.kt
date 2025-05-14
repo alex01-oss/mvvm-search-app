@@ -1,6 +1,6 @@
 package com.loc.searchapp.presentation.auth
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -25,24 +26,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.SmallPadding
-import com.loc.searchapp.presentation.Dimens.TitleSize
 import com.loc.searchapp.presentation.auth.components.CustomTextField
 import com.loc.searchapp.presentation.auth.components.PasswordTextField
 import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.common.components.InlineErrorMessage
 import com.loc.searchapp.presentation.nvgraph.Route
 import com.loc.searchapp.utils.FormValidator
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
@@ -75,24 +83,45 @@ fun LoginScreen(
     }
 
     Column(
-        modifier
+        modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = MediumPadding1,
-                start = MediumPadding1,
-                end = MediumPadding1
-            )
+            .padding(horizontal = 48.dp)
             .statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .height(135.dp)
+        )
+
+        Spacer(modifier = Modifier.height(36.dp))
+
         Text(
-            text = stringResource(id = R.string.sign_in),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = TextStyle(
-                fontSize = TitleSize,
-                fontWeight = FontWeight.Bold
-            )
+            text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                ) {
+                    append("Sign ")  // translate
+                }
+                withStyle(
+                    style = SpanStyle(
+                        color = colorResource(id = R.color.light_red),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                ) {
+                    append("IN") // translate
+                }
+            }
         )
 
         Spacer(modifier.height(MediumPadding1))
@@ -157,7 +186,10 @@ fun LoginScreen(
                     viewModel.onEvent(AuthEvent.LoginUser(email, password))
                 }
             },
-            modifier.fillMaxWidth(),
+            modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(16.dp),
             enabled = authState !is AuthState.Loading
         ) {
             if (authState is AuthState.Loading) {
@@ -189,12 +221,16 @@ fun LoginScreen(
             HorizontalDivider(modifier.weight(1f))
         }
 
-        Spacer(modifier.height(SmallPadding))
+        Spacer(modifier.height(ExtraSmallPadding))
 
-        TextButton(onClick = onRegisterClick) {
+        TextButton(onClick = {
+            viewModel.clearError()
+            onRegisterClick()
+        }) {
             Text(
                 text = stringResource(id = R.string.not_have_account),
-                color = MaterialTheme.colorScheme.primary)
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }

@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
@@ -48,9 +49,10 @@ fun PostsScreen(
     var showDeleteDialog by remember { mutableStateOf<Post?>(null) }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             SharedTopBar(
-                title = "News screen",
+                title = "Posts screen", // translate
                 onBackClick = onBackClick,
                 showBackButton = true
             )
@@ -58,9 +60,13 @@ fun PostsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
-                onClick = onAddNewPost
+                onClick = onAddNewPost,
             ) {
-                Icon(Icons.Default.Add, contentDescription = null)
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
             }
         }
     ) { paddingValues ->

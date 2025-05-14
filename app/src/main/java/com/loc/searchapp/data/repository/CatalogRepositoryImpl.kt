@@ -3,6 +3,7 @@ package com.loc.searchapp.data.repository
 import com.loc.searchapp.data.remote.api.CatalogApi
 import com.loc.searchapp.data.remote.dto.CartResponse
 import com.loc.searchapp.data.remote.dto.CatalogDto
+import com.loc.searchapp.data.remote.dto.CatalogItemDetailedResponse
 import com.loc.searchapp.data.remote.dto.ItemCartRequest
 import com.loc.searchapp.data.remote.dto.ItemCartResponse
 import com.loc.searchapp.data.remote.dto.MenuResponse
@@ -32,6 +33,12 @@ class CatalogRepositoryImpl @Inject constructor(
         } else {
             throw Exception("API error: ${response.code()}")
         }
+    }
+
+    override suspend fun getCatalogItem(
+        code: String
+    ): CatalogItemDetailedResponse {
+        return api.getCatalogItem(code)
     }
 
     override suspend fun getCart(

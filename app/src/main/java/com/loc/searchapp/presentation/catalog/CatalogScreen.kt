@@ -1,9 +1,7 @@
 package com.loc.searchapp.presentation.catalog
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -14,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
@@ -46,6 +45,7 @@ fun CatalogScreen(
     val loginActionLabel = stringResource(id = R.string.login)
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             SharedTopBar(
                 title = stringResource(id = R.string.catalog),
@@ -66,13 +66,10 @@ fun CatalogScreen(
                     onValueChange = {},
                     onClick = { navigateToSearch() },
                     onSearch = {},
-                    placeholder = stringResource(id = R.string.search_placeholder)
+                    placeholder = stringResource(id = R.string.search_placeholder),
                 )
 
-                Spacer(modifier.height(MediumPadding1))
-
                 ProductsList(
-                    modifier.padding(horizontal = MediumPadding1),
                     items = products,
                     onClick = { product -> navigateToDetails(product) },
                     onAdd = { product ->

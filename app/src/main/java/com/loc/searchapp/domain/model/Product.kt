@@ -9,8 +9,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Product(
     val code: String,
+    val shape: String,
     val dimensions: String,
     val images: String,
-    val shape: String,
+    @SerialName("name_bond") val nameBond: String,
+    @SerialName("grid_size") val gridSize: String,
     @SerialName("is_in_cart") val isInCart: Boolean
 ): Parcelable

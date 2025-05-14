@@ -1,10 +1,10 @@
 package com.loc.searchapp.presentation.products_navigator
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -27,7 +27,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.BottomNavItem
 import com.loc.searchapp.domain.model.Post
-import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.presentation.account.AccountScreen
 import com.loc.searchapp.presentation.auth.LoginScreen
 import com.loc.searchapp.presentation.auth.RegisterScreen
@@ -43,17 +42,14 @@ import com.loc.searchapp.presentation.posts.PostDetailedScreen
 import com.loc.searchapp.presentation.posts.PostEditorScreen
 import com.loc.searchapp.presentation.posts.PostViewModel
 import com.loc.searchapp.presentation.posts.PostsScreen
-import com.loc.searchapp.presentation.product_details.DetailsEvent
 import com.loc.searchapp.presentation.product_details.DetailsScreen
 import com.loc.searchapp.presentation.product_details.DetailsViewModel
-import com.loc.searchapp.presentation.products_navigator.components.NewsBottomNavigation
+import com.loc.searchapp.presentation.products_navigator.components.BottomNavigation
 import com.loc.searchapp.presentation.search.SearchScreen
 import com.loc.searchapp.presentation.search.SearchViewModel
 
 @Composable
-fun ProductsNavigator(
-    modifier: Modifier = Modifier,
-) {
+fun ProductsNavigator(modifier: Modifier = Modifier) {
     val bottomNavigationItems = listOf(
         BottomNavItem(
             icon = R.drawable.home, text = stringResource(id = R.string.home)
@@ -62,7 +58,7 @@ fun ProductsNavigator(
             icon = R.drawable.search, text = stringResource(id = R.string.search)
         ),
         BottomNavItem(
-            icon = R.drawable.shopping_cart, text = stringResource(id = R.string.cart)
+            icon = R.drawable.cart, text = stringResource(id = R.string.cart)
         ),
         BottomNavItem(
             icon = R.drawable.person, text = stringResource(id = R.string.account)
@@ -97,9 +93,11 @@ fun ProductsNavigator(
     val postViewModel: PostViewModel = hiltViewModel()
 
     Scaffold(
-        modifier.fillMaxSize(), bottomBar = {
+        modifier.fillMaxSize(),
+        containerColor = Color.Transparent,
+        bottomBar = {
             if (isBottomBarVisible) {
-                NewsBottomNavigation(
+                BottomNavigation(
                     items = bottomNavigationItems,
                     selected = selectedItem,
                     onItemClick = { index ->
@@ -152,6 +150,14 @@ fun ProductsNavigator(
                 val products = homeViewModel.catalogFlow.collectAsLazyPagingItems()
 
                 CatalogScreen(
+                    products = products,
+                    authViewModel = authViewModel,
+                    productViewModel = productViewModel,
+                    onAuthClick = {
+                        navController.navigate(
+                            Route.LoginScreen.route
+                        )
+                    },
                     navigateToSearch = {
                         navigateToTab(
                             navController = navController,
@@ -159,17 +165,8 @@ fun ProductsNavigator(
                         )
                     },
                     navigateToDetails = { product ->
-                        navigateToDetails(
-                            navController = navController,
-                            product = product
-                        )
-                    },
-                    products = products,
-                    authViewModel = authViewModel,
-                    productViewModel = productViewModel,
-                    onAuthClick = {
                         navController.navigate(
-                            Route.LoginScreen.route
+                            Route.ProductDetailsScreen.createRoute(product.code)
                         )
                     },
                     onBackClick = {
@@ -182,15 +179,16 @@ fun ProductsNavigator(
                 val state = searchViewModel.state.value
 
                 SearchScreen(
-                    state = state, event = searchViewModel::onEvent,
-                    navigateToDetails = {
-                        navigateToDetails(
-                            navController = navController, product = it
-                        )
-                    },
+                    state = state,
+                    event = searchViewModel::onEvent,
                     viewModel = searchViewModel,
                     productViewModel = productViewModel,
                     homeViewModel = homeViewModel,
+                    navigateToDetails = { product ->
+                        navController.navigate(
+                            Route.ProductDetailsScreen.createRoute(product.code)
+                        )
+                    },
                 )
             }
 
@@ -198,11 +196,6 @@ fun ProductsNavigator(
                 val cartItems = productViewModel.cartItems.collectAsState()
 
                 CartScreen(
-                    navigateToDetails = { cartItem ->
-                        navigateToDetails(
-                            navController = navController, product = cartItem.product
-                        )
-                    },
                     cartItems = cartItems,
                     viewModel = productViewModel,
                     cartModified = productViewModel.cartModified,
@@ -210,6 +203,11 @@ fun ProductsNavigator(
                     authViewModel = authViewModel,
                     onAuthClick = {
                         navController.navigate(Route.LoginScreen.route)
+                    },
+                    navigateToDetails = { cartItem ->
+                        navController.navigate(
+                            Route.ProductDetailsScreen.createRoute(cartItem.product.code)
+                        )
                     },
                 )
             }
@@ -230,22 +228,23 @@ fun ProductsNavigator(
                 )
             }
 
-            composable(route = Route.ProductDetailsScreen.route) {
-                if (detailsViewModel.sideEffect != null) {
-                    Toast.makeText(
-                        LocalContext.current, detailsViewModel.sideEffect, Toast.LENGTH_SHORT
-                    ).show()
-                }
-                detailsViewModel.onEvent(DetailsEvent.RemoveSideEffect)
+            composable(
+                route = Route.ProductDetailsScreen.route,
+                arguments = listOf(navArgument("code") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val code = backStackEntry.arguments?.getString("code") ?: return@composable
 
-                navController.previousBackStackEntry?.savedStateHandle?.get<Product?>("product")
-                    ?.let { product ->
-                        DetailsScreen(
-                            event = detailsViewModel::onEvent,
-                            onBackClick = { navController.navigateUp() },
-                            product = product,
-                        )
-                    }
+                LaunchedEffect(code) {
+                    detailsViewModel.loadProduct(code)
+                }
+
+                val state by detailsViewModel.state
+
+                DetailsScreen(
+                    state = state,
+                    onBackClick = { navController.navigateUp() },
+                    event = detailsViewModel::onEvent
+                )
             }
 
             composable(route = Route.LoginScreen.route) {
@@ -362,14 +361,4 @@ private fun navigateToTab(
             launchSingleTop = true
         }
     }
-}
-
-private fun navigateToDetails(
-    navController: NavController, product: Product
-
-) {
-    navController.currentBackStackEntry?.savedStateHandle?.set("product", product)
-    navController.navigate(
-        route = Route.ProductDetailsScreen.route
-    )
 }

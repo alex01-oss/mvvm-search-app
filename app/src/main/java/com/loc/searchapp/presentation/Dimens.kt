@@ -12,7 +12,7 @@ object Dimens {
     val ExtraSmallPadding = 3.dp
     val ExtraSmallPadding2 = 6.dp
     val SmallPadding = 12.dp
-    val IconSize = 20.dp
+    val IconSize = 24.dp
     val ArticleImageHeight = 248.dp
     val AvatarHeight = 80.dp
     val TitleSize = 30.sp

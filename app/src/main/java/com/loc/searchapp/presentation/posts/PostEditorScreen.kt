@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -40,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -163,6 +162,7 @@ fun PostEditorScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             EditorTopBar(
                 isNewPost = post == null,
@@ -181,9 +181,8 @@ fun PostEditorScreen(
                 Column(
                     modifier
                         .fillMaxSize()
-                        .statusBarsPadding()
-                        .padding(paddingValues)
-                        .padding(16.dp)
+                        .padding(top = paddingValues.calculateTopPadding())
+                        .padding(horizontal = 16.dp)
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -213,9 +212,13 @@ fun PostEditorScreen(
                                 Icon(
                                     Icons.Default.AddPhotoAlternate,
                                     contentDescription = null,
-                                    modifier.padding(end = 8.dp)
+                                    modifier.padding(end = 8.dp),
+                                    tint = MaterialTheme.colorScheme.onBackground
                                 )
-                                Text(stringResource(id = R.string.pick_image))
+                                Text(
+                                    text = stringResource(id = R.string.pick_image),
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
                             }
 
                             if (formState.hasImage) {
@@ -270,7 +273,6 @@ fun PostEditorScreen(
                         modifier
                             .fillMaxWidth()
                             .heightIn(min = 200.dp),
-                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(8.dp),
                         border = ButtonDefaults.outlinedButtonBorder(enabled = true)
                     ) {
@@ -291,14 +293,14 @@ fun PostEditorScreen(
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         ),
-                        modifier = modifier.padding(top = 16.dp)
+                        modifier = modifier.padding(top = 16.dp),
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
 
                     Surface(
                         modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         RichText(

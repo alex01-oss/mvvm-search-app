@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ fun PostDetailedScreen(
     val fullImageUrl = "$CATALOG_URL${post.imageUrl}"
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             PostInfoTopBar(
                 onEditClick = { onEditClick(post) },
@@ -55,7 +57,8 @@ fun PostDetailedScreen(
                 text = post.title,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = modifier.padding(16.dp)
+                modifier = modifier.padding(16.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             if (post.imageUrl.isNotEmpty()) {
@@ -63,9 +66,7 @@ fun PostDetailedScreen(
                     model = fullImageUrl,
                     contentDescription = post.title,
                     contentScale = ContentScale.FillWidth,
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .height(240.dp)
+                    modifier = modifier.fillMaxWidth()
                 )
             }
 

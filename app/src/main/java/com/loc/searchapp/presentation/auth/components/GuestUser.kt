@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.AvatarHeight
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
@@ -30,7 +31,11 @@ fun GuestUser(
 
     Spacer(modifier.height(MediumPadding1))
 
-    Text(text = stringResource(id = R.string.must_login))
+    Text(
+        text = stringResource(id = R.string.must_login),
+        color = MaterialTheme.colorScheme.onBackground,
+        textAlign = TextAlign.Center
+    )
 
     Spacer(modifier.height(MediumPadding1))
 

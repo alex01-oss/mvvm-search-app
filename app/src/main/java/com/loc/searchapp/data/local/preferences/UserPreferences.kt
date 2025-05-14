@@ -6,7 +6,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_prefs")
@@ -20,6 +23,10 @@ class UserPreferences @Inject constructor(
         val REFRESH_TOKEN = stringPreferencesKey("refreshToken")
     }
 
+    val tokenFlow: Flow<String?> = dataStore.data
+        .map { it[Keys.ACCESS_TOKEN] }
+        .catch { emit(null) }
+
     suspend fun saveTokens(accessToken: String, refreshToken: String) {
         dataStore.edit {
             it[Keys.ACCESS_TOKEN] = accessToken
@@ -28,9 +35,7 @@ class UserPreferences @Inject constructor(
     }
 
     suspend fun getAccessToken(): String? {
-        return runCatching {
-            dataStore.data.first()[Keys.ACCESS_TOKEN]
-        }.getOrNull()
+        return tokenFlow.first()
     }
 
     suspend fun getRefreshToken(): String? {

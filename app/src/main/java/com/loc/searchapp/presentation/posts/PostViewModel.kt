@@ -32,15 +32,20 @@ class PostViewModel @Inject constructor(
 
     fun loadPosts() {
         viewModelScope.launch {
-            val response = postsUseCases.getAllPosts()
+            try {
+                val response = postsUseCases.getAllPosts()
 
-            if (response.isSuccessful) {
-                if (response.body() != null) {
-                    response.body()?.let { list ->
-                        _posts.value = list.map { it.toDomain() }
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        response.body()?.let { list ->
+                            _posts.value = list.map { it.toDomain() }
+                        }
                     }
+                } else {
+                    _posts.value = emptyList()
                 }
-            } else {
+            } catch (e: Exception) {
+                e.printStackTrace()
                 _posts.value = emptyList()
             }
         }
