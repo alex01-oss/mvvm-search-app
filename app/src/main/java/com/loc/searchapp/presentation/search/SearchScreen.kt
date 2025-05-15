@@ -24,11 +24,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.domain.model.Product
+import com.loc.searchapp.presentation.Dimens.DrawerWidth
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.TopBarPadding
 import com.loc.searchapp.presentation.common.base.ProductViewModel
 import com.loc.searchapp.presentation.common.components.ProductsList
 import com.loc.searchapp.presentation.home.HomeViewModel
@@ -59,7 +60,7 @@ fun SearchScreen(
         drawerContent = {
             ModalDrawerSheet(
                 modifier
-                    .width(300.dp)
+                    .width(DrawerWidth)
                     .statusBarsPadding(),
                 drawerContainerColor = MaterialTheme.colorScheme.background
             ) {
@@ -83,9 +84,9 @@ fun SearchScreen(
                 TopAppBar(
                     title = {
                         Row(
-                            Modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 5.dp, end = MediumPadding1),
+                                .padding(start = TopBarPadding, end = MediumPadding1),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             SearchTopSection(
@@ -117,7 +118,7 @@ fun SearchScreen(
             },
             content = { paddingValues ->
                 Column(
-                    modifier
+                    modifier = Modifier
                         .padding(horizontal = MediumPadding1)
                         .padding(top = paddingValues.calculateTopPadding())
                         .fillMaxSize()

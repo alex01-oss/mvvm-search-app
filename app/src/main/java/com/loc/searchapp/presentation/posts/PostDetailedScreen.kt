@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -14,12 +15,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.loc.searchapp.domain.model.Post
+import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.SectionSpacing
+import com.loc.searchapp.presentation.Dimens.StrongCorner
 import com.loc.searchapp.presentation.posts.components.PostInfoTopBar
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 import com.mohamedrejeb.richeditor.model.RichTextState
@@ -38,6 +42,7 @@ fun PostDetailedScreen(
     val fullImageUrl = "$CATALOG_URL${post.imageUrl}"
 
     Scaffold(
+        modifier = modifier,
         containerColor = Color.Transparent,
         topBar = {
             PostInfoTopBar(
@@ -48,41 +53,45 @@ fun PostDetailedScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
+                modifier = Modifier.padding(MediumPadding1),
                 text = post.title,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onBackground
             )
 
             if (post.imageUrl.isNotEmpty()) {
                 AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MediumPadding1)
+                        .clip(RoundedCornerShape(StrongCorner)),
                     model = fullImageUrl,
                     contentDescription = post.title,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = modifier.fillMaxWidth()
+                    contentScale = ContentScale.FillWidth
                 )
             }
 
             Surface(
-                modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(MediumPadding1)
+                    .clip(RoundedCornerShape(StrongCorner)),
                 color = MaterialTheme.colorScheme.surface
             ) {
                 RichText(
-                    state = richTextState,
-                    modifier.padding(16.dp)
+                    modifier = Modifier.padding(MediumPadding1),
+                    state = richTextState
                 )
             }
 
-            Spacer(modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(SectionSpacing))
         }
     }
 }

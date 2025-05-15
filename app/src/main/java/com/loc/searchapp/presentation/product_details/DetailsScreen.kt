@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
@@ -72,7 +71,7 @@ fun DetailsScreen(
                 )
 
                 LazyColumn(
-                    modifier = modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(
                         top = MediumPadding1,
                         start = MediumPadding1,
@@ -82,24 +81,24 @@ fun DetailsScreen(
                 ) {
                     item {
                         Card(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = MediumPadding1),
-                            elevation = CardDefaults.cardElevation(4.dp),
+                            elevation = CardDefaults.cardElevation(ExtraSmallPadding),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface
                             )
                         ) {
                             AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(ArticleImageHeight)
+                                    .padding(MediumPadding1),
                                 model = ImageRequest
                                     .Builder(context = context)
                                     .data(imageUrl)
                                     .build(),
                                 contentDescription = null,
-                                modifier = modifier
-                                    .fillMaxWidth()
-                                    .height(ArticleImageHeight)
-                                    .padding(MediumPadding1),
                                 contentScale = ContentScale.Fit
                             )
                         }
@@ -107,10 +106,10 @@ fun DetailsScreen(
 
                     item {
                         Card(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = MediumPadding1),
-                            elevation = CardDefaults.cardElevation(4.dp),
+                            elevation = CardDefaults.cardElevation(ExtraSmallPadding),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface
                             )
@@ -121,11 +120,10 @@ fun DetailsScreen(
                                     .padding(MediumPadding1)
                             ) {
                                 Text(
-                                    text = "Product details",
-//                            text = stringResource(id = R.string.product_details),
+                                    modifier = Modifier.padding(bottom = SmallPadding),
+                                    text = stringResource(id = R.string.product_details),
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = modifier.padding(bottom = SmallPadding)
+                                    color = MaterialTheme.colorScheme.primary
                                 )
 
                                 ProductInfoRow(
@@ -133,33 +131,39 @@ fun DetailsScreen(
                                     value = state.product.code,
                                 )
 
-                                HorizontalDivider(modifier.padding(vertical = ExtraSmallPadding))
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = ExtraSmallPadding)
+                                )
 
                                 ProductInfoRow(
                                     label = stringResource(id = R.string.shape),
                                     value = state.product.shape
                                 )
 
-                                HorizontalDivider(modifier = modifier.padding(vertical = ExtraSmallPadding))
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = ExtraSmallPadding)
+                                )
 
                                 ProductInfoRow(
                                     label = stringResource(id = R.string.dimensions),
                                     value = state.product.dimensions
                                 )
 
-                                HorizontalDivider(modifier = modifier.padding(vertical = ExtraSmallPadding))
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = ExtraSmallPadding)
+                                )
 
                                 ProductInfoRow(
-                                    label = "Bond: ",
-//                            label = stringResource(id = R.string.bond),
+                                    label = stringResource(id = R.string.bond),
                                     value = state.product.nameBond
                                 )
 
-                                HorizontalDivider(modifier = modifier.padding(vertical = ExtraSmallPadding))
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = ExtraSmallPadding)
+                                )
 
                                 ProductInfoRow(
-                                    label = "Grid size: ",
-//                            label = stringResource(id = R.string.grid_size),
+                                    label = stringResource(id = R.string.grid_size),
                                     value = state.product.gridSize
                                 )
                             }
@@ -169,43 +173,46 @@ fun DetailsScreen(
                     if (state.bond != null) {
                         item {
                             Card(
-                                modifier = modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = MediumPadding1),
-                                elevation = CardDefaults.cardElevation(4.dp),
+                                elevation = CardDefaults.cardElevation(ExtraSmallPadding),
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.surface
                                 )
                             ) {
                                 Column(
-                                    modifier = modifier
+                                    modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(MediumPadding1)
                                 ) {
                                     Text(
-                                        text = "Bond info",
-//                                text = stringResource(id = R.string.bond_info),
+                                        modifier = Modifier.padding(bottom = SmallPadding),
+                                        text = stringResource(id = R.string.bond_info),
                                         style = MaterialTheme.typography.titleLarge,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = modifier.padding(bottom = SmallPadding)
+                                        color = MaterialTheme.colorScheme.primary
                                     )
 
                                     Text(
+                                        modifier = Modifier.padding(bottom = SmallPadding),
                                         text = state.bond.bondDescription,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        modifier = modifier.padding(bottom = SmallPadding)
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
 
                                     if (state.bond.bondCooling.isNotEmpty()) {
-                                        HorizontalDivider(modifier = modifier.padding(vertical = ExtraSmallPadding))
+                                        HorizontalDivider(
+                                            modifier = Modifier.padding(vertical = ExtraSmallPadding)
+                                        )
 
                                         Text(
-                                            text = "Cooling instructions",
-//                                    text = stringResource(id = R.string.cooling_instructions),
+                                            modifier = Modifier.padding(
+                                                top = SmallPadding,
+                                                bottom = ExtraSmallPadding
+                                            ),
+                                            text = stringResource(id = R.string.cooling_instructions),
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            modifier = modifier.padding(top = SmallPadding, bottom = ExtraSmallPadding)
+                                            color = MaterialTheme.colorScheme.primary
                                         )
 
                                         Text(
@@ -222,22 +229,21 @@ fun DetailsScreen(
                     if (state.machines.isNotEmpty()) {
                         item {
                             Card(
-                                modifier = modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = MediumPadding1),
-                                elevation = CardDefaults.cardElevation(4.dp),
+                                elevation = CardDefaults.cardElevation(ExtraSmallPadding),
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.surface
                                 )
                             ) {
                                 Column(
-                                    modifier = modifier
+                                    modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(MediumPadding1)
                                 ) {
                                     Text(
-                                        text = "Compatible machines",
-//                                text = stringResource(id = R.string.compatible_machines),
+                                        text = stringResource(id = R.string.compatible_machines),
                                         style = MaterialTheme.typography.titleLarge,
                                         color = MaterialTheme.colorScheme.primary,
                                         modifier = modifier.padding(bottom = SmallPadding)

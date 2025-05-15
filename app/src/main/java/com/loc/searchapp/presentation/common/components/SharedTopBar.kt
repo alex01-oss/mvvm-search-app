@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +33,7 @@ fun SharedTopBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (leadingIcon != null) leadingIcon()
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(SmallPadding))
                 if (title != null) Text(text = title)
             }
         },

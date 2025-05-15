@@ -17,13 +17,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.AvatarSize
+import com.loc.searchapp.presentation.Dimens.BorderStroke
 
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
     firstName: String?,
     lastName: String?,
-    size: Dp = 40.dp,
+    size: Dp = AvatarSize,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     placeholder: @Composable (() -> Unit)? = null
 ) {
@@ -32,7 +34,7 @@ fun Avatar(
             .size(size)
             .clip(CircleShape)
             .border(
-                width = 2.dp,
+                width = BorderStroke,
                 color = MaterialTheme.colorScheme.onBackground,
                 shape = CircleShape
             ),
@@ -44,15 +46,18 @@ fun Avatar(
             val initials = (firstName.take(1) + lastName.take(1)).uppercase()
             Text(text = initials, style = textStyle, color = Color.White)
         } else {
-            placeholder?.invoke() ?: DefaultPlaceholder(size)
+            placeholder?.invoke() ?: DefaultPlaceholder(size = size)
         }
     }
 }
 
 @Composable
-fun DefaultPlaceholder(size: Dp) {
+fun DefaultPlaceholder(
+    modifier: Modifier = Modifier,
+    size: Dp
+) {
     Box(
-        modifier = Modifier
+        modifier
             .size(size)
             .clip(CircleShape),
         contentAlignment = Alignment.Center

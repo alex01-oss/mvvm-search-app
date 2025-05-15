@@ -31,11 +31,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Post
+import com.loc.searchapp.presentation.Dimens.ArticleImageHeight
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.DefaultCorner
+import com.loc.searchapp.presentation.Dimens.PagerHeight
+import com.loc.searchapp.presentation.Dimens.PostImageHeight
+import com.loc.searchapp.presentation.Dimens.ExtraSmallCorner
+import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.Dimens.StrongCorner
+import com.loc.searchapp.presentation.Dimens.TextBarHeight
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 import kotlinx.coroutines.launch
 
@@ -49,13 +57,13 @@ fun PostsSlider(
         Box(
             modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(4.dp))
+                .height(PostImageHeight)
+                .clip(RoundedCornerShape(StrongCorner))
                 .background(Color.Transparent)
                 .border(
-                    width = 1.dp,
+                    width = ExtraSmallCorner,
                     color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(DefaultCorner)
                 ),
             contentAlignment = Alignment.Center
         ) {
@@ -76,15 +84,15 @@ fun PostsSlider(
     val coroutineScope = rememberCoroutineScope()
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(250.dp)
+        modifier
+        .fillMaxWidth()
+        .height(ArticleImageHeight)
     ) {
         HorizontalPager(
-            state = pagerState,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(320.dp)
+                .height(PagerHeight),
+            state = pagerState
         ) { page ->
             val post = posts[page]
             val fullImageUrl = "$CATALOG_URL${post.imageUrl}"
@@ -92,13 +100,13 @@ fun PostsSlider(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(4.dp))
+                    .clip(RoundedCornerShape(StrongCorner))
                     .clickable { onPostClick(post) }
             ) {
                 AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
                     model = fullImageUrl,
                     contentDescription = post.title,
-                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
 
@@ -106,9 +114,9 @@ fun PostsSlider(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .fillMaxWidth()
-                        .height(70.dp)
+                        .height(TextBarHeight)
                         .background(MaterialTheme.colorScheme.background)
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = BasePadding, vertical = SmallPadding),
                     verticalArrangement = Arrangement.Center
                 ) {
                     val currentPost = posts[pagerState.currentPage]
@@ -135,6 +143,10 @@ fun PostsSlider(
 
                 if (pagerState.currentPage > 0) {
                     IconButton(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = SmallPadding)
+                            .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape),
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
@@ -143,11 +155,7 @@ fun PostsSlider(
                                     )
                                 )
                             }
-                        },
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = 8.dp)
-                            .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape)
+                        }
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
@@ -159,6 +167,10 @@ fun PostsSlider(
 
                 if (pagerState.currentPage < posts.size - 1) {
                     IconButton(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = SmallPadding)
+                            .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape),
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(
@@ -167,11 +179,7 @@ fun PostsSlider(
                                     )
                                 )
                             }
-                        },
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 8.dp)
-                            .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape)
+                        }
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowForward,

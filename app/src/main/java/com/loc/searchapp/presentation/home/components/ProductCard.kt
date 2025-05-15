@@ -24,15 +24,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.ProductCardSize
 import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.Dimens.SmallPadding2
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
@@ -52,12 +53,12 @@ fun ProductCard(
     Row(modifier
         .clickable { onClick() }
         .fillMaxWidth()
-        .clip(RoundedCornerShape(8.dp))
+        .clip(RoundedCornerShape(SmallPadding2))
         .background(MaterialTheme.colorScheme.surface)
-        .padding(16.dp)
+        .padding(BasePadding)
     ) {
         AsyncImage(
-            modifier = modifier
+            modifier = Modifier
                 .size(ProductCardSize)
                 .clip(MaterialTheme.shapes.small),
             model = ImageRequest
@@ -72,7 +73,7 @@ fun ProductCard(
 
         Column(
             verticalArrangement = Arrangement.SpaceAround,
-            modifier = modifier
+            modifier = Modifier
                 .padding(start = MediumPadding1, end = ExtraSmallPadding)
                 .height(ProductCardSize)
                 .weight(1f)
@@ -115,7 +116,7 @@ fun ProductCard(
             )
         }
         Column(
-            modifier
+            modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(end = SmallPadding)
         ) {

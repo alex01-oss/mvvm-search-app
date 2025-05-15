@@ -22,6 +22,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.ExtraSmallCorner
+import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
+import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.Dimens.navBarHeight
 import com.loc.searchapp.presentation.common.components.SearchBar
 
 @Composable
@@ -39,8 +43,8 @@ fun SearchTopSection(
     ) {
         Surface(
             modifier = Modifier
-                .size(56.dp)
-                .clip(RoundedCornerShape(4.dp))
+                .size(navBarHeight)
+                .clip(RoundedCornerShape(ExtraSmallPadding))
                 .burgerButtonBorder(),
             color =
                 if (isSystemInDarkTheme()) colorResource(id = R.color.input_background)
@@ -56,7 +60,7 @@ fun SearchTopSection(
             }
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(SmallPadding))
 
         SearchBar(
             modifier = Modifier.weight(1f),
@@ -72,7 +76,7 @@ fun SearchTopSection(
 fun Modifier.burgerButtonBorder() = composed {
     if (!isSystemInDarkTheme()) {
         border(
-            width = 1.dp,
+            width = ExtraSmallCorner,
             color = Color.Black,
             shape = MaterialTheme.shapes.medium
         )

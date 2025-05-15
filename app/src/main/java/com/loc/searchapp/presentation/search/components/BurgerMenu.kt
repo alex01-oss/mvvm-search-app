@@ -33,9 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.loc.searchapp.R
 import com.loc.searchapp.data.remote.dto.MenuResponse
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.BurgerIconSize
+import com.loc.searchapp.presentation.Dimens.BurgerPadding
+import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
+import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.Dimens.TextSize
 
 @Composable
 fun BurgerMenu(
@@ -49,14 +55,14 @@ fun BurgerMenu(
     LazyColumn(
         modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(BasePadding)
     ) {
         item {
             Text(
+                modifier = Modifier.padding(bottom = BasePadding),
                 text = stringResource(id = R.string.categories),
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = modifier.padding(bottom = 16.dp)
+                fontWeight = FontWeight.Bold
             )
         }
 
@@ -66,7 +72,7 @@ fun BurgerMenu(
                     modifier
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.CenterHorizontally)
-                        .padding(24.dp)
+                        .padding(MediumPadding1)
                 )
             }
         } else {
@@ -79,29 +85,27 @@ fun BurgerMenu(
                 item {
                     val expanded = expandedIndex.value == index
 
-                    Column(
-                        modifier.padding(4.dp)
-                    ) {
+                    Column(modifier.padding(ExtraSmallPadding)) {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             color = MaterialTheme.colorScheme.surfaceVariant,
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Row(
-                                modifier
-                                    .fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxWidth()
                                     .clickable {
                                         expandedIndex.value =
                                             if (expanded) null
                                             else index
                                     }
-                                    .padding(8.dp),
+                                    .padding(SmallPadding),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
+                                    modifier = Modifier.weight(1f),
                                     text = category.title,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = modifier.weight(1f)
+                                    fontWeight = FontWeight.Bold
                                 )
                                 Icon(
                                     imageVector =
@@ -114,18 +118,18 @@ fun BurgerMenu(
 
                         AnimatedVisibility(visible = expanded) {
                             Column(
-                                modifier.padding(start = 8.dp, top = 4.dp)
+                                modifier = Modifier.padding(start = SmallPadding, top = ExtraSmallPadding)
                             ) {
                                 category.items.forEach { group ->
                                     Text(
                                         text = group.text,
-                                        modifier.padding(start = 8.dp, bottom = 4.dp),
+                                        modifier = Modifier.padding(start = SmallPadding, top = ExtraSmallPadding),
                                         fontWeight = FontWeight.SemiBold
                                     )
 
                                     group.items.forEach { item ->
                                         Row(
-                                            modifier
+                                            modifier = Modifier
                                                 .fillMaxSize()
                                                 .clickable {
                                                     when {
@@ -138,7 +142,7 @@ fun BurgerMenu(
                                                         }
                                                     }
                                                 }
-                                                .padding(vertical = 6.dp, horizontal = 8.dp),
+                                                .padding(vertical = BurgerPadding, horizontal = SmallPadding),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             val icon = when {
@@ -148,9 +152,9 @@ fun BurgerMenu(
                                             }
 
                                             Icon(
+                                                modifier = Modifier.size(BurgerIconSize),
                                                 imageVector = icon,
                                                 contentDescription = null,
-                                                modifier.size(18.dp),
                                                 tint = when {
                                                     item.url != null -> MaterialTheme.colorScheme.error
                                                     item.searchType != null -> MaterialTheme.colorScheme.primary
@@ -158,11 +162,11 @@ fun BurgerMenu(
                                                 }
                                             )
 
-                                            Spacer(modifier.width(8.dp))
+                                            Spacer(modifier = Modifier.width(SmallPadding))
 
                                             Text(
                                                 text = item.text,
-                                                fontSize = 14.sp
+                                                fontSize = TextSize
                                             )
                                         }
                                     }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -15,13 +14,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.loc.searchapp.presentation.Dimens.PostImageHeight
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 import kotlinx.coroutines.launch
 
 @Composable
@@ -41,7 +42,7 @@ fun YouTubeVideoSlider(
     Box(
         modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(PostImageHeight)
     ) {
         HorizontalPager(
             state = pagerState,
@@ -62,13 +63,13 @@ fun YouTubeVideoSlider(
                 },
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 8.dp)
+                    .padding(start = SmallPadding)
                     .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape)
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -82,13 +83,13 @@ fun YouTubeVideoSlider(
                 },
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 8.dp)
+                    .padding(end = SmallPadding)
                     .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape)
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null,
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         }

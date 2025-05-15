@@ -10,7 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import com.loc.searchapp.presentation.Dimens.EmptyIconSize
+import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 
 @Composable
 fun ProductInfoRow(
@@ -20,16 +21,16 @@ fun ProductInfoRow(
     isHighlighted: Boolean = false
 ) {
     Row(
-        modifier = modifier
+        modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = ExtraSmallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier.width(EmptyIconSize),
             text = label,
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-            modifier = Modifier.width(120.dp)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
         )
 
         Text(

@@ -2,8 +2,10 @@ package com.loc.searchapp.presentation.cart
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,6 +63,7 @@ fun CartScreen(
     }
 
     Scaffold(
+        modifier = modifier,
         containerColor = Color.Transparent,
         topBar = {
             SharedTopBar(
@@ -76,7 +79,7 @@ fun CartScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(
                     top = paddingValues.calculateTopPadding(),
@@ -88,7 +91,7 @@ fun CartScreen(
             when (authState) {
                 is AuthState.Authenticated -> {
                     Column(
-                        modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         CartList(
                             items = cartItems.value,
@@ -98,11 +101,15 @@ fun CartScreen(
                     }
                 }
 
-                AuthState.Unauthenticated -> GuestUser(onAuthClick = onAuthClick)
+                AuthState.Unauthenticated -> {
+                    Spacer(modifier = Modifier.height(MediumPadding1))
+
+                    GuestUser(onAuthClick = onAuthClick)
+                }
 
                 AuthState.Loading -> {
                     Box(
-                        modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()

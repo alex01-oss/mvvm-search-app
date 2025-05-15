@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.loc.searchapp.presentation.mainActivity.components.AppBackground
 import com.loc.searchapp.presentation.nvgraph.NavGraph
 import com.loc.searchapp.ui.theme.SearchAppTheme
 import com.loc.searchapp.utils.LanguagePreference

@@ -6,9 +6,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
+import com.loc.searchapp.presentation.Dimens.PostImageHeight
+import com.loc.searchapp.presentation.Dimens.StrongCorner
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -18,8 +19,8 @@ fun YouTubeVideoPlayer(videoId: String, lifecycleOwner: LifecycleOwner) {
     AndroidView(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .clip(RoundedCornerShape(4.dp)),
+            .height(PostImageHeight)
+            .clip(RoundedCornerShape(StrongCorner)),
         factory = { context ->
             YouTubePlayerView(context).apply {
                 lifecycleOwner.lifecycle.addObserver(this)

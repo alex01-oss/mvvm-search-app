@@ -21,7 +21,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding2
+import com.loc.searchapp.presentation.Dimens.IconSize
+import com.loc.searchapp.presentation.Dimens.SectionSpacing
 
 @Composable
 fun CustomTextField(
@@ -33,6 +36,7 @@ fun CustomTextField(
     isError: Boolean = false
 ) {
     OutlinedTextField(
+        modifier = modifier.fillMaxWidth(),
         value = value,
         onValueChange = { if (it.length <= 64) onValueChange(it) },
         placeholder = {
@@ -53,13 +57,12 @@ fun CustomTextField(
                 else MaterialTheme.colorScheme.onBackground
         ),
         keyboardOptions = KeyboardOptions.Default,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(BasePadding),
         leadingIcon = {
             Icon(
                 painter = painterResource,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(IconSize)
                     .padding(start = ExtraSmallPadding2),
                 contentDescription = null,
                 tint =
@@ -82,6 +85,7 @@ fun PasswordTextField(
     isError: Boolean = false
 ) {
     OutlinedTextField(
+        modifier = modifier.fillMaxWidth(),
         value = value,
         onValueChange = { if (it.length <= 22) onValueChange(it) },
         placeholder = {
@@ -102,13 +106,12 @@ fun PasswordTextField(
                 else MaterialTheme.colorScheme.onBackground
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(BasePadding),
         leadingIcon = {
             Icon(
                 painter = painterResource,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(IconSize)
                     .padding(start = ExtraSmallPadding2),
                 contentDescription = null,
                 tint =

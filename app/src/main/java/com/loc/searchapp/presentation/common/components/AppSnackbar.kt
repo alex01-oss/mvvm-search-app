@@ -17,7 +17,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.SmallPadding2
 
 @Composable
 fun AppSnackbar(
@@ -25,10 +26,11 @@ fun AppSnackbar(
     snackbarHostState: SnackbarHostState,
 ) {
     SnackbarHost(
+        modifier = modifier,
         hostState = snackbarHostState,
     ) { data ->
         Snackbar(
-            modifier = modifier.padding(16.dp),
+            modifier = Modifier.padding(BasePadding),
             action = {
                 if (data.visuals.actionLabel != null) {
                     TextButton(
@@ -53,9 +55,9 @@ fun AppSnackbar(
             }) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
+                    modifier = Modifier.padding(end = SmallPadding2),
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier.padding(end = 8.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(data.visuals.message)

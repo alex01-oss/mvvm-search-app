@@ -27,9 +27,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.AvatarSize
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.TopBarPadding
+import com.loc.searchapp.presentation.Dimens.TopLogoHeight
 import com.loc.searchapp.presentation.auth.AuthState
 import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.common.components.Avatar
@@ -62,19 +64,19 @@ fun HomeTopBar(
             modifier = Modifier.fillMaxWidth(),
             title = {
                 Row(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 5.dp, end = MediumPadding1),
+                        .padding(start = TopBarPadding, end = MediumPadding1),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.size(40.dp))
+                    Box(modifier = Modifier.size(AvatarSize))
 
                     Image(
                         painter = painterResource(id = R.drawable.logo_white),
                         contentDescription = null,
                         modifier = Modifier
-                            .height(50.dp)
+                            .height(TopLogoHeight)
                             .graphicsLayer {
                                 alpha = logoAlpha
                             }
@@ -100,7 +102,7 @@ fun HomeTopBar(
                         }
 
                         else -> {
-                            Spacer(modifier = Modifier.width(40.dp))
+                            Spacer(modifier = Modifier.width(AvatarSize))
                         }
                     }
                 }

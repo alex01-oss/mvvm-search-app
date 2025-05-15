@@ -7,11 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.data.local.preferences.UserPreferences
-import com.loc.searchapp.data.remote.dto.CatalogItemDetailedResponse
-import com.loc.searchapp.domain.model.Bond
 import com.loc.searchapp.domain.model.CartItem
-import com.loc.searchapp.domain.model.EquipmentModel
-import com.loc.searchapp.domain.model.Product
 import com.loc.searchapp.domain.usecases.catalog.CatalogUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

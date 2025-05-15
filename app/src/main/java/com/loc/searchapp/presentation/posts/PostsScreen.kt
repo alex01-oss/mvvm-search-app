@@ -29,9 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Post
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.PostsSpacerSize
+import com.loc.searchapp.presentation.Dimens.activeButtonSize
 import com.loc.searchapp.presentation.common.components.AppDialog
 import com.loc.searchapp.presentation.common.components.SharedTopBar
 import com.loc.searchapp.presentation.posts.components.PostItem
@@ -39,7 +41,6 @@ import com.loc.searchapp.presentation.posts.components.PostItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostsScreen(
-    modifier: Modifier = Modifier,
     posts: List<Post> = emptyList(),
     onPostClick: (Post) -> Unit,
     onBackClick: () -> Unit,
@@ -52,7 +53,7 @@ fun PostsScreen(
         containerColor = Color.Transparent,
         topBar = {
             SharedTopBar(
-                title = "Posts screen", // translate
+                title = stringResource(id = R.string.blog),
                 onBackClick = onBackClick,
                 showBackButton = true
             )
@@ -72,20 +73,20 @@ fun PostsScreen(
     ) { paddingValues ->
         if (posts.isEmpty()) {
             Box(
-                modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp),
+                    .padding(BasePadding),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
+                    modifier = Modifier.size(activeButtonSize),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(BasePadding)
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.Article,
                         contentDescription = null,
-                        modifier.size(64.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(stringResource(id = R.string.add_post_warn))
@@ -93,11 +94,11 @@ fun PostsScreen(
             }
         } else {
             LazyColumn(
-                modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                contentPadding = PaddingValues(BasePadding),
+                verticalArrangement = Arrangement.spacedBy(BasePadding)
             ) {
                 items(posts) { post ->
                     PostItem(
@@ -106,7 +107,7 @@ fun PostsScreen(
                         onDeleteClick = { showDeleteDialog = post }
                     )
                 }
-                item { Spacer(modifier.height(80.dp)) }
+                item { Spacer(modifier = Modifier.height(PostsSpacerSize)) }
             }
 
         }

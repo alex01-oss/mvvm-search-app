@@ -21,11 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
-import com.loc.searchapp.presentation.Dimens.ProductCardSize
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.ProductCardSize
+import com.loc.searchapp.presentation.Dimens.ShimmerHeight1
+import com.loc.searchapp.presentation.Dimens.ShimmerHeight2
 
 fun Modifier.shimmerEffect() = composed {
     val transition = rememberInfiniteTransition()
@@ -46,7 +47,7 @@ fun ProductCardShimmerEffect(
 ) {
     Row(modifier = modifier) {
         Box(
-            modifier
+            modifier = Modifier
                 .size(ProductCardSize)
                 .clip(MaterialTheme.shapes.medium)
                 .shimmerEffect()
@@ -54,23 +55,23 @@ fun ProductCardShimmerEffect(
 
         Column(
             verticalArrangement = Arrangement.SpaceAround,
-            modifier = modifier
+            modifier = Modifier
                 .padding(horizontal = ExtraSmallPadding)
                 .height(ProductCardSize)
         ) {
             Box(
-                modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .height(30.dp)
+                    .height(ShimmerHeight1)
                     .padding(horizontal = MediumPadding1)
                     .shimmerEffect()
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
-                    modifier
+                    modifier = Modifier
                         .fillMaxWidth(0.5f)
-                        .height(15.dp)
+                        .height(ShimmerHeight2)
                         .padding(horizontal = MediumPadding1)
                         .shimmerEffect()
                 )

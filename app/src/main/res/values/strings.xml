@@ -116,4 +116,20 @@
     <string name="pick_image">Pick Image</string>
     <string name="delete_image">Delete Image</string>
     <string name="preview">Preview</string>
+    <string name="sign">Sign</string>
+    <string name="_in">IN</string>
+    <string name="_up">UP</string>
+    <string name="not_found">Not found</string>
+    <string name="no_categories">No categories yet</string>
+    <string name="last_news">Last news</string>
+    <string name="our_videos">Our videos</string>
+    <string name="social_media">Social media</string>
+    <string name="blog">Blog</string>
+    <string name="product_details">Product details</string>
+    <string name="bond">"Bond: "</string>
+    <string name="grid_size">"Grid size: "</string>
+    <string name="bond_info">Bond info</string>
+    <string name="cooling_instructions">Cooling instructions</string>
+    <string name="compatible_machines">Compatible machines</string>
+    <string name="product_info">Product info</string>
 </resources>

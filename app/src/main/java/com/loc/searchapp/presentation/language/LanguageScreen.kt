@@ -19,9 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 import com.loc.searchapp.presentation.common.components.AppDialog
 import com.loc.searchapp.presentation.common.components.SharedTopBar
 import com.loc.searchapp.presentation.language.components.LanguageOption
@@ -56,16 +57,16 @@ fun LanguageScreen(
             showBackButton = true
         )
 
-        Spacer(modifier.height(MediumPadding1))
+        Spacer(modifier = Modifier.height(MediumPadding1))
 
         Text(
+            modifier = Modifier.padding(horizontal = MediumPadding1),
             text = stringResource(id = R.string.select_language),
             style = MaterialTheme.typography.labelLarge,
-            modifier = modifier.padding(horizontal = MediumPadding1),
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        Spacer(modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(BasePadding))
 
         LanguageOption(
             language = stringResource(id = R.string.system_language),
@@ -77,7 +78,7 @@ fun LanguageScreen(
             id = R.drawable.globe
         )
 
-        Spacer(modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(SmallPadding))
 
         LanguageOption(
             language = "English",
@@ -89,7 +90,7 @@ fun LanguageScreen(
             id = R.drawable.flag_uk
         )
 
-        Spacer(modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(SmallPadding))
 
         LanguageOption(
             language = "Українська",

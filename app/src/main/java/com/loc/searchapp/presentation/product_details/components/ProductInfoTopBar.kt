@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.common.components.SharedTopBar
 
@@ -15,7 +16,7 @@ fun ProductInfoTopBar(
     onToggleCart: () -> Unit,
 ) {
     SharedTopBar(
-        title = "Product info",
+        title = stringResource(id = R.string.product_info),
         onBackClick = onBackClick,
         actions = {
             IconButton(

@@ -33,9 +33,7 @@ fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     event: (OnBoardingEvent) -> Unit
 ) {
-    Column(
-        modifier.fillMaxSize(),
-    ) {
+    Column(modifier.fillMaxSize()) {
         val pages = listOf(
             Page(
                 title = stringResource(id = R.string.first_title),
@@ -77,10 +75,10 @@ fun OnBoardingScreen(
             OnBoardingPage(page = pages[index])
         }
 
-        Spacer(modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
 
         Row(
-            modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = MediumPadding2)
                 .navigationBarsPadding(),
@@ -88,7 +86,7 @@ fun OnBoardingScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PageIndicator(
-                modifier.width(PageIndicatorWidth),
+                modifier = Modifier.width(PageIndicatorWidth),
                 pageSize = pages.size,
                 selectedPage = pagerState.currentPage
             )
@@ -119,6 +117,6 @@ fun OnBoardingScreen(
             }
         }
 
-        Spacer(modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.5f))
     }
 }

@@ -124,9 +124,9 @@ fun ProductsNavigator(modifier: Modifier = Modifier) {
         }) {
         val bottomPadding = it.calculateBottomPadding()
         NavHost(
+            modifier = Modifier.padding(bottom = bottomPadding),
             navController = navController,
-            startDestination = Route.HomeScreen.route,
-            modifier.padding(bottom = bottomPadding)
+            startDestination = Route.HomeScreen.route
         ) {
             composable(route = Route.HomeScreen.route) {
                 HomeScreen(

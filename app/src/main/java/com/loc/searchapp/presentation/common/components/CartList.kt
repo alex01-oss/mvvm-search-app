@@ -38,7 +38,7 @@ fun CartList(
             LazyColumn(
                 modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(MediumPadding1),
-                contentPadding = PaddingValues(top = MediumPadding1)
+                contentPadding = PaddingValues(vertical = MediumPadding1)
             ) {
                 items(items) { cartItem ->
                     CartItemCard(

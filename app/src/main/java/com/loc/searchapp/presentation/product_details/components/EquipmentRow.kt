@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.loc.searchapp.presentation.Dimens.IconSize
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 
 @Composable
 fun EquipmentRow(
@@ -25,19 +27,19 @@ fun EquipmentRow(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
+        modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = SmallPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
+            modifier = Modifier.size(IconSize),
             imageVector = Icons.Default.Build,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
+            tint = MaterialTheme.colorScheme.primary
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(SmallPadding))
 
         Column {
             Text(

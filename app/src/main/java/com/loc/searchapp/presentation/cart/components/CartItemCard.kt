@@ -29,10 +29,12 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.CartItem
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.ProductCardSize
 import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.Dimens.StrongCorner
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @Composable
@@ -49,12 +51,12 @@ fun CartItemCard(
         modifier
             .clickable { onClick() }
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(StrongCorner))
             .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp)
+            .padding(BasePadding)
     ) {
         AsyncImage(
-            modifier = modifier
+            modifier = Modifier
                 .size(ProductCardSize)
                 .clip(MaterialTheme.shapes.small),
             model = ImageRequest
@@ -68,11 +70,11 @@ fun CartItemCard(
         )
 
         Column(
-            verticalArrangement = Arrangement.SpaceAround,
-            modifier = modifier
+            modifier = Modifier
                 .padding(start = MediumPadding1, end = ExtraSmallPadding)
                 .height(ProductCardSize)
-                .weight(1f)
+                .weight(1f),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -112,7 +114,7 @@ fun CartItemCard(
             )
         }
         Column(
-            modifier
+            modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(end = SmallPadding)
         ) {

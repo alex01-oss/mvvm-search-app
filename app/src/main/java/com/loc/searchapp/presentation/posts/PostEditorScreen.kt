@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,8 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
@@ -54,6 +52,12 @@ import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Post
 import com.loc.searchapp.domain.model.PostFormState
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
+import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.PostImageHeight
+import com.loc.searchapp.presentation.Dimens.SmallPadding
+import com.loc.searchapp.presentation.Dimens.TitleSize
 import com.loc.searchapp.presentation.posts.components.EditorTopBar
 import com.loc.searchapp.presentation.posts.components.ErrorDialog
 import com.loc.searchapp.presentation.posts.components.RichTextToolbar
@@ -162,6 +166,7 @@ fun PostEditorScreen(
     }
 
     Scaffold(
+        modifier = modifier,
         containerColor = Color.Transparent,
         topBar = {
             EditorTopBar(
@@ -174,47 +179,54 @@ fun PostEditorScreen(
     ) { paddingValues ->
         when (isLoading) {
             true ->
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
+
             false ->
                 Column(
-                    modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(top = paddingValues.calculateTopPadding())
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = MediumPadding1)
                         .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(BasePadding)
                 ) {
+                    Spacer(modifier = Modifier.height(MediumPadding1))
+
                     OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
                         value = formState.title,
                         onValueChange = { formState = formState.copy(title = it) },
                         label = { Text(stringResource(id = R.string.title)) },
-                        modifier = modifier.fillMaxWidth(),
                         singleLine = true
                     )
 
                     Card(
-                        modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(SmallPadding)
                     ) {
-                        Column(modifier.padding(16.dp)) {
+                        Column(modifier = Modifier.padding(BasePadding)) {
                             Text(
+                                modifier = Modifier.padding(bottom = SmallPadding),
                                 text = stringResource(id = R.string.image),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = modifier.padding(bottom = 8.dp)
+                                style = MaterialTheme.typography.titleMedium
                             )
 
                             Button(
-                                onClick = { showImagePicker = true },
-                                modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = SmallPadding),
+                                onClick = { showImagePicker = true }
                             ) {
                                 Icon(
                                     Icons.Default.AddPhotoAlternate,
                                     contentDescription = null,
-                                    modifier.padding(end = 8.dp),
                                     tint = MaterialTheme.colorScheme.onBackground
                                 )
+
+                                Spacer(modifier = Modifier.width(ExtraSmallPadding))
+
                                 Text(
                                     text = stringResource(id = R.string.pick_image),
                                     color = MaterialTheme.colorScheme.onBackground
@@ -222,9 +234,13 @@ fun PostEditorScreen(
                             }
 
                             if (formState.hasImage) {
-                                Spacer(modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(SmallPadding))
 
                                 AsyncImage(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(PostImageHeight)
+                                        .clip(RoundedCornerShape(SmallPadding)),
                                     model = ImageRequest.Builder(context)
                                         .data(formState.previewUri)
                                         .crossfade(true)
@@ -232,16 +248,15 @@ fun PostEditorScreen(
                                         .diskCachePolicy(CachePolicy.ENABLED)
                                         .build(),
                                     contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    modifier = modifier
-                                        .fillMaxWidth()
-                                        .height(200.dp)
-                                        .clip(RoundedCornerShape(8.dp))
+                                    contentScale = ContentScale.Crop
                                 )
 
-                                Spacer(modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(SmallPadding))
 
                                 OutlinedButton(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = SmallPadding),
                                     onClick = {
                                         val imageLoader = ImageLoader(context)
                                         val imageUri = formState.previewUri
@@ -253,14 +268,15 @@ fun PostEditorScreen(
 
                                         formState =
                                             formState.copy(imageUrl = null, imageFile = null)
-                                    },
-                                    modifier.fillMaxWidth()
+                                    }
                                 ) {
                                     Icon(
                                         Icons.Default.Delete,
                                         contentDescription = null,
-                                        modifier.padding(end = 8.dp)
                                     )
+
+                                    Spacer(modifier = Modifier.width(ExtraSmallPadding))
+
                                     Text(stringResource(id = R.string.delete_image))
                                 }
                             }
@@ -269,18 +285,19 @@ fun PostEditorScreen(
 
                     RichTextToolbar(richTextState = richTextState)
 
-                    Surface(
-                        modifier
+                    Card(
+                        modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 200.dp),
-                        shape = RoundedCornerShape(8.dp),
+                            .heightIn(min = PostImageHeight),
+                        shape = RoundedCornerShape(SmallPadding),
                         border = ButtonDefaults.outlinedButtonBorder(enabled = true)
                     ) {
                         RichTextEditor(
-                            state = richTextState,
-                            modifier
+                            modifier = Modifier
+                                .padding(end = SmallPadding)
                                 .fillMaxWidth()
-                                .padding(16.dp),
+                                .padding(BasePadding),
+                            state = richTextState,
                             colors = RichTextEditorDefaults.richTextEditorColors(
                                 textColor = MaterialTheme.colorScheme.onSurface
                             )
@@ -291,21 +308,21 @@ fun PostEditorScreen(
                         text = stringResource(id = R.string.preview),
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = TitleSize
                         ),
-                        modifier = modifier.padding(top = 16.dp),
+                        modifier = Modifier.padding(top = BasePadding),
                         color = MaterialTheme.colorScheme.onBackground,
                     )
 
-                    Surface(
-                        modifier
+                    Card(
+                        modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        shape = RoundedCornerShape(8.dp)
+                            .padding(bottom = SmallPadding),
+                        shape = RoundedCornerShape(SmallPadding)
                     ) {
                         RichText(
-                            state = richTextState,
-                            modifier.padding(16.dp)
+                            modifier = Modifier.padding(BasePadding),
+                            state = richTextState
                         )
                     }
                 }

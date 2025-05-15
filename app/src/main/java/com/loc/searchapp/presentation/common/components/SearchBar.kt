@@ -23,9 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.IconSize
+import com.loc.searchapp.presentation.Dimens.ExtraSmallCorner
 
 @Composable
 fun SearchBar(
@@ -47,9 +47,9 @@ fun SearchBar(
         }
     }
 
-    Box {
+    Box(modifier = modifier) {
         TextField(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .searchBarBorder(),
             value = text,
@@ -57,9 +57,9 @@ fun SearchBar(
             readOnly = readOnly,
             leadingIcon = {
                 Icon(
+                    modifier = Modifier.size(IconSize),
                     painter = painterResource(id = R.drawable.search),
                     contentDescription = null,
-                    modifier.size(IconSize),
                     tint = colorResource(id = R.color.body)
                 )
             },
@@ -96,7 +96,7 @@ fun SearchBar(
 fun Modifier.searchBarBorder() = composed {
     if (!isSystemInDarkTheme()) {
         border(
-            width = 1.dp,
+            width = ExtraSmallCorner,
             color = Color.Black,
             shape = MaterialTheme.shapes.medium
         )

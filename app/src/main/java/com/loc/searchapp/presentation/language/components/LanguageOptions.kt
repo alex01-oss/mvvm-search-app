@@ -18,9 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.DefaultCorner
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.SmallCorner
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 
 @Composable
 fun LanguageOption(
@@ -38,23 +41,23 @@ fun LanguageOption(
             .padding(horizontal = MediumPadding1)
             .clickable { onClick() }
             .border(
-                width = 2.dp,
+                width = SmallCorner,
                 color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(DefaultCorner)
             )
-            .padding(16.dp),
+            .padding(BasePadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
+            modifier = Modifier.size(SmallPadding),
             painter = painterResource(id = id),
             contentDescription = null,
-            modifier.size(24.dp),
             colorFilter =
                 if (isSystemIcon) ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                 else null
         )
 
-        Spacer(modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(SmallPadding))
 
         Text(
             text = language,

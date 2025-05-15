@@ -39,8 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Post
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.TitleSize
 import com.loc.searchapp.presentation.common.base.AuthViewModel
 import com.loc.searchapp.presentation.common.components.AppSnackbar
 import com.loc.searchapp.presentation.home.components.HomeCategories
@@ -76,6 +78,7 @@ fun HomeScreen(
                 firstVisibleItemIndex > 0 -> 1f
                 firstVisibleItemScrollOffset > 0 -> (firstVisibleItemScrollOffset / 200f)
                     .coerceIn(0f, 1f)
+
                 else -> 0f
             }
         }
@@ -88,6 +91,7 @@ fun HomeScreen(
     )
 
     Scaffold(
+        modifier = modifier,
         containerColor = Color.Transparent,
         topBar = {
             HomeTopBar(
@@ -99,7 +103,7 @@ fun HomeScreen(
         content = { paddingValues ->
             LazyColumn(
                 state = scrollState,
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(top = paddingValues.calculateTopPadding())
                     .padding(horizontal = MediumPadding1)
@@ -110,10 +114,10 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
+                            modifier = Modifier.fillMaxWidth(),
                             painter = painterResource(id = R.drawable.logo),
                             contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier.fillMaxWidth()
+                            contentScale = ContentScale.Fit
                         )
                     }
 
@@ -144,7 +148,7 @@ fun HomeScreen(
 
                 item {
                     Row(
-                        modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(
                                 top = MediumPadding1,
@@ -153,9 +157,9 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Categories", // translate
+                            text = stringResource(id = R.string.categories),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
+                            fontSize = TitleSize,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -168,7 +172,7 @@ fun HomeScreen(
 
                 item {
                     Row(
-                        modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(
                                 top = MediumPadding1,
@@ -177,22 +181,22 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Last news", // translate
+                            text = stringResource(id = R.string.last_news),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
+                            fontSize = TitleSize,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
                     PostsSlider(
-                        posts = posts, // translate
+                        posts = posts,
                         onPostClick = onPostClick
                     )
                 }
 
                 item {
                     Row(
-                        modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .padding(
                                 top = MediumPadding1,
@@ -201,9 +205,9 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Our videos", // translate
+                            text = stringResource(id = R.string.our_videos),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
+                            fontSize = TitleSize,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -218,7 +222,7 @@ fun HomeScreen(
                 item {
                     Column {
                         Row(
-                            modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
                                     top = MediumPadding1,
@@ -227,15 +231,15 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "Social media", // translate
+                                text = stringResource(id = R.string.social_media),
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
+                                fontSize = TitleSize,
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
                         Row(
-                            modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             SocialIcon(
@@ -264,9 +268,8 @@ fun HomeScreen(
             }
 
             SnackbarHost(
+                modifier = Modifier.padding(bottom = BasePadding),
                 hostState = snackbarHostState,
-                modifier
-                    .padding(bottom = 16.dp),
                 snackbar = { snackbarData ->
                     AppSnackbar(
                         snackbarHostState = snackbarHostState

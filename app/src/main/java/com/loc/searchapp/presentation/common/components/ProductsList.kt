@@ -21,6 +21,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.Product
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.home.components.ProductCard
 
@@ -47,7 +48,7 @@ fun ProductsList(
 
         loadState.refresh is LoadState.NotLoading && items.itemCount == 0 -> {
             EmptyScreen(
-                message = "Not found",
+                message = stringResource(id = R.string.not_found),
                 iconId = R.drawable.ic_search_document
             )
         }
@@ -56,7 +57,7 @@ fun ProductsList(
             LazyColumn(
                 modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(MediumPadding1),
-                contentPadding = PaddingValues(top = MediumPadding1)
+                contentPadding = PaddingValues(vertical = MediumPadding1)
             ) {
                 items(items.itemCount) { index ->
                     val product = items[index]
@@ -75,7 +76,7 @@ fun ProductsList(
                     is LoadState.Loading -> {
                         item {
                             CircularProgressIndicator(
-                                modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentWidth(Alignment.CenterHorizontally)
                                     .padding(24.dp),
@@ -87,9 +88,9 @@ fun ProductsList(
                     is LoadState.Error -> {
                         item {
                             Text(
+                                modifier = Modifier.padding(BasePadding),
                                 text = stringResource(id = R.string.loading_error),
-                                color = Color.Red,
-                                modifier = modifier.padding(16.dp)
+                                color = Color.Red
                             )
                         }
                     }

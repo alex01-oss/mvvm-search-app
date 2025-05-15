@@ -25,8 +25,9 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.presentation.Dimens.EmptyIconSize
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -78,17 +79,13 @@ fun EmptyContent(
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
+            modifier = Modifier.size(EmptyIconSize).alpha(alphaAnim),
             painter = painterResource(id = iconId),
             contentDescription = null,
-            tint = if (isSystemInDarkTheme()) LightGray else DarkGray,
-            modifier = modifier
-                .size(120.dp)
-                .alpha(alphaAnim)
+            tint = if (isSystemInDarkTheme()) LightGray else DarkGray
         )
         Text(
-            modifier = modifier
-                .padding(10.dp)
-                .alpha(alphaAnim),
+            modifier = Modifier.padding(SmallPadding).alpha(alphaAnim),
             text = message,
             style = MaterialTheme.typography.bodyMedium,
             color = if (isSystemInDarkTheme()) LightGray else DarkGray,

@@ -36,7 +36,7 @@ fun AccountOption(
             contentDescription = null,
         )
 
-        Spacer(modifier.width(SmallPadding))
+        Spacer(modifier = Modifier.width(SmallPadding))
 
         Text(
             text = text,

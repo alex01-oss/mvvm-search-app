@@ -30,7 +30,7 @@ fun InlineErrorMessage(
         shape = MaterialTheme.shapes.small
     ) {
         Row(
-            modifier.padding(MediumPadding1),
+            modifier = Modifier.padding(MediumPadding1),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -38,7 +38,7 @@ fun InlineErrorMessage(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.error
             )
-            Spacer(modifier.width(SmallPadding))
+            Spacer(modifier = Modifier.width(SmallPadding))
             Text(
                 text = message,
                 color = MaterialTheme.colorScheme.onErrorContainer,

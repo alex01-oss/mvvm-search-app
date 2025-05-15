@@ -29,6 +29,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.loc.searchapp.domain.model.Post
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.PostPreviewSize
+import com.loc.searchapp.presentation.Dimens.SmallPadding
 import com.loc.searchapp.utils.Constants.CATALOG_URL
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,24 +51,24 @@ fun PostItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-            modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp),
+                .height(PostPreviewSize),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (post.imageUrl.isNotEmpty()) {
                 AsyncImage(
+                    modifier = Modifier
+                        .width(PostPreviewSize)
+                        .fillMaxHeight(),
                     model = fullImageUrl,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = modifier
-                        .width(120.dp)
-                        .fillMaxHeight()
+                    contentScale = ContentScale.Crop
                 )
             } else {
                 Box(
-                    modifier
-                        .width(120.dp)
+                    modifier = Modifier
+                        .width(PostPreviewSize)
                         .fillMaxHeight()
                         .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
@@ -79,10 +82,10 @@ fun PostItem(
             }
 
             Column(
-                modifier
+                modifier = Modifier
                     .weight(1f)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(BasePadding),
+                verticalArrangement = Arrangement.spacedBy(SmallPadding)
             ) {
                 Text(
                     text = post.title,

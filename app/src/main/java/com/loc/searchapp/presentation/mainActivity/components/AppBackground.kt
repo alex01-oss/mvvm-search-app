@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.mainActivity
+package com.loc.searchapp.presentation.mainActivity.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

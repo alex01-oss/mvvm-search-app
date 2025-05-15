@@ -28,9 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.Dimens.AvatarHeight
+import com.loc.searchapp.presentation.Dimens.BasePadding
 import com.loc.searchapp.presentation.Dimens.IconSize
 import com.loc.searchapp.presentation.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.Dimens.SmallPadding
@@ -55,6 +55,7 @@ fun AccountScreen(
     val authState = viewModel.authState.collectAsState().value
 
     Scaffold(
+        modifier = modifier,
         containerColor = Color.Transparent,
         topBar = {
             SharedTopBar(
@@ -63,14 +64,14 @@ fun AccountScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.person),
                         contentDescription = null,
-                        modifier.size(IconSize)
+                        modifier = Modifier.size(IconSize)
                     )
                 }
             )
         }
     ) { paddingValues ->
         Column(
-            modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(top = paddingValues.calculateTopPadding() + MediumPadding1)
                 .padding(horizontal = MediumPadding1),
@@ -89,7 +90,7 @@ fun AccountScreen(
                         textStyle = MaterialTheme.typography.titleLarge
                     )
 
-                    Spacer(modifier.height(SmallPadding))
+                    Spacer(modifier = Modifier.height(SmallPadding))
 
                     Text(
                         text = user?.username.toString(),
@@ -103,9 +104,9 @@ fun AccountScreen(
                         color = Color.Gray
                     )
 
-                    Spacer(modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(MediumPadding1))
 
-                    Column(modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         AccountOption(
                             icon = Icons.Default.Settings,
                             text = stringResource(id = R.string.settings)
@@ -126,22 +127,22 @@ fun AccountScreen(
                         )
                     }
 
-                    Spacer(modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(MediumPadding1))
 
                     Button(
                         onClick = {
                             viewModel.onEvent(AuthEvent.LogoutUser)
                             productViewModel.clearLocalCart()
                         },
-                        modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
                         ),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(BasePadding),
                     ) {
                         Text(
                             text = stringResource(id = R.string.logout),
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -152,7 +153,7 @@ fun AccountScreen(
 
                 is AuthState.Loading -> {
                     Box(
-                        modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()

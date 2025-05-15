@@ -20,9 +20,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.loc.searchapp.R
 import com.loc.searchapp.data.remote.dto.MenuCategory
 import com.loc.searchapp.data.remote.dto.MenuResponse
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.CategoryHeight
+import com.loc.searchapp.presentation.Dimens.DefaultCorner
+import com.loc.searchapp.presentation.Dimens.ExtraSmallPadding
+import com.loc.searchapp.presentation.Dimens.ExtraSmallCorner
 
 
 @Composable
@@ -41,18 +48,18 @@ fun HomeCategories(
         Box(
             modifier
                 .fillMaxWidth()
-                .height(50.dp)
+                .height(CategoryHeight)
                 .clip(RoundedCornerShape(4.dp))
                 .background(Color.Transparent)
                 .border(
-                    width = 1.dp,
+                    width = ExtraSmallCorner,
                     color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(DefaultCorner)
                 ),
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = "No categories yet",
+                text = stringResource(id = R.string.no_categories),
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -66,24 +73,24 @@ fun HomeCategories(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .padding(vertical = ExtraSmallPadding)
+                    .clip(RoundedCornerShape(DefaultCorner))
                     .background(
                         if (isSelected) MaterialTheme.colorScheme.primary
                         else Color.Transparent
                     )
                     .border(
-                        width = if (isSelected) 0.dp else 1.dp,
+                        width = if (isSelected) 0.dp else ExtraSmallCorner,
                         color =
                             if (isSelected) Color.Transparent
                             else MaterialTheme.colorScheme.onBackground,
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(DefaultCorner)
                     )
                     .clickable {
                         selectedCategory = category
                         onCategoryClick(category)
                     }
-                    .padding(16.dp),
+                    .padding(BasePadding),
                 contentAlignment = Alignment.Center
             ) {
                 Text(

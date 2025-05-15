@@ -27,7 +27,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.domain.model.BottomNavItem
+import com.loc.searchapp.presentation.Dimens.BasePadding
+import com.loc.searchapp.presentation.Dimens.BottomNavMargin
 import com.loc.searchapp.presentation.Dimens.IconSize
+import com.loc.searchapp.presentation.Dimens.MediumPadding1
+import com.loc.searchapp.presentation.Dimens.activeButtonSize
+import com.loc.searchapp.presentation.Dimens.navBarHeight
 
 @Composable
 fun BottomNavigation(
@@ -36,16 +41,14 @@ fun BottomNavigation(
     selected: Int,
     onItemClick: (Int) -> Unit
 ) {
-    val navBarHeight = 56.dp
-    val activeButtonSize = 64.dp
-    val horizontalPadding = 24.dp
+    val navBarHeight = navBarHeight
 
     Box(
-        modifier = modifier
+        modifier
             .fillMaxWidth()
             .height(navBarHeight + 60.dp)
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 40.dp),
+            .padding(horizontal = BasePadding)
+            .padding(bottom = BottomNavMargin),
         contentAlignment = Alignment.BottomCenter
     ) {
         Card(
@@ -62,7 +65,7 @@ fun BottomNavigation(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = horizontalPadding),
+                    .padding(horizontal = MediumPadding1),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -73,13 +76,13 @@ fun BottomNavigation(
                     ) {
                         if (index != selected) {
                             IconButton(
-                                onClick = { onItemClick(index) },
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(32.dp),
+                                onClick = { onItemClick(index) }
                             ) {
                                 Icon(
+                                    modifier = Modifier.size(IconSize),
                                     painter = painterResource(id = item.icon),
                                     contentDescription = null,
-                                    modifier = Modifier.size(IconSize),
                                     tint = Color.White
                                 )
                             }
@@ -103,9 +106,9 @@ fun BottomNavigation(
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
+                            modifier = Modifier.size(IconSize),
                             painter = painterResource(id = selectedItem.icon),
                             contentDescription = null,
-                            modifier = Modifier.size(IconSize),
                             tint = Color.White
                         )
                     }
@@ -114,10 +117,10 @@ fun BottomNavigation(
                 val placeables = measurables.map { it.measure(constraints) }
                 val buttonPlaceable = placeables.first()
 
-                val availableWidth = constraints.maxWidth - (2 * horizontalPadding.roundToPx())
+                val availableWidth = constraints.maxWidth - (2 * MediumPadding1.roundToPx())
                 val itemWidth = availableWidth / items.size
 
-                val paddingOffset = horizontalPadding.roundToPx()
+                val paddingOffset = MediumPadding1.roundToPx()
                 val centerX = paddingOffset + (selected * itemWidth) + (itemWidth / 2)
                 val posX = centerX - (buttonPlaceable.width / 2)
 
