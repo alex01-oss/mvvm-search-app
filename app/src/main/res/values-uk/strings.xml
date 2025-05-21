@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Search App</string>
 
     <!--    account screen-->
@@ -88,7 +88,7 @@
     <string name="delete">Видалити</string>
 
     <!--    news screen -->
-    <string name="add_post">Додати новину</string>
+    <string name="our_blog">Наш блог</string>
     <string name="empty_news">Новин поки немає</string>
     <string name="create_post">Створення новини</string>
     <string name="edit_post">Редагування новини</string>
@@ -101,7 +101,7 @@
 
     <!--    home screen-->
     <string name="about_start">З 1966 року </string>
-    <string name="about_company">ПрАТ «ПОЛТАВСЬКИЙ АЛМАЗНИЙ ІНСТРУМЕНТ»</string>
+    <string name="about_company">ПрАТ «ПОЛТАВСЬКИЙ АЛМАЗНИЙ ІНСТРУМЕНТ» %1$s</string>
     <string name="about_end"> продовжує традиції якості та інновацій у виробництві алмазного та CBN інструменту. Наша компанія пройшла шлях від розробника перших алмазних порошків у СРСР до сучасного підприємства, що виготовляє складні рішення для промисловості по всьому світу.</string>
 
     <!--    catalog screen-->
@@ -116,19 +116,33 @@
     <string name="pick_image">Вибрати зображення</string>
     <string name="delete_image">Видалити зображення</string>
     <string name="preview">Попередній перегляд</string>
-    <string name="sign">Sign</string>
-    <string name="_in">IN</string>
-    <string name="_up">UP</string>
-    <string name="not_found">Not found</string>
-    <string name="no_categories">No categories yet</string>
-    <string name="last_news">Last news</string>
-    <string name="our_videos">Our videos</string>
-    <string name="social_media">Social media</string>
-    <string name="blog">Blog</string>
-    <string name="product_details">Product details</string>
-    <string name="grid_size">"Grid size: "</string>
-    <string name="bond_info">Bond info</string>
-    <string name="cooling_instructions">Cooling instructions</string>
-    <string name="compatible_machines">Compatible machines</string>
-    <string name="product_info">Product info</string>
+
+    <string name="sign_in_main">Увійти</string>
+    <string name="sign_in_suffix">в акаунт</string>
+
+    <string name="sign_up_main">Увійти</string>
+    <string name="sign_up_suffix">в акаунт</string>
+
+    <string name="not_found">Нічого не знайдено</string>
+    <string name="no_categories">Категорії відсутні</string>
+    <string name="last_news">Останні новини</string>
+    <string name="our_videos">Наші відео</string>
+    <string name="social_media">Соціальні мережі</string>
+    <string name="blog">Блог</string>
+    <string name="product_details">Деталі продукту</string>
+    <string name="bond">Зв’язка: </string>
+    <string name="grid_size">Розмір сітки: </string>
+    <string name="bond_info">Інформація про зв’язку</string>
+    <string name="cooling_instructions">Інструкції з охолодження</string>
+    <string name="compatible_machines">Сумісне обладнання</string>
+    <string name="product_info">Інформація про продукт</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="privacy_policy_text">Privacy policy text</string>
+    <string name="terms_of_use">Terms of user</string>
+    <string name="terms_of_use_text">Tefrms of use text</string>
+    <string name="support">Support</string>
+    <string name="support_email">Support email</string>
+    <string name="about_us">About us</string>
 </resources>

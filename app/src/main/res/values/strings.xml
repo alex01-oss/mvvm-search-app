@@ -88,7 +88,7 @@
     <string name="delete">Delete</string>
 
     <!-- news screen -->
-    <string name="add_post">Add News</string>
+    <string name="our_blog">Our blog</string>
     <string name="empty_news">No news yet</string>
     <string name="create_post">Create News</string>
     <string name="edit_post">Edit News</string>
@@ -101,7 +101,7 @@
 
     <!-- home screen -->
     <string name="about_start">Since 1966, </string>
-    <string name="about_company">PJSC «Poltava Diamond Tool»</string>
+    <string name="about_company">PJSC «Poltava Diamond Tool» %1$s</string>
     <string name="about_end"> has continued the tradition of quality and innovation in the production of diamond and CBN tools. Our company has evolved from developing the first diamond powders in the USSR to a modern enterprise providing complex industrial solutions worldwide.</string>
 
     <!-- catalog screen -->
@@ -116,9 +116,13 @@
     <string name="pick_image">Pick Image</string>
     <string name="delete_image">Delete Image</string>
     <string name="preview">Preview</string>
-    <string name="sign">Sign</string>
-    <string name="_in">IN</string>
-    <string name="_up">UP</string>
+
+    <string name="sign_in_main">Sign</string>
+    <string name="sign_in_suffix">IN</string>
+
+    <string name="sign_up_main">Sign</string>
+    <string name="sign_up_suffix">UP</string>
+
     <string name="not_found">Not found</string>
     <string name="no_categories">No categories yet</string>
     <string name="last_news">Last news</string>
@@ -132,4 +136,13 @@
     <string name="cooling_instructions">Cooling instructions</string>
     <string name="compatible_machines">Compatible machines</string>
     <string name="product_info">Product info</string>
+    <string name="about">About</string>
+    <string name="version">Version %1$s</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="privacy_policy_text">Privacy policy text</string>
+    <string name="terms_of_use">Terms of user</string>
+    <string name="terms_of_use_text">Terms of use text</string>
+    <string name="support">Support</string>
+    <string name="support_email">Support email</string>
+    <string name="about_us">About us</string>
 </resources>
