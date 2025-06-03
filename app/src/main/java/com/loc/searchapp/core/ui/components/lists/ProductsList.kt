@@ -1,7 +1,6 @@
 package com.loc.searchapp.core.ui.components.lists
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,42 +21,35 @@ import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.ui.components.common.EmptyScreen
-import com.loc.searchapp.core.ui.components.loading.ProductCardShimmerEffect
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.home.components.ProductCard
+import com.loc.searchapp.feature.catalog.components.ProductCard
+import com.loc.searchapp.feature.shared.components.ProductListShimmer
+import com.loc.searchapp.feature.shared.model.UiState
 
 @Composable
 fun ProductsList(
+    state: UiState<Unit>,
     modifier: Modifier = Modifier,
     items: LazyPagingItems<Product>,
     onClick: (Product) -> Unit,
     onAdd: (Product) -> Unit,
     onRemove: (Product) -> Unit,
     localCartChanges: Map<String, Boolean>,
-    showShimmerOnFirstLoad: Boolean,
 ) {
-    val loadState = items.loadState
+    when (state) {
+        UiState.Loading -> ProductListShimmer()
 
-    when {
-        loadState.refresh is LoadState.Loading && showShimmerOnFirstLoad -> {
-            ShimmerEffect()
-        }
+        is UiState.Error -> EmptyScreen(message = state.message)
 
-        loadState.refresh is LoadState.Error -> {
-            EmptyScreen(error = (loadState.refresh as LoadState.Error).error)
-        }
+        UiState.Empty -> EmptyScreen(
+            message = stringResource(id = R.string.not_found),
+            iconId = R.drawable.ic_search_document
+        )
 
-        loadState.refresh is LoadState.NotLoading && items.itemCount == 0 -> {
-            EmptyScreen(
-                message = stringResource(id = R.string.not_found),
-                iconId = R.drawable.ic_search_document
-            )
-        }
-
-        else -> {
+        is UiState.Success -> {
             LazyColumn(
-                modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(MediumPadding1),
                 contentPadding = PaddingValues(vertical = MediumPadding1)
             ) {
@@ -75,45 +67,27 @@ fun ProductsList(
                 }
 
                 when (items.loadState.append) {
-                    is LoadState.Loading -> {
-                        item {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                                    .padding(24.dp),
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
+                    is LoadState.Loading -> item {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(Alignment.CenterHorizontally)
+                                .padding(24.dp),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
 
-                    is LoadState.Error -> {
-                        item {
-                            Text(
-                                modifier = Modifier.padding(BasePadding),
-                                text = stringResource(id = R.string.loading_error),
-                                color = Color.Red
-                            )
-                        }
+                    is LoadState.Error -> item {
+                        Text(
+                            modifier = Modifier.padding(BasePadding),
+                            text = stringResource(id = R.string.loading_error),
+                            color = Color.Red
+                        )
                     }
 
                     else -> Unit
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ShimmerEffect(
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(MediumPadding1)
-    ) {
-        repeat(10) {
-            ProductCardShimmerEffect(modifier.padding(horizontal = MediumPadding1))
         }
     }
 }

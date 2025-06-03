@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -25,9 +26,10 @@ import com.loc.searchapp.core.ui.components.common.SharedTopBar
 import com.loc.searchapp.core.ui.components.lists.ProductsList
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.auth.model.AuthState
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.catalog.viewmodel.ProductViewModel
+import com.loc.searchapp.feature.shared.model.AuthState
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,12 +41,17 @@ fun CatalogScreen(
     onAuthClick: () -> Unit,
     authViewModel: AuthViewModel,
     productViewModel: ProductViewModel,
+    homeViewModel: HomeViewModel,
     onBackClick: () -> Unit
 ) {
-    val localCartChanges = productViewModel.localCartChanges.collectAsState().value
-    val authState = authViewModel.authState.collectAsState().value
+    val localCartChanges by productViewModel.localCartChanges.collectAsState()
+    val authState by authViewModel.authState.collectAsState()
+
+    val productsState by homeViewModel.productsState.collectAsState()
+
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
     val mustLoginMessage = stringResource(id = R.string.must_login)
     val loginActionLabel = stringResource(id = R.string.login)
 
@@ -76,6 +83,7 @@ fun CatalogScreen(
             ) {
                 ProductsList(
                     items = products,
+                    state = productsState,
                     onClick = { product -> navigateToDetails(product) },
                     onAdd = { product ->
                         if (authState !is AuthState.Authenticated) {
@@ -95,7 +103,6 @@ fun CatalogScreen(
                     },
                     onRemove = { product -> productViewModel.removeFromCart(product.code) },
                     localCartChanges = localCartChanges,
-                    showShimmerOnFirstLoad = true,
                 )
             }
         }

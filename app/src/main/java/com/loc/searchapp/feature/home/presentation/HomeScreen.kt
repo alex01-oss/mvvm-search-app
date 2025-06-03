@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -38,20 +37,22 @@ import androidx.compose.ui.text.withStyle
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.components.common.AppSnackbar
+import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TitleSize
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.home.components.HomeCategories
 import com.loc.searchapp.feature.home.components.HomeTopBar
 import com.loc.searchapp.feature.home.components.PostsSlider
 import com.loc.searchapp.feature.home.components.SocialIcon
 import com.loc.searchapp.feature.home.components.YouTubeVideoSlider
-import com.loc.searchapp.feature.home.viewmodel.HomeViewModel
-import com.loc.searchapp.feature.posts.viewmodel.PostViewModel
+import com.loc.searchapp.feature.shared.components.ProductListShimmer
+import com.loc.searchapp.feature.shared.model.UiState
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -63,8 +64,8 @@ fun HomeScreen(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val menu = viewModel.menu.collectAsState().value
-    val posts = postViewModel.posts.collectAsState().value
+    val menu by viewModel.menu.collectAsState()
+    val postState by postViewModel.postsState.collectAsState()
 
     val scrollState = rememberLazyListState()
 
@@ -186,10 +187,20 @@ fun HomeScreen(
                         )
                     }
 
-                    PostsSlider(
-                        posts = posts,
-                        onPostClick = onPostClick
-                    )
+                    when (postState) {
+                        is UiState.Success -> {
+                            PostsSlider(
+                                posts = (postState as UiState.Success).data,
+                                onPostClick = onPostClick
+                            )
+                        }
+
+                        UiState.Loading -> ProductListShimmer()
+
+                        is UiState.Error -> EmptyScreen((postState as UiState.Error).message)
+
+                        UiState.Empty -> EmptyScreen(message = stringResource(id = R.string.empty_blog))
+                    }
                 }
 
                 item {
@@ -210,10 +221,7 @@ fun HomeScreen(
                         )
                     }
                     YouTubeVideoSlider(
-                        videoIds = listOf(
-                            "6Hv7BELOddo",
-                            "fVAF2z6h4Ic"
-                        )
+                        videoIds = viewModel.videoIds
                     )
                 }
 
@@ -268,7 +276,7 @@ fun HomeScreen(
             SnackbarHost(
                 modifier = Modifier.padding(bottom = BasePadding),
                 hostState = snackbarHostState,
-                snackbar = { snackbarData ->
+                snackbar = {
                     AppSnackbar(
                         snackbarHostState = snackbarHostState
                     )

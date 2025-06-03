@@ -20,13 +20,19 @@ class UserPreferences @Inject constructor(
     }
 
     val tokenFlow: Flow<String?> = dataStore.data
-        .map { it[Keys.ACCESS_TOKEN] }
+        .map { prefs ->
+            prefs[Keys.ACCESS_TOKEN]?.let {
+                runCatching { EncryptionManager.decrypt(it) }.getOrNull()
+            }
+        }
         .catch { emit(null) }
 
     suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        val encryptedAccess = EncryptionManager.encrypt(accessToken)
+        val encryptedRefresh = EncryptionManager.encrypt(refreshToken)
         dataStore.edit {
-            it[Keys.ACCESS_TOKEN] = accessToken
-            it[Keys.REFRESH_TOKEN] = refreshToken
+            it[Keys.ACCESS_TOKEN] = encryptedAccess
+            it[Keys.REFRESH_TOKEN] = encryptedRefresh
         }
     }
 
@@ -36,7 +42,8 @@ class UserPreferences @Inject constructor(
 
     suspend fun getRefreshToken(): String? {
         return runCatching {
-            dataStore.data.first()[Keys.REFRESH_TOKEN]
+            val encrypted = dataStore.data.first()[Keys.REFRESH_TOKEN]
+            encrypted?.let { EncryptionManager.decrypt(it) }
         }.getOrNull()
     }
 

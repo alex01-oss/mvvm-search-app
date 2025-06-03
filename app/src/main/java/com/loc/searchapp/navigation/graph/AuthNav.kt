@@ -3,9 +3,9 @@ package com.loc.searchapp.navigation.graph
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.loc.searchapp.feature.auth.presentation.LoginScreen
-import com.loc.searchapp.feature.auth.presentation.RegisterScreen
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.login.presentation.LoginScreen
+import com.loc.searchapp.feature.register.presentation.RegisterScreen
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 
 fun NavGraphBuilder.authScreens(
     navController: NavController,
@@ -17,7 +17,10 @@ fun NavGraphBuilder.authScreens(
                 navController.navigate(Route.RegisterScreen.route)
             },
             onAuthenticated = {
-                navController.navigate(Route.HomeScreen.route)
+                navController.popBackStack()
+                navController.navigate(Route.HomeScreen.route) {
+                    launchSingleTop = true
+                }
             },
             viewModel = authViewModel
         )
@@ -29,7 +32,10 @@ fun NavGraphBuilder.authScreens(
                 navController.navigate(Route.LoginScreen.route)
             },
             onAuthenticated = {
-                navController.navigate(Route.HomeScreen.route)
+                navController.popBackStack()
+                navController.navigate(Route.HomeScreen.route) {
+                    launchSingleTop = true
+                }
             },
             viewModel = authViewModel
         )

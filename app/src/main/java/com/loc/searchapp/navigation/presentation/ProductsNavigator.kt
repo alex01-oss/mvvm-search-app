@@ -3,6 +3,9 @@ package com.loc.searchapp.navigation.presentation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -19,16 +22,22 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
 import com.loc.searchapp.core.ui.components.loading.LoadingScreen
-import com.loc.searchapp.feature.auth.model.AuthState
+import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.feature.shared.model.AuthState
+import com.loc.searchapp.feature.shared.network.NetworkStatus
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ConnectivityViewModel
+import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import com.loc.searchapp.navigation.components.BottomNavigation
 import com.loc.searchapp.navigation.graph.Route
 import com.loc.searchapp.navigation.graph.authScreens
 import com.loc.searchapp.navigation.graph.homeScreens
-import com.loc.searchapp.navigation.utils.navigateToTab
 import com.loc.searchapp.navigation.graph.postScreens
 import com.loc.searchapp.navigation.graph.settingsScreens
+import com.loc.searchapp.navigation.utils.navigateToTab
 
 @Composable
 fun ProductsNavigator(
@@ -36,7 +45,28 @@ fun ProductsNavigator(
 ) {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = hiltViewModel()
+    val productViewModel: ProductViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val postViewModel: PostViewModel = hiltViewModel()
+
     val authState by authViewModel.authState.collectAsState()
+
+    val connectivityViewModel: ConnectivityViewModel = hiltViewModel()
+    val networkStatus by connectivityViewModel.networkStatus.collectAsState()
+
+    if (networkStatus != NetworkStatus.Available) {
+        Snackbar(
+            modifier = Modifier.padding(MediumPadding1),
+            action = {
+                TextButton(onClick = { /* Maybe open settings */ }) {
+                    Text("Налаштування")
+                }
+            }
+        ) {
+            Text("Немає інтернету (${networkStatus.name})")
+        }
+    }
+
 
     if (authState == AuthState.Loading) {
         LoadingScreen()
@@ -111,7 +141,13 @@ fun ProductsNavigator(
                 navController = navController,
                 startDestination = startDestination
             ) {
-                mainNavGraph(navController, authViewModel)
+                mainNavGraph(
+                    navController,
+                    authViewModel,
+                    productViewModel,
+                    homeViewModel,
+                    postViewModel
+                )
             }
         }
     }
@@ -119,10 +155,28 @@ fun ProductsNavigator(
 
 fun NavGraphBuilder.mainNavGraph(
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    productViewModel: ProductViewModel,
+    homeViewModel: HomeViewModel,
+    postViewModel: PostViewModel
 ) {
-    homeScreens(navController, authViewModel)
-    authScreens(navController, authViewModel)
-    postScreens(navController, authViewModel)
-    settingsScreens(navController)
+    homeScreens(
+        navController,
+        authViewModel,
+        productViewModel,
+        homeViewModel,
+        postViewModel
+    )
+    authScreens(
+        navController,
+        authViewModel
+    )
+    postScreens(
+        navController,
+        authViewModel,
+        postViewModel
+    )
+    settingsScreens(
+        navController
+    )
 }

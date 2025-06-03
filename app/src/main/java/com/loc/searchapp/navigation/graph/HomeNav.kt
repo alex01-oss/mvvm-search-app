@@ -11,27 +11,27 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.feature.account.presentation.AccountScreen
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.cart.presentation.CartScreen
 import com.loc.searchapp.feature.catalog.presentation.CatalogScreen
-import com.loc.searchapp.feature.catalog.viewmodel.ProductViewModel
-import com.loc.searchapp.feature.details.presentation.DetailsScreen
-import com.loc.searchapp.feature.details.viewmodel.DetailsViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
+import com.loc.searchapp.feature.product_details.presentation.DetailsScreen
+import com.loc.searchapp.feature.product_details.viewmodel.DetailsViewModel
 import com.loc.searchapp.feature.home.presentation.HomeScreen
-import com.loc.searchapp.feature.home.viewmodel.HomeViewModel
-import com.loc.searchapp.feature.posts.viewmodel.PostViewModel
+import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 import com.loc.searchapp.feature.search.presentation.SearchScreen
 import com.loc.searchapp.feature.search.viewmodel.SearchViewModel
 import com.loc.searchapp.navigation.utils.navigateToTab
 
 fun NavGraphBuilder.homeScreens(
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    productViewModel: ProductViewModel,
+    homeViewModel: HomeViewModel,
+    postViewModel: PostViewModel
 ) {
     composable(route = Route.HomeScreen.route) {
-        val homeViewModel: HomeViewModel = hiltViewModel()
-        val postViewModel: PostViewModel = hiltViewModel()
-
         HomeScreen(
             authViewModel = authViewModel,
             postViewModel = postViewModel,
@@ -46,14 +46,13 @@ fun NavGraphBuilder.homeScreens(
     }
 
     composable(route = Route.CatalogScreen.route) {
-        val homeViewModel: HomeViewModel = hiltViewModel()
-        val productViewModel: ProductViewModel = hiltViewModel()
         val products = homeViewModel.catalogFlow.collectAsLazyPagingItems()
 
         CatalogScreen(
             products = products,
             authViewModel = authViewModel,
             productViewModel = productViewModel,
+            homeViewModel = homeViewModel,
             onAuthClick = {
                 navController.navigate(Route.LoginScreen.route)
             },
@@ -71,8 +70,6 @@ fun NavGraphBuilder.homeScreens(
 
     composable(route = Route.SearchScreen.route) {
         val searchViewModel: SearchViewModel = hiltViewModel()
-        val productViewModel: ProductViewModel = hiltViewModel()
-        val homeViewModel: HomeViewModel = hiltViewModel()
         val state = searchViewModel.state.value
 
         SearchScreen(
@@ -88,12 +85,9 @@ fun NavGraphBuilder.homeScreens(
     }
 
     composable(route = Route.CartScreen.route) {
-        val productViewModel: ProductViewModel = hiltViewModel()
-        val cartItems = productViewModel.cartItems.collectAsState()
         val cartModified = productViewModel.cartModified.collectAsState()
 
         CartScreen(
-            cartItems = cartItems,
             viewModel = productViewModel,
             cartModified = cartModified,
             onCartUpdated = { productViewModel.resetCartModified() },
@@ -113,13 +107,12 @@ fun NavGraphBuilder.homeScreens(
     ) { backStackEntry ->
         val code = backStackEntry.arguments?.getString("code") ?: return@composable
         val detailsViewModel: DetailsViewModel = hiltViewModel()
-        val productViewModel: ProductViewModel = hiltViewModel()
 
         LaunchedEffect(code) {
             detailsViewModel.loadProduct(code)
         }
 
-        val state by detailsViewModel.state
+        val state by detailsViewModel.detailsState
         val localCartChanges = productViewModel.localCartChanges.collectAsState().value
 
         DetailsScreen(
@@ -131,7 +124,6 @@ fun NavGraphBuilder.homeScreens(
     }
 
     composable(route = Route.AccountScreen.route) {
-        val productViewModel: ProductViewModel = hiltViewModel()
 
         AccountScreen(
             onAuthClick = {

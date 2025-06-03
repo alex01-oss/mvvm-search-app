@@ -31,15 +31,14 @@ import com.loc.searchapp.core.ui.components.common.SharedTopBar
 import com.loc.searchapp.core.ui.components.lists.CartList
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.auth.components.GuestUser
-import com.loc.searchapp.feature.auth.model.AuthState
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.catalog.viewmodel.ProductViewModel
+import com.loc.searchapp.feature.shared.components.GuestUser
+import com.loc.searchapp.feature.shared.model.AuthState
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    cartItems: State<List<CartItem>>,
     navigateToDetails: (CartItem) -> Unit,
     authViewModel: AuthViewModel,
     viewModel: ProductViewModel,
@@ -47,19 +46,20 @@ fun CartScreen(
     onCartUpdated: () -> Unit,
     onAuthClick: () -> Unit,
 ) {
-    val authState = authViewModel.authState.collectAsState().value
+    val authState by authViewModel.authState.collectAsState()
     var cartInitialized by rememberSaveable { mutableStateOf(false) }
+
+    val cartState by viewModel.cartState.collectAsState()
 
     LaunchedEffect(authState, cartModified) {
         if (authState is AuthState.Authenticated) {
             if (!cartInitialized) {
-                viewModel.getCart()
+                viewModel.loadCart()
                 cartInitialized = true
             } else if (cartModified.value) {
-                viewModel.getCart()
+                viewModel.loadCart()
                 onCartUpdated()
             }
-
         }
     }
 
@@ -95,7 +95,7 @@ fun CartScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         CartList(
-                            items = cartItems.value,
+                            state = cartState,
                             onClick = { cartItem -> navigateToDetails(cartItem) },
                             onRemove = { cartItem -> viewModel.removeFromCart(cartItem.product.code) },
                         )
@@ -118,7 +118,7 @@ fun CartScreen(
                 }
 
                 is AuthState.Error -> {
-                    Text(text = stringResource(id = R.string.cart, authState.message))
+                    Text(text = stringResource(id = R.string.cart, (authState as AuthState.Error).message))
                 }
             }
         }

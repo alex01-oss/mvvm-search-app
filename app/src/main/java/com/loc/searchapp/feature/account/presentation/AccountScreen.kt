@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.components.common.Avatar
 import com.loc.searchapp.core.ui.components.common.SharedTopBar
@@ -38,11 +39,11 @@ import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.feature.account.components.AccountOption
-import com.loc.searchapp.feature.auth.components.GuestUser
-import com.loc.searchapp.feature.auth.model.AuthEvent
-import com.loc.searchapp.feature.auth.model.AuthState
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.catalog.viewmodel.ProductViewModel
+import com.loc.searchapp.feature.shared.components.GuestUser
+import com.loc.searchapp.feature.shared.model.AuthEvent
+import com.loc.searchapp.feature.shared.model.AuthState
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 
 @Composable
 fun AccountScreen(
@@ -108,7 +109,13 @@ fun AccountScreen(
                     )
 
                     if (user?.role == "admin") {
-                        Text("role: admin")
+                        Text(
+                            text = "role: admin",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .padding(vertical = BasePadding),
+                            fontWeight = FontWeight.Bold,
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(MediumPadding1))

@@ -33,8 +33,8 @@ import com.loc.searchapp.core.ui.values.Dimens.AvatarSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopBarPadding
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
-import com.loc.searchapp.feature.auth.model.AuthState
-import com.loc.searchapp.feature.auth.viewmodel.AuthViewModel
+import com.loc.searchapp.feature.shared.model.AuthState
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

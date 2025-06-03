@@ -24,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.PostPreviewSize
 import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.ShimmerHeight1
 import com.loc.searchapp.core.ui.values.Dimens.ShimmerHeight2
@@ -43,6 +44,84 @@ fun Modifier.shimmerEffect() = composed {
 
 @Composable
 fun ProductCardShimmerEffect(
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .size(ProductCardSize)
+                .clip(MaterialTheme.shapes.medium)
+                .shimmerEffect()
+        )
+
+        Column(
+            verticalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .padding(horizontal = ExtraSmallPadding)
+                .height(ProductCardSize)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(ShimmerHeight1)
+                    .padding(horizontal = MediumPadding1)
+                    .shimmerEffect()
+            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .height(ShimmerHeight2)
+                        .padding(horizontal = MediumPadding1)
+                        .shimmerEffect()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BlogShimmerEffect(
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .size(PostPreviewSize)
+                .clip(MaterialTheme.shapes.medium)
+                .shimmerEffect()
+        )
+
+        Column(
+            verticalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .padding(horizontal = ExtraSmallPadding)
+                .height(PostPreviewSize)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(ShimmerHeight1)
+                    .padding(horizontal = MediumPadding1)
+                    .shimmerEffect()
+            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .height(ShimmerHeight2)
+                        .padding(horizontal = MediumPadding1)
+                        .shimmerEffect()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PostItemShimmerEffect(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {

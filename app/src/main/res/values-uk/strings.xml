@@ -145,4 +145,5 @@
     <string name="support">Support</string>
     <string name="support_email">Support email</string>
     <string name="about_us">About us</string>
+    <string name="empty_blog">Empty blog</string>
 </resources>

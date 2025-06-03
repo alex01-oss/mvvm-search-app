@@ -19,6 +19,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField("String", "YOUTUBE_API_KEY", "\"AIzaSyCq3NHJwF4_MPg5iLKGiuJUGUwJXtxLV80\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -98,10 +100,10 @@ dependencies {
     implementation('io.coil-kt:coil-compose:2.7.0')
 
     // Datastore
-    implementation('androidx.datastore:datastore-preferences:1.1.6')
+    implementation('androidx.datastore:datastore-preferences:1.1.7')
 
     // Compose Foundation
-    implementation('androidx.compose.foundation:foundation:1.8.1')
+    implementation('androidx.compose.foundation:foundation:1.8.2')
 
     // Paging 3
     implementation('androidx.paging:paging-runtime-ktx:3.3.6')
