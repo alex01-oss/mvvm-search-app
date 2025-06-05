@@ -21,9 +21,6 @@ class ProductViewModel @Inject constructor(
     private val _localCartChanges = MutableStateFlow<Map<String, Boolean>>(emptyMap())
     val localCartChanges = _localCartChanges.asStateFlow()
 
-    private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
-    val cartItems: StateFlow<List<CartItem>> = _cartItems.asStateFlow()
-
     private val _cartModified = MutableStateFlow(false)
     val cartModified: StateFlow<Boolean> = _cartModified.asStateFlow()
 

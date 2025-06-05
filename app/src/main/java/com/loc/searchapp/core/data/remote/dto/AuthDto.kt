@@ -12,8 +12,9 @@ data class LoginRequest(
 
 @Serializable
 data class RegisterRequest(
-    val username: String,
+    val fullname: String,
     val email: String,
+    val phone: String,
     val password: String
 )
 
@@ -21,8 +22,8 @@ data class RegisterRequest(
 data class AuthResponse (
     val message: String? = null,
     val user: User,
-    val accessToken: String,
-    val refreshToken: String
+    @SerialName("access_token") val accessToken: String,
+    @SerialName("refresh_token") val refreshToken: String
 )
 
 @Serializable
@@ -32,7 +33,7 @@ data class UserResponse (
 
 @Serializable
 data class LogoutRequest(
-    val refreshToken: String
+    @SerialName("refresh_token") val refreshToken: String
 )
 
 @Serializable
@@ -42,12 +43,12 @@ data class LogoutResponse(
 
 @Serializable
 data class RefreshTokenRequest(
-    val refreshToken: String
+    @SerialName("refresh_token") val refreshToken: String
 )
 
 @Serializable
 data class RefreshTokenResponse(
-    val accessToken: String,
-    val refreshToken: String,
+    @SerialName("access_token") val accessToken: String,
+    @SerialName("refresh_token") val refreshToken: String,
     @SerialName("token_type") val tokenType: String
 )

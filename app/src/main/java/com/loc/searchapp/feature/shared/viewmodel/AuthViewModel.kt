@@ -95,8 +95,9 @@ class AuthViewModel @Inject constructor(
 
                     try {
                         val response = authUseCases.registerUser(
-                            event.username,
+                            event.fullname,
                             event.email,
+                            event.phone,
                             event.password
                         )
 

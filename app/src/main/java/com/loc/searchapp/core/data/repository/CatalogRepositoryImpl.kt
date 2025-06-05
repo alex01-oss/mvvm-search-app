@@ -57,9 +57,7 @@ class CatalogRepositoryImpl @Inject constructor(
     override suspend fun deleteProduct(
         code: String
     ): ItemCartResponse {
-        return api.removeFromCart(
-            ItemCartRequest(code)
-        )
+        return api.removeFromCart(code)
     }
 
     override suspend fun getMenu(): MenuResponse {

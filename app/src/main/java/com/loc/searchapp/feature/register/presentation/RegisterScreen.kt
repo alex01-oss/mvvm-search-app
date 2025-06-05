@@ -34,21 +34,23 @@ fun RegisterScreen(
 ) {
     val authState by viewModel.authState.collectAsState()
 
-    var username by remember { mutableStateOf("") }
+    var fullname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    var usernameError by remember { mutableStateOf<String?>(null) }
+    var fullnameError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
+    var phoneError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
 
     fun validateForm(): Boolean {
-        usernameError = FormValidator.validateUsername(username)
+        fullnameError = FormValidator.validateUsername(fullname)
         emailError = FormValidator.validateEmail(email)
         passwordError = FormValidator.validatePassword(password)
 
-        return usernameError == null && emailError == null && passwordError == null
+        return fullnameError == null && emailError == null && passwordError == null
     }
 
     LaunchedEffect(authState) {
@@ -70,15 +72,15 @@ fun RegisterScreen(
         },
         fields = listOf(
             AuthField(
-                value = username,
+                value = fullname,
                 onValueChange = {
-                    username = it
-                    usernameError = null
+                    fullname = it
+                    fullnameError = null
                 },
                 placeholder = stringResource(id = R.string.full_name),
                 icon = painterResource(R.drawable.person),
-                isError = usernameError != null,
-                errorMessage = usernameError
+                isError = fullnameError != null,
+                errorMessage = fullnameError
             ),
             AuthField(
                 value = email,
@@ -90,6 +92,17 @@ fun RegisterScreen(
                 icon = painterResource(R.drawable.mail),
                 isError = emailError != null,
                 errorMessage = emailError
+            ),
+            AuthField(
+                value = phone,
+                onValueChange = {
+                    phone = it
+                    phoneError = null
+                },
+                placeholder = stringResource(id = R.string.phone),
+                icon = painterResource(R.drawable.phone),
+                isError = phoneError != null,
+                errorMessage = phoneError
             ),
             AuthField(
                 value = password,
@@ -108,16 +121,16 @@ fun RegisterScreen(
         ),
         onSubmitClick = {
             if (validateForm()) {
-                viewModel.onEvent(AuthEvent.LoginUser(email, password))
+                viewModel.onEvent(AuthEvent.RegisterUser(fullname, email, phone, password))
             }
         },
         isLoading = authState is AuthState.Loading,
-        submitButtonText = stringResource(id = R.string.login),
+        submitButtonText = stringResource(id = R.string.register),
         onBottomTextClick = {
             viewModel.clearError()
             onLoginClick()
         },
-        bottomText = stringResource(id = R.string.not_have_account),
+        bottomText = stringResource(id = R.string.have_account),
         showError = (authState as? AuthState.Error)?.message
     )
 }

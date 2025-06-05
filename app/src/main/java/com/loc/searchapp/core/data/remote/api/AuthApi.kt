@@ -15,28 +15,28 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST("api/login")
+    @POST("auth/login")
     suspend fun login(
         @Body request: LoginRequest
     ): Response<AuthResponse>
 
-    @POST("api/register")
+    @POST("auth/register")
     suspend fun register(
         @Body request: RegisterRequest
     ): Response<AuthResponse>
 
-    @POST("api/logout")
+    @POST("auth/logout")
     suspend fun logout(
         @Header("Authorization") accessToken: String,
         @Body request: LogoutRequest
     ): Response<LogoutResponse>
 
-    @POST("api/refresh")
+    @POST("auth/refresh")
     suspend fun refresh(
         @Body request: RefreshTokenRequest
     ): Response<RefreshTokenResponse>
 
-    @GET("api/user")
+    @GET("user")
     suspend fun getUser(
         @Header("Authorization") accessToken: String
     ): Response<UserResponse>

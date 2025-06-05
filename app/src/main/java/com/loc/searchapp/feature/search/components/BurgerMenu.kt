@@ -42,11 +42,12 @@ import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.TextSize
+import com.loc.searchapp.feature.shared.model.UiState
 
 @Composable
 fun BurgerMenu(
     modifier: Modifier = Modifier,
-    menu: MenuResponse?,
+    state: UiState<MenuResponse>,
     onOpenUrl: (String) -> Unit,
     onNavigateToSearch: (String) -> Unit,
 ) {
@@ -66,108 +67,135 @@ fun BurgerMenu(
             )
         }
 
-        if (menu == null) {
-            item {
-                CircularProgressIndicator(
-                    modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally)
-                        .padding(MediumPadding1)
-                )
-            }
-        } else {
-            listOfNotNull(
-                menu.sharpeningTool,
-                menu.axialTool,
-                menu.grindingTool,
-                menu.constructionTool
-            ).forEachIndexed { index, category ->
+        when (state) {
+            UiState.Empty -> {
                 item {
-                    val expanded = expandedIndex.value == index
+                    Text(
+                        text = stringResource(id = R.string.no_categories),
+                        modifier = Modifier.padding(MediumPadding1)
+                    )
+                }
+            }
 
-                    Column(modifier.padding(ExtraSmallPadding)) {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        expandedIndex.value =
-                                            if (expanded) null
-                                            else index
-                                    }
-                                    .padding(SmallPadding),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = category.title,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Icon(
-                                    imageVector =
-                                        if (expanded) Icons.Default.ExpandLess
-                                        else Icons.Default.ExpandMore,
-                                    contentDescription = null
-                                )
-                            }
-                        }
+            is UiState.Error -> {
+                item {
+                    Text(
+                        text = state.message,
+                        modifier = Modifier.padding(MediumPadding1),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
 
-                        AnimatedVisibility(visible = expanded) {
-                            Column(
-                                modifier = Modifier.padding(start = SmallPadding, top = ExtraSmallPadding)
+            UiState.Loading -> {
+                item {
+                    CircularProgressIndicator(
+                        modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                            .padding(MediumPadding1)
+                    )
+                }
+            }
+
+            is UiState.Success -> {
+                state.data.categories.forEachIndexed { index, category ->
+                    item {
+                        val expanded = expandedIndex.value == index
+
+                        Column(modifier.padding(ExtraSmallPadding)) {
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                shape = RoundedCornerShape(8.dp)
                             ) {
-                                category.items.forEach { group ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            expandedIndex.value =
+                                                if (expanded) null
+                                                else index
+                                        }
+                                        .padding(SmallPadding),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
                                     Text(
-                                        text = group.text,
-                                        modifier = Modifier.padding(start = SmallPadding, top = ExtraSmallPadding),
-                                        fontWeight = FontWeight.SemiBold
+                                        modifier = Modifier.weight(1f),
+                                        text = category.title,
+                                        fontWeight = FontWeight.Bold
                                     )
+                                    Icon(
+                                        imageVector =
+                                            if (expanded) Icons.Default.ExpandLess
+                                            else Icons.Default.ExpandMore,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
 
-                                    group.items.forEach { item ->
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .clickable {
-                                                    when {
-                                                        item.type == "button" && item.url != null -> {
-                                                            onOpenUrl(item.url)
-                                                        }
+                            AnimatedVisibility(visible = expanded) {
+                                Column(
+                                    modifier = Modifier.padding(
+                                        start = SmallPadding,
+                                        top = ExtraSmallPadding
+                                    )
+                                ) {
+                                    category.items.forEach { group ->
+                                        Text(
+                                            text = group.text,
+                                            modifier = Modifier.padding(
+                                                start = SmallPadding,
+                                                top = ExtraSmallPadding
+                                            ),
+                                            fontWeight = FontWeight.SemiBold
+                                        )
 
-                                                        item.searchType != null -> {
-                                                            onNavigateToSearch(item.searchType)
+                                        group.items.forEach { item ->
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .clickable {
+                                                        when {
+                                                            item.type == "button" && item.url != null -> {
+                                                                onOpenUrl(item.url)
+                                                            }
+
+                                                            item.searchType != null -> {
+                                                                onNavigateToSearch(item.searchType)
+                                                            }
                                                         }
                                                     }
+                                                    .padding(
+                                                        vertical = BurgerPadding,
+                                                        horizontal = SmallPadding
+                                                    ),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                val icon = when {
+                                                    item.url != null -> Icons.Default.PictureAsPdf
+                                                    item.searchType != null -> Icons.Default.Search
+                                                    else -> Icons.AutoMirrored.Filled.ArrowRight
                                                 }
-                                                .padding(vertical = BurgerPadding, horizontal = SmallPadding),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            val icon = when {
-                                                item.url != null -> Icons.Default.PictureAsPdf
-                                                item.searchType != null -> Icons.Default.Search
-                                                else -> Icons.AutoMirrored.Filled.ArrowRight
+
+                                                Icon(
+                                                    modifier = Modifier.size(BurgerIconSize),
+                                                    imageVector = icon,
+                                                    contentDescription = null,
+                                                    tint = when {
+                                                        item.url != null -> MaterialTheme.colorScheme.error
+                                                        item.searchType != null -> MaterialTheme.colorScheme.primary
+                                                        else -> LocalContentColor.current
+                                                    }
+                                                )
+
+                                                Spacer(modifier = Modifier.width(SmallPadding))
+
+                                                Text(
+                                                    text = item.text,
+                                                    fontSize = TextSize
+                                                )
                                             }
-
-                                            Icon(
-                                                modifier = Modifier.size(BurgerIconSize),
-                                                imageVector = icon,
-                                                contentDescription = null,
-                                                tint = when {
-                                                    item.url != null -> MaterialTheme.colorScheme.error
-                                                    item.searchType != null -> MaterialTheme.colorScheme.primary
-                                                    else -> LocalContentColor.current
-                                                }
-                                            )
-
-                                            Spacer(modifier = Modifier.width(SmallPadding))
-
-                                            Text(
-                                                text = item.text,
-                                                fontSize = TextSize
-                                            )
                                         }
                                     }
                                 }

@@ -42,14 +42,23 @@ import com.loc.searchapp.navigation.utils.navigateToTab
 @Composable
 fun ProductsNavigator(
     modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel
 ) {
     val navController = rememberNavController()
-    val authViewModel: AuthViewModel = hiltViewModel()
     val productViewModel: ProductViewModel = hiltViewModel()
     val homeViewModel: HomeViewModel = hiltViewModel()
     val postViewModel: PostViewModel = hiltViewModel()
 
     val authState by authViewModel.authState.collectAsState()
+
+    val startDestination = when (authState) {
+        is AuthState.Authenticated -> Route.HomeScreen.route
+        is AuthState.Unauthenticated, is AuthState.Error -> Route.LoginScreen.route
+        AuthState.Loading -> {
+            LoadingScreen()
+            return
+        }
+    }
 
     val connectivityViewModel: ConnectivityViewModel = hiltViewModel()
     val networkStatus by connectivityViewModel.networkStatus.collectAsState()
@@ -59,22 +68,13 @@ fun ProductsNavigator(
             modifier = Modifier.padding(MediumPadding1),
             action = {
                 TextButton(onClick = { /* Maybe open settings */ }) {
-                    Text("Налаштування")
+                    Text("Налаштування") // translate
                 }
             }
         ) {
-            Text("Немає інтернету (${networkStatus.name})")
+            Text("Немає інтернету (${networkStatus.name})") // translate
         }
     }
-
-
-    if (authState == AuthState.Loading) {
-        LoadingScreen()
-    } else {
-        val startDestination = when (authState) {
-            is AuthState.Authenticated -> Route.HomeScreen.route
-            else -> Route.LoginScreen.route
-        }
 
         val backstackState = navController.currentBackStackEntryAsState().value
 
@@ -151,7 +151,6 @@ fun ProductsNavigator(
             }
         }
     }
-}
 
 fun NavGraphBuilder.mainNavGraph(
     navController: NavController,

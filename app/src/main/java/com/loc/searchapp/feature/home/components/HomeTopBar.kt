@@ -87,9 +87,9 @@ fun HomeTopBar(
                             val user = authState.user
 
                             Avatar(
-                                firstName = user?.username?.substringBefore(" ")
+                                firstName = user?.fullname?.substringBefore(" ")
                                     ?: stringResource(id = R.string.guest),
-                                lastName = user?.username?.substringAfter(" ")
+                                lastName = user?.fullname?.substringAfter(" ")
                                     ?: stringResource(id = R.string.guest),
                             )
                         }

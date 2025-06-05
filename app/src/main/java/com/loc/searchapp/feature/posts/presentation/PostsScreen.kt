@@ -33,9 +33,8 @@ import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.components.common.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostsSpacerSize
-import com.loc.searchapp.feature.posts.components.PostListShimmer
+import com.loc.searchapp.feature.posts.components.PostItemShimmer
 import com.loc.searchapp.feature.shared.components.PostItem
-import com.loc.searchapp.feature.shared.components.ProductListShimmer
 import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
@@ -76,7 +75,7 @@ fun PostsScreen(
         }
     ) { paddingValues ->
         when (postState) {
-            UiState.Loading -> PostListShimmer()
+            UiState.Loading -> PostItemShimmer()
 
             UiState.Empty -> Box(
                 modifier = Modifier

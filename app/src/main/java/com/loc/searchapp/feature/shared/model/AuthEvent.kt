@@ -7,8 +7,9 @@ sealed class AuthEvent {
     ) : AuthEvent()
 
     data class RegisterUser(
-        val username: String,
+        val fullname: String,
         val email: String,
+        val phone: String,
         val password: String
     ) : AuthEvent()
 

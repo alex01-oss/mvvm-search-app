@@ -120,8 +120,8 @@
     <string name="sign_in_main">Увійти</string>
     <string name="sign_in_suffix">в акаунт</string>
 
-    <string name="sign_up_main">Увійти</string>
-    <string name="sign_up_suffix">в акаунт</string>
+    <string name="sign_up_main">Створити</string>
+    <string name="sign_up_suffix">акаунт</string>
 
     <string name="not_found">Нічого не знайдено</string>
     <string name="no_categories">Категорії відсутні</string>
@@ -136,14 +136,17 @@
     <string name="cooling_instructions">Інструкції з охолодження</string>
     <string name="compatible_machines">Сумісне обладнання</string>
     <string name="product_info">Інформація про продукт</string>
-    <string name="about">About</string>
-    <string name="version">Version</string>
-    <string name="privacy_policy">Privacy policy</string>
-    <string name="privacy_policy_text">Privacy policy text</string>
-    <string name="terms_of_use">Terms of user</string>
-    <string name="terms_of_use_text">Tefrms of use text</string>
-    <string name="support">Support</string>
-    <string name="support_email">Support email</string>
-    <string name="about_us">About us</string>
-    <string name="empty_blog">Empty blog</string>
+    <string name="about">Про нас</string>
+    <string name="version">Версія</string>
+    <string name="privacy_policy">Політика конфіденційності</string>
+    <string name="privacy_policy_text">Текст політики конфіденційності</string>
+    <string name="terms_of_use">Умови використання</string>
+    <string name="terms_of_use_text">Текст умов використання</string>
+    <string name="support">Підтримка</string>
+    <string name="support_email">Пошта підтримки</string>
+    <string name="about_us">Про нас</string>
+    <string name="empty_blog">Блог порожній</string>
+    <string name="phone">Номер телефону</string>
+    <string name="empty_videos">Videos are empty</string>
+    <string name="start_searching">Start searching</string>
 </resources>

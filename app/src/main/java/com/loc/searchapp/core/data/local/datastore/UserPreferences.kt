@@ -1,5 +1,6 @@
 package com.loc.searchapp.core.data.local.datastore
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -22,10 +23,20 @@ class UserPreferences @Inject constructor(
     val tokenFlow: Flow<String?> = dataStore.data
         .map { prefs ->
             prefs[Keys.ACCESS_TOKEN]?.let {
-                runCatching { EncryptionManager.decrypt(it) }.getOrNull()
+                try {
+                    EncryptionManager.decrypt(it)
+                } catch (e: Exception) {
+                    Log.e("TokenDecrypt", "Failed to decrypt access token", e)
+                    null
+                }
             }
         }
-        .catch { emit(null) }
+        .catch {
+            Log.e("TokenFlow", "Error reading token", it)
+            clearTokens()
+            emit(null)
+        }
+
 
     suspend fun saveTokens(accessToken: String, refreshToken: String) {
         val encryptedAccess = EncryptionManager.encrypt(accessToken)

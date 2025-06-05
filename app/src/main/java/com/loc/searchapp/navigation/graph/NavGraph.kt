@@ -1,32 +1,41 @@
 package com.loc.searchapp.navigation.graph
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.loc.searchapp.feature.onboarding.model.OnBoardingEvent
 import com.loc.searchapp.feature.onboarding.presentation.OnBoardingScreen
-import com.loc.searchapp.feature.onboarding.viewmodel.OnBoardingViewModel
+import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.navigation.presentation.ProductsNavigator
 
 @Composable
 fun NavGraph(
-    startDestination: String
+    startDestination: String,
+    authViewModel: AuthViewModel
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
         navigation(
             route = Route.AppStartNavigation.route,
             startDestination = Route.OnBoardingScreen.route
         ) {
-            composable(
-                route = Route.OnBoardingScreen.route
-            ) {
-                val viewModel: OnBoardingViewModel = hiltViewModel()
+            composable(route = Route.OnBoardingScreen.route) {
                 OnBoardingScreen(
-                    event = viewModel::onEvent
+                    event = { event ->
+                        when (event) {
+                            OnBoardingEvent.SaveAppEntry -> {
+                                navController.navigate(Route.ProductsNavigation.route) {
+                                    popUpTo(Route.AppStartNavigation.route) { inclusive = true }
+                                }
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -36,7 +45,7 @@ fun NavGraph(
             startDestination = Route.ProductsNavigatorScreen.route
         ) {
             composable(route = Route.ProductsNavigatorScreen.route) {
-                ProductsNavigator()
+                ProductsNavigator(authViewModel = authViewModel)
             }
         }
     }

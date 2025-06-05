@@ -52,7 +52,6 @@ fun NavGraphBuilder.homeScreens(
             products = products,
             authViewModel = authViewModel,
             productViewModel = productViewModel,
-            homeViewModel = homeViewModel,
             onAuthClick = {
                 navController.navigate(Route.LoginScreen.route)
             },

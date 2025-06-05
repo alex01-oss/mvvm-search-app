@@ -3,8 +3,6 @@ package com.loc.searchapp.navigation.graph
 sealed class Route(
     val route: String
 ) {
-    data object AppEntryScreen : Route(route = "appEntryScreen")
-
     data object OnBoardingScreen : Route(route = "onBoardingScreen")
 
     data object HomeScreen : Route(route = "homeScreen")

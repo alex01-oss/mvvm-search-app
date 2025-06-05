@@ -1,11 +1,11 @@
 package com.loc.searchapp.core.ui.components.lists
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -25,67 +25,75 @@ import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.feature.catalog.components.ProductCard
 import com.loc.searchapp.feature.shared.components.ProductListShimmer
-import com.loc.searchapp.feature.shared.model.UiState
 
 @Composable
 fun ProductsList(
-    state: UiState<Unit>,
     modifier: Modifier = Modifier,
     items: LazyPagingItems<Product>,
     onClick: (Product) -> Unit,
     onAdd: (Product) -> Unit,
     onRemove: (Product) -> Unit,
     localCartChanges: Map<String, Boolean>,
+    showLoadingOnEmpty: Boolean = true
 ) {
-    when (state) {
-        UiState.Loading -> ProductListShimmer()
+    when (items.loadState.refresh) {
+        is LoadState.Error -> EmptyScreen(message = stringResource(id = R.string.error))
 
-        is UiState.Error -> EmptyScreen(message = state.message)
+        LoadState.Loading -> {
+            if (showLoadingOnEmpty) {
+                ProductListShimmer()
+            } else {
+                EmptyScreen(message = stringResource(id = R.string.start_searching))
+            }
+        }
 
-        UiState.Empty -> EmptyScreen(
-            message = stringResource(id = R.string.not_found),
-            iconId = R.drawable.ic_search_document
-        )
-
-        is UiState.Success -> {
-            LazyColumn(
-                modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(MediumPadding1),
-                contentPadding = PaddingValues(vertical = MediumPadding1)
-            ) {
-                items(items.itemCount) { index ->
-                    val product = items[index]
-                    if (product != null) {
-                        ProductCard(
-                            product = product,
-                            localCartChanges = localCartChanges,
-                            onClick = { onClick(product) },
-                            onAdd = { onAdd(product) },
-                            onRemove = { onRemove(product) },
-                        )
-                    }
-                }
-
-                when (items.loadState.append) {
-                    is LoadState.Loading -> item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                                .padding(24.dp),
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+        is LoadState.NotLoading -> {
+            if (items.itemCount == 0 ) {
+                EmptyScreen(message = stringResource(id = R.string.not_found))
+            } else {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = MediumPadding1),
+                    verticalArrangement = Arrangement.spacedBy(MediumPadding1),
+                ) {
+                    items(items.itemCount) { index ->
+                        val product = items[index]
+                        if (product != null) {
+                            ProductCard(
+                                product = product,
+                                localCartChanges = localCartChanges,
+                                onClick = { onClick(product) },
+                                onAdd = { onAdd(product) },
+                                onRemove = { onRemove(product) },
+                            )
+                        }
                     }
 
-                    is LoadState.Error -> item {
-                        Text(
-                            modifier = Modifier.padding(BasePadding),
-                            text = stringResource(id = R.string.loading_error),
-                            color = Color.Red
-                        )
-                    }
+                    when (items.loadState.append) {
+                        is LoadState.Loading -> item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    strokeWidth = 2.dp,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                        }
 
-                    else -> Unit
+                        is LoadState.Error -> item {
+                            Text(
+                                modifier = Modifier.padding(BasePadding),
+                                text = stringResource(id = R.string.loading_error),
+                                color = Color.Red
+                            )
+                        }
+
+                        else -> Unit
+                    }
                 }
             }
         }

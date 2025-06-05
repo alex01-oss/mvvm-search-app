@@ -146,4 +146,7 @@
     <string name="support_email">Support email</string>
     <string name="about_us">About us</string>
     <string name="empty_blog">Empty blog</string>
+    <string name="phone">Phone number</string>
+    <string name="empty_videos">Videos are empty</string>
+    <string name="start_searching">Start searching</string>
 </resources>

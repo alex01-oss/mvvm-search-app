@@ -10,6 +10,7 @@ import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.domain.usecases.posts.PostsUseCases
 import com.loc.searchapp.feature.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -13,8 +13,9 @@ interface AuthRepository {
     ): Response<AuthResponse>
 
     suspend fun register(
-        username: String,
+        fullname: String,
         email: String,
+        phone: String,
         password: String
     ): Response<AuthResponse>
 

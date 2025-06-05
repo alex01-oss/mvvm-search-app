@@ -9,10 +9,11 @@ class RegisterUser @Inject constructor(
     private val authRepository: AuthRepository
 ){
     suspend operator fun invoke(
-        username: String,
+        fullname: String,
         email: String,
+        phone: String,
         password: String
     ): Response<AuthResponse> {
-        return authRepository.register(username, email, password)
+        return authRepository.register(fullname, email, phone, password)
     }
 }

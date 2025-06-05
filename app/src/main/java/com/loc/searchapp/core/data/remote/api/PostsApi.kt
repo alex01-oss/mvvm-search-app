@@ -17,32 +17,32 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface PostsApi {
-    @POST("/api/blog")
+    @POST("blog")
     suspend fun createPost(
         @Body request: CreatePostRequest
     ): Response<PostResponse>
 
-    @DELETE("/api/blog/{post_id}")
+    @DELETE("blog/{post_id}")
     suspend fun deletePost(
         @Path("post_id") postId: Int
     ): Response<DeletePostResponse>
 
-    @PUT("/api/blog/{post_id}")
+    @PUT("blog/{post_id}")
     suspend fun editPost(
         @Path("post_id") postId: Int,
         @Body request: EditPostRequest
     ): Response<PostResponse>
 
-    @GET("/api/blog")
+    @GET("blog")
     suspend fun getAllPosts(): Response<List<PostResponse>>
 
-    @GET("/api/blog/{post_id}")
+    @GET("blog/{post_id}")
     suspend fun getPostById(
         @Path("post_id") postId: Int?
     ): Response<PostResponse>
 
     @Multipart
-    @POST("/api/upload-image")
+    @POST("images/upload-image")
     suspend fun uploadImage(
         @Part file: MultipartBody.Part
     ): Response<ImageUploadResponse>

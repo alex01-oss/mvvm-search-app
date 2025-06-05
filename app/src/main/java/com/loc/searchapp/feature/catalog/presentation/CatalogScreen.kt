@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -28,7 +29,6 @@ import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.feature.shared.model.AuthState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -41,13 +41,10 @@ fun CatalogScreen(
     onAuthClick: () -> Unit,
     authViewModel: AuthViewModel,
     productViewModel: ProductViewModel,
-    homeViewModel: HomeViewModel,
     onBackClick: () -> Unit
 ) {
     val localCartChanges by productViewModel.localCartChanges.collectAsState()
     val authState by authViewModel.authState.collectAsState()
-
-    val productsState by homeViewModel.productsState.collectAsState()
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -58,6 +55,7 @@ fun CatalogScreen(
     Scaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             SharedTopBar(
                 title = stringResource(id = R.string.catalog),
@@ -83,10 +81,9 @@ fun CatalogScreen(
             ) {
                 ProductsList(
                     items = products,
-                    state = productsState,
                     onClick = { product -> navigateToDetails(product) },
                     onAdd = { product ->
-                        if (authState !is AuthState.Authenticated) {
+                        if (authState is AuthState.Unauthenticated) {
                             scope.launch {
                                 val result = snackbarHostState.showSnackbar(
                                     message = mustLoginMessage,

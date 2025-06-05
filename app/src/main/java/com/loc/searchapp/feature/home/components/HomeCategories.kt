@@ -24,92 +24,66 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.MenuCategory
-import com.loc.searchapp.core.data.remote.dto.MenuResponse
+import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.CategoryHeight
 import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
+import com.loc.searchapp.feature.shared.model.UiState
 
 
 @Composable
 fun HomeCategories(
     modifier: Modifier = Modifier,
-    menu: MenuResponse?,
+    state: UiState<List<MenuCategory>>,
     onCategoryClick: (MenuCategory) -> Unit
 ) {
-    val categories = remember(menu) {
-        menu?.getAllCategories().orEmpty()
-    }
-
     var selectedCategory by remember { mutableStateOf<MenuCategory?>(null) }
 
-    if (categories.isEmpty()) {
-        Box(
-            modifier
-                .fillMaxWidth()
-                .height(CategoryHeight)
-                .clip(RoundedCornerShape(4.dp))
-                .background(Color.Transparent)
-                .border(
-                    width = ExtraSmallCorner,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(DefaultCorner)
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = stringResource(id = R.string.no_categories),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-        return
-    }
+    when (state) {
+        UiState.Empty -> EmptyScreen(stringResource(id = R.string.no_categories))
+        is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+        UiState.Loading -> CategoriesShimmer()
+        is UiState.Success -> {
+            Column(modifier.fillMaxWidth()) {
+                state.data.forEach { category ->
+                    val isSelected = selectedCategory == category
 
-    Column(modifier.fillMaxWidth()) {
-        categories.forEach { category ->
-            val isSelected = selectedCategory == category
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = ExtraSmallPadding)
-                    .clip(RoundedCornerShape(DefaultCorner))
-                    .background(
-                        if (isSelected) MaterialTheme.colorScheme.primary
-                        else Color.Transparent
-                    )
-                    .border(
-                        width = if (isSelected) 0.dp else ExtraSmallCorner,
-                        color =
-                            if (isSelected) Color.Transparent
-                            else MaterialTheme.colorScheme.onBackground,
-                        shape = RoundedCornerShape(DefaultCorner)
-                    )
-                    .clickable {
-                        selectedCategory = category
-                        onCategoryClick(category)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(CategoryHeight)
+                            .padding(vertical = ExtraSmallPadding)
+                            .clip(RoundedCornerShape(DefaultCorner))
+                            .background(
+                                if (isSelected) MaterialTheme.colorScheme.primary
+                                else Color.Transparent
+                            )
+                            .border(
+                                width = if (isSelected) 0.dp else ExtraSmallCorner,
+                                color =
+                                    if (isSelected) Color.Transparent
+                                    else MaterialTheme.colorScheme.onBackground,
+                                shape = RoundedCornerShape(DefaultCorner)
+                            )
+                            .clickable {
+                                selectedCategory = category
+                                onCategoryClick(category)
+                            }
+                            .padding(BasePadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = category.title.uppercase(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color =
+                                if (isSelected) Color.White
+                                else MaterialTheme.colorScheme.onBackground
+                        )
                     }
-                    .padding(BasePadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = category.title.uppercase(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color =
-                        if (isSelected) Color.White
-                        else MaterialTheme.colorScheme.onBackground
-                )
+                }
             }
         }
     }
-}
-
-fun MenuResponse.getAllCategories(): List<MenuCategory> {
-    return listOf(
-        sharpeningTool,
-        axialTool,
-        grindingTool,
-        constructionTool
-    )
 }

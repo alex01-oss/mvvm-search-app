@@ -11,5 +11,5 @@ data class SearchState(
     val page: Int = 1,
     val products: Flow<PagingData<Product>> = emptyFlow(),
     val token: String? = null,
-    val placeholder: String = "Enter code"
+    val placeholder: String = "Enter code",
 )

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.core.domain.usecases.app_entry.AppEntryUseCases
 import com.loc.searchapp.navigation.graph.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -17,6 +16,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     appEntryUseCases: AppEntryUseCases,
 ) : ViewModel() {
+
     var splashCondition by mutableStateOf(true)
         private set
 
@@ -30,8 +30,10 @@ class MainViewModel @Inject constructor(
             } else {
                 Route.AppStartNavigation.route
             }
-            delay(300)
-            splashCondition = false
         }.launchIn(viewModelScope)
+    }
+
+    fun hideSplash() {
+        splashCondition = false
     }
 }

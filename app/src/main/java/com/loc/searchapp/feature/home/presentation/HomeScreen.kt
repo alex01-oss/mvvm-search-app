@@ -37,7 +37,6 @@ import androidx.compose.ui.text.withStyle
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.components.common.AppSnackbar
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
@@ -47,8 +46,6 @@ import com.loc.searchapp.feature.home.components.HomeTopBar
 import com.loc.searchapp.feature.home.components.PostsSlider
 import com.loc.searchapp.feature.home.components.SocialIcon
 import com.loc.searchapp.feature.home.components.YouTubeVideoSlider
-import com.loc.searchapp.feature.shared.components.ProductListShimmer
-import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
@@ -64,8 +61,10 @@ fun HomeScreen(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val menu by viewModel.menu.collectAsState()
-    val postState by postViewModel.postsState.collectAsState()
+
+    val categoriesState by viewModel.categoriesState.collectAsState()
+    val videoIdsState by viewModel.videoIdsState.collectAsState()
+    val postsState by postViewModel.postsState.collectAsState()
 
     val scrollState = rememberLazyListState()
 
@@ -164,7 +163,7 @@ fun HomeScreen(
                     }
 
                     HomeCategories(
-                        menu = menu,
+                        state = categoriesState,
                         onCategoryClick = { onCategoryClick() }
                     )
                 }
@@ -186,21 +185,10 @@ fun HomeScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-
-                    when (postState) {
-                        is UiState.Success -> {
-                            PostsSlider(
-                                posts = (postState as UiState.Success).data,
-                                onPostClick = onPostClick
-                            )
-                        }
-
-                        UiState.Loading -> ProductListShimmer()
-
-                        is UiState.Error -> EmptyScreen((postState as UiState.Error).message)
-
-                        UiState.Empty -> EmptyScreen(message = stringResource(id = R.string.empty_blog))
-                    }
+                    PostsSlider(
+                        state = postsState,
+                        onPostClick = onPostClick,
+                    )
                 }
 
                 item {
@@ -220,9 +208,7 @@ fun HomeScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-                    YouTubeVideoSlider(
-                        videoIds = viewModel.videoIds
-                    )
+                    YouTubeVideoSlider(state = videoIdsState)
                 }
 
                 item {

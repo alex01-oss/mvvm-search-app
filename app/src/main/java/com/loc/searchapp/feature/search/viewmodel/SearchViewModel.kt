@@ -53,17 +53,16 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is SearchEvent.SearchProducts -> {
-
                     val currentParams = Triple(
-                        state.value.searchQuery,
-                        state.value.searchType,
+                        state.value.searchQuery.trim(),
+                        state.value.searchType.trim(),
                         state.value.page
                     )
 
-                    if(lastSearchParams != currentParams) {
-                        lastSearchParams = currentParams
-                        _searchFlow.value = currentParams
-                    }
+                    if (currentParams == lastSearchParams) return@launch
+
+                    lastSearchParams = currentParams
+                    _searchFlow.value = currentParams
                 }
 
                 is SearchEvent.UpdateSearchQuery -> {

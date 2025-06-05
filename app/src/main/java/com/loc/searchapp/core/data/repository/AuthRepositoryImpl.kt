@@ -1,5 +1,6 @@
 package com.loc.searchapp.core.data.repository
 
+import android.util.Log
 import com.loc.searchapp.core.data.remote.api.AuthApi
 import com.loc.searchapp.core.data.remote.dto.AuthResponse
 import com.loc.searchapp.core.data.remote.dto.LoginRequest
@@ -20,18 +21,20 @@ class AuthRepositoryImpl(
         email: String,
         password: String
     ): Response<AuthResponse> {
+        Log.d("AUTH", "About to call API")
         return api.login(
             LoginRequest(email, password)
         )
     }
 
     override suspend fun register(
-        username: String,
+        fullname: String,
         email: String,
+        phone: String,
         password: String
     ): Response<AuthResponse> {
         return api.register(
-            RegisterRequest(username, email, password)
+            RegisterRequest(fullname, email, phone, password)
         )
     }
 

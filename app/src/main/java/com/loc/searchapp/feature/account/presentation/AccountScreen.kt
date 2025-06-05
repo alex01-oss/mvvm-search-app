@@ -88,8 +88,8 @@ fun AccountScreen(
                     Spacer(modifier = Modifier.height(MediumPadding1))
 
                     Avatar(
-                        firstName = user?.username?.substringBefore(" ").toString(),
-                        lastName = user?.username?.substringAfter(" ").toString(),
+                        firstName = user?.fullname?.substringBefore(" ").toString(),
+                        lastName = user?.fullname?.substringAfter(" ").toString(),
                         size = AvatarHeight,
                         textStyle = MaterialTheme.typography.titleLarge
                     )
@@ -97,7 +97,7 @@ fun AccountScreen(
                     Spacer(modifier = Modifier.height(SmallPadding))
 
                     Text(
-                        text = user?.username.toString(),
+                        text = user?.fullname.toString(),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground
                     )

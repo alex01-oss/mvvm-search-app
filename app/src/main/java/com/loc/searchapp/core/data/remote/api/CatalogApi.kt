@@ -8,15 +8,15 @@ import com.loc.searchapp.core.data.remote.dto.ItemCartResponse
 import com.loc.searchapp.core.data.remote.dto.MenuResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CatalogApi {
-    @GET("/api/catalog")
+    @GET("catalog")
     suspend fun getCatalog(
         @Query("search") searchQuery: String = "",
         @Query("search_type") searchType: String,
@@ -24,26 +24,26 @@ interface CatalogApi {
         @Header("Authorization") token: String? = null
     ): Response<CatalogDto>
 
-    @GET("api/catalog/{code}")
+    @GET("catalog/{code}")
     suspend fun getCatalogItem(
         @Path("code") code: String
     ): CatalogItemDetailedResponse
 
-    @GET("api/menu")
+    @GET("menu")
     suspend fun getMenu(): MenuResponse
 
-    @GET("/api/cart")
+    @GET("cart")
     suspend fun getCart(
         @Header("Authorization") token: String
     ): CartResponse
 
-    @POST("api/cart")
+    @POST("cart/items")
     suspend fun addToCart(
         @Body addItemRequest: ItemCartRequest
     ): ItemCartResponse
 
-    @HTTP(method = "DELETE", path = "api/cart", hasBody = true)
+    @DELETE("cart/items/{code}")
     suspend fun removeFromCart(
-        @Body removeItemRequest: ItemCartRequest
+        @Path("code") code: String
     ): ItemCartResponse
 }

@@ -1,14 +1,10 @@
 package com.loc.searchapp.core.data.remote.dto
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MenuResponse(
-    @SerialName("sharpening") val sharpeningTool: MenuCategory,
-    @SerialName("axial_tool") val axialTool: MenuCategory,
-    @SerialName("grinding_tool") val grindingTool: MenuCategory,
-    @SerialName("construction_tool") val constructionTool: MenuCategory,
+    val categories: List<MenuCategory>
 )
 
 @Serializable

@@ -1,14 +1,13 @@
 package com.loc.searchapp.feature.shared.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
+import com.loc.searchapp.core.data.remote.dto.MenuCategory
 import com.loc.searchapp.core.data.remote.dto.MenuResponse
+import com.loc.searchapp.core.data.remote.dto.VideoId
 import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.core.domain.usecases.youtube.YoutubeUseCases
@@ -27,13 +26,18 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases,
     private val youtubeUseCases: YoutubeUseCases,
-    userPreferences: UserPreferences,
+    private val userPreferences: UserPreferences,
 ) : ViewModel() {
-    private val _menu = MutableStateFlow<MenuResponse?>(null)
-    val menu: StateFlow<MenuResponse?> = _menu.asStateFlow()
+    private val _menuState = MutableStateFlow<UiState<MenuResponse>>(UiState.Loading)
+    val menuState: StateFlow<UiState<MenuResponse>> = _menuState.asStateFlow()
+
+    private val _categoriesState = MutableStateFlow<UiState<List<MenuCategory>>>(UiState.Loading)
+    val categoriesState = _categoriesState.asStateFlow()
 
     private val _productsState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
-    val productsState: StateFlow<UiState<Unit>> = _productsState.asStateFlow()
+
+    private val _videoIdsState = MutableStateFlow<UiState<List<VideoId>>>(UiState.Loading)
+    val videoIdsState = _videoIdsState.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val catalogFlow: Flow<PagingData<Product>> = userPreferences.tokenFlow
@@ -42,28 +46,50 @@ class HomeViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
-    var videoIds by mutableStateOf<List<String>>(emptyList())
-        private set
-
     init {
         loadInitialData()
     }
 
     private fun loadInitialData() {
         viewModelScope.launch {
+            // --- CATALOG ---
             try {
-                _productsState.value = UiState.Loading
+                val token = userPreferences.getAccessToken()
+                if (token.isNullOrBlank()) {
+                    _productsState.value = UiState.Error("Access token is missing")
+                } else {
+                    _productsState.value = UiState.Success(Unit)
+                }
+            } catch (e: Exception) {
+                _productsState.value = UiState.Error(e.localizedMessage ?: "Error loading products")
+            }
 
-                val menuResult = catalogUseCases.getMenu()
-                _menu.value = menuResult
+            // --- MENU ---
+            try {
+                val menu = catalogUseCases.getMenu()
+                _menuState.value = UiState.Success(menu)
 
-                val videoIds = youtubeUseCases.getLatestVideos("UC3tUVI8r3Bfr8hb9-KzfCvw")
-                this@HomeViewModel.videoIds = videoIds
-
-                _productsState.value = UiState.Success(Unit)
+                val categories = menu.categories
+                _categoriesState.value =
+                    if (categories.isEmpty()) UiState.Empty
+                    else UiState.Success(categories)
 
             } catch (e: Exception) {
-                _productsState.value = UiState.Error(e.localizedMessage ?: "Error loading data")
+                _menuState.value = UiState.Error(e.localizedMessage ?: "Error loading menu")
+                _categoriesState.value = UiState.Error(e.localizedMessage ?: "Error loading categories")
+            }
+
+            // --- VIDEOS ---
+            try {
+                val videos = youtubeUseCases.getLatestVideos("UC3tUVI8r3Bfr8hb9-KzfCvw")
+                    .filter { it.kind == "youtube#video" && it.videoId != null }
+
+                _videoIdsState.value =
+                    if (videos.isEmpty()) UiState.Empty
+                    else UiState.Success(videos.map { VideoId(it.kind, it.videoId!!) })
+
+            } catch (e: Exception) {
+                _videoIdsState.value = UiState.Error(e.localizedMessage ?: "Error loading videos")
             }
         }
     }

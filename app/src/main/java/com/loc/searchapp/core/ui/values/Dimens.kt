@@ -33,7 +33,7 @@ object Dimens {
     val SmallCorner = 2.dp
     val ShimmerHeight1 = 30.dp
     val ShimmerHeight2 = 16.dp
-    val CategoryHeight = 50.dp
+    val CategoryHeight = 60.dp
     val DefaultCorner = 8.dp
     val TopBarPadding = 5.dp
     val TopLogoHeight = 48.dp
@@ -50,4 +50,5 @@ object Dimens {
     val DrawerWidth = 300.dp
     val AboutLogoSize = 96.dp
     val AboutTextWidth = 200.dp
+    val LargePadding = 300.dp
 }

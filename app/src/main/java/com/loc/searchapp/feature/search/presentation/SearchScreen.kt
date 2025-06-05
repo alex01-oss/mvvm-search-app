@@ -32,13 +32,13 @@ import com.loc.searchapp.core.ui.components.lists.ProductsList
 import com.loc.searchapp.core.ui.values.Dimens.DrawerWidth
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopBarPadding
-import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
-import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.search.components.BurgerMenu
 import com.loc.searchapp.feature.search.components.SearchTopSection
 import com.loc.searchapp.feature.search.model.SearchEvent
 import com.loc.searchapp.feature.search.model.SearchState
 import com.loc.searchapp.feature.search.viewmodel.SearchViewModel
+import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,9 +57,7 @@ fun SearchScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val menu = homeViewModel.menu.collectAsState().value
-
-    val productsState by homeViewModel.productsState.collectAsState()
+    val menuState by homeViewModel.menuState.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -71,7 +69,7 @@ fun SearchScreen(
                 drawerContainerColor = MaterialTheme.colorScheme.background
             ) {
                 BurgerMenu(
-                    menu = menu,
+                    state = menuState,
                     onOpenUrl = { url ->
                         val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                         context.startActivity(intent)
@@ -107,7 +105,9 @@ fun SearchScreen(
                                         )
                                     )
                                 },
-                                onSearch = { event(SearchEvent.SearchProducts) },
+                                onSearch = {
+                                    event(SearchEvent.SearchProducts)
+                                },
                                 onBurgerClick = {
                                     scope.launch {
                                         if (drawerState.isClosed) drawerState.open()
@@ -135,7 +135,7 @@ fun SearchScreen(
                         onAdd = { productViewModel.addToCart(it.code) },
                         onRemove = { productViewModel.removeFromCart(it.code) },
                         localCartChanges = localCartChanges,
-                        state = productsState,
+                        showLoadingOnEmpty = state.searchQuery.isNotEmpty()
                     )
                 }
             }

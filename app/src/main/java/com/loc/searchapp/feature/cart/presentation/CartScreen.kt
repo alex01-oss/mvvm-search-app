@@ -1,6 +1,5 @@
 package com.loc.searchapp.feature.cart.presentation
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +27,7 @@ import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.CartItem
 import com.loc.searchapp.core.ui.components.common.SharedTopBar
 import com.loc.searchapp.core.ui.components.lists.CartList
+import com.loc.searchapp.core.ui.components.loading.LoadingScreen
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.feature.shared.components.GuestUser
@@ -47,9 +46,9 @@ fun CartScreen(
     onAuthClick: () -> Unit,
 ) {
     val authState by authViewModel.authState.collectAsState()
-    var cartInitialized by rememberSaveable { mutableStateOf(false) }
-
     val cartState by viewModel.cartState.collectAsState()
+
+    var cartInitialized by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(authState, cartModified) {
         if (authState is AuthState.Authenticated) {
@@ -91,9 +90,7 @@ fun CartScreen(
         ) {
             when (authState) {
                 is AuthState.Authenticated -> {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         CartList(
                             state = cartState,
                             onClick = { cartItem -> navigateToDetails(cartItem) },
@@ -108,14 +105,7 @@ fun CartScreen(
                     GuestUser(onAuthClick = onAuthClick)
                 }
 
-                AuthState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
+                AuthState.Loading -> LoadingScreen()
 
                 is AuthState.Error -> {
                     Text(text = stringResource(id = R.string.cart, (authState as AuthState.Error).message))
