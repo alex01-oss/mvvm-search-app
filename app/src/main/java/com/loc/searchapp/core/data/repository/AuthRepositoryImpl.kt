@@ -9,6 +9,7 @@ import com.loc.searchapp.core.data.remote.dto.LogoutResponse
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenResponse
 import com.loc.searchapp.core.data.remote.dto.RegisterRequest
+import com.loc.searchapp.core.data.remote.dto.UpdateUserRequest
 import com.loc.searchapp.core.data.remote.dto.UserResponse
 import com.loc.searchapp.core.domain.repository.AuthRepository
 import retrofit2.Response
@@ -49,9 +50,20 @@ class AuthRepositoryImpl(
     override suspend fun getUser(
         accessToken: String
     ): Response<UserResponse> {
-        return api.getUser(
-            accessToken
-        )
+        return api.getUser(accessToken)
+    }
+
+    override suspend fun updateUser(
+        accessToken: String,
+        updateUserRequest: UpdateUserRequest
+    ): Response<UserResponse> {
+        return api.updateUser(accessToken, updateUserRequest)
+    }
+
+    override suspend fun deleteUser(
+        token: String
+    ): Response<Unit> {
+        return api.deleteUser(token)
     }
 
     override suspend fun logout(

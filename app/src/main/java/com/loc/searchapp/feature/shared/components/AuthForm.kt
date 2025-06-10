@@ -1,6 +1,5 @@
 package com.loc.searchapp.feature.shared.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,8 +19,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -31,9 +28,7 @@ import com.loc.searchapp.core.ui.components.common.InlineErrorMessage
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.ImageMargin
 import com.loc.searchapp.core.ui.values.Dimens.InputFieldHeight
-import com.loc.searchapp.core.ui.values.Dimens.LogoHeight
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.TextSize
@@ -47,7 +42,7 @@ fun AuthForm(
     isLoading: Boolean,
     submitButtonText: String,
     onBottomTextClick: () -> Unit,
-    bottomText: String,
+    bottomContent: @Composable () -> Unit,
     showError: String? = null,
 ) {
     Column(
@@ -55,19 +50,8 @@ fun AuthForm(
             .fillMaxSize()
             .padding(horizontal = InputFieldHeight)
             .statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(InputFieldHeight))
-
-        Image(
-            modifier = Modifier.height(LogoHeight),
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-        )
-
-        Spacer(modifier = Modifier.height(ImageMargin))
-
         Text(text = title)
 
         Spacer(modifier = Modifier.height(MediumPadding1))
@@ -153,7 +137,7 @@ fun AuthForm(
         Spacer(modifier = Modifier.height(ExtraSmallPadding))
 
         TextButton(onClick = onBottomTextClick) {
-            Text(text = bottomText, color = MaterialTheme.colorScheme.onBackground)
+            bottomContent()
         }
     }
 }

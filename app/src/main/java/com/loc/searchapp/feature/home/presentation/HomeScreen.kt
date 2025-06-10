@@ -15,8 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -36,8 +35,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
-import com.loc.searchapp.core.ui.components.common.AppSnackbar
-import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TitleSize
@@ -46,6 +43,8 @@ import com.loc.searchapp.feature.home.components.HomeTopBar
 import com.loc.searchapp.feature.home.components.PostsSlider
 import com.loc.searchapp.feature.home.components.SocialIcon
 import com.loc.searchapp.feature.home.components.YouTubeVideoSlider
+import com.loc.searchapp.feature.shared.network.NetworkObserver
+import com.loc.searchapp.feature.shared.network.NetworkStatus
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
@@ -59,9 +58,6 @@ fun HomeScreen(
     onCategoryClick: () -> Unit,
     onPostClick: (Post) -> Unit
 ) {
-
-    val snackbarHostState = remember { SnackbarHostState() }
-
     val categoriesState by viewModel.categoriesState.collectAsState()
     val videoIdsState by viewModel.videoIdsState.collectAsState()
     val postsState by postViewModel.postsState.collectAsState()
@@ -87,6 +83,12 @@ fun HomeScreen(
         targetValue = scrolled.value,
         animationSpec = tween(300),
         label = "logoAlpha"
+    )
+
+    val context = LocalContext.current
+    val networkObserver = remember { NetworkObserver(context) }
+    val networkStatus by networkObserver.networkStatus.collectAsState(
+        initial = NetworkStatus.Available
     )
 
     Scaffold(
@@ -115,7 +117,7 @@ fun HomeScreen(
                         Image(
                             modifier = Modifier.fillMaxWidth(),
                             painter = painterResource(id = R.drawable.logo),
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.logo),
                             contentScale = ContentScale.Fit
                         )
                     }
@@ -164,7 +166,8 @@ fun HomeScreen(
 
                     HomeCategories(
                         state = categoriesState,
-                        onCategoryClick = { onCategoryClick() }
+                        onCategoryClick = { onCategoryClick() },
+                        networkStatus = networkStatus,
                     )
                 }
 
@@ -188,6 +191,7 @@ fun HomeScreen(
                     PostsSlider(
                         state = postsState,
                         onPostClick = onPostClick,
+                        networkStatus = networkStatus,
                     )
                 }
 
@@ -208,7 +212,10 @@ fun HomeScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-                    YouTubeVideoSlider(state = videoIdsState)
+                    YouTubeVideoSlider(
+                        networkStatus = networkStatus,
+                        state = videoIdsState
+                    )
                 }
 
                 item {
@@ -258,16 +265,6 @@ fun HomeScreen(
                     }
                 }
             }
-
-            SnackbarHost(
-                modifier = Modifier.padding(bottom = BasePadding),
-                hostState = snackbarHostState,
-                snackbar = {
-                    AppSnackbar(
-                        snackbarHostState = snackbarHostState
-                    )
-                }
-            )
         }
     )
 }

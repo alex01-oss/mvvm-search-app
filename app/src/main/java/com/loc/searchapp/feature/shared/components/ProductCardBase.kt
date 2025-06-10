@@ -67,7 +67,7 @@ fun ProductCardBase(
                 .error(R.drawable.placeholder_image)
                 .fallback(R.drawable.placeholder_image)
                 .build(),
-            contentDescription = null,
+            contentDescription = product.code,
         )
 
         Column(
@@ -122,7 +122,7 @@ fun ProductCardBase(
                     IconButton(onClick = onRemove) {
                         Icon(
                             painterResource(id = R.drawable.delete),
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.delete),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -130,7 +130,7 @@ fun ProductCardBase(
                     IconButton(onClick = onAdd) {
                         Icon(
                             painterResource(id = R.drawable.add_shopping_cart),
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.add_to_cart),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }

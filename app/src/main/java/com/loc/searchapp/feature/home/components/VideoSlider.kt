@@ -29,21 +29,27 @@ import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.feature.home.player.YouTubeVideoPlayer
 import com.loc.searchapp.feature.shared.model.UiState
+import com.loc.searchapp.feature.shared.network.NetworkStatus
 import kotlinx.coroutines.launch
 
 @Composable
 fun YouTubeVideoSlider(
     modifier: Modifier = Modifier,
     state: UiState<List<VideoId>>,
+    networkStatus: NetworkStatus,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    when (state) {
-        UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_videos))
-        is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
-        UiState.Loading -> VideoSliderShimmer()
-        is UiState.Success -> {
+    when {
+        networkStatus != NetworkStatus.Available -> {
+            EmptyScreen(stringResource(R.string.no_internet_connection))
+        }
+
+        state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_videos))
+        state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+        state == UiState.Loading -> VideoSliderShimmer()
+        state is UiState.Success -> {
             val pagerState = rememberPagerState(
                 initialPage = 0,
                 initialPageOffsetFraction = 0f,
@@ -79,7 +85,7 @@ fun YouTubeVideoSlider(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.arrow_back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -99,7 +105,7 @@ fun YouTubeVideoSlider(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.arrow_forward),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }

@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,12 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.Product
+import com.loc.searchapp.core.ui.components.common.AppSnackbar
 import com.loc.searchapp.core.ui.components.common.SharedTopBar
 import com.loc.searchapp.core.ui.components.lists.ProductsList
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.shared.model.AuthState
-import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -38,24 +36,35 @@ fun CatalogScreen(
     products: LazyPagingItems<Product>,
     navigateToSearch: () -> Unit,
     navigateToDetails: (Product) -> Unit,
-    onAuthClick: () -> Unit,
-    authViewModel: AuthViewModel,
     productViewModel: ProductViewModel,
     onBackClick: () -> Unit
 ) {
     val localCartChanges by productViewModel.localCartChanges.collectAsState()
-    val authState by authViewModel.authState.collectAsState()
-
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val mustLoginMessage = stringResource(id = R.string.must_login)
-    val loginActionLabel = stringResource(id = R.string.login)
+    val addMessage = stringResource(id = R.string.added)
+    val removeMessage = stringResource(id = R.string.removed)
+
+    fun showSnackbarImmediately(message: String) {
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
 
     Scaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { data -> AppSnackbar(data) }
+            )
+        },
         topBar = {
             SharedTopBar(
                 title = stringResource(id = R.string.catalog),
@@ -83,22 +92,13 @@ fun CatalogScreen(
                     items = products,
                     onClick = { product -> navigateToDetails(product) },
                     onAdd = { product ->
-                        if (authState is AuthState.Unauthenticated) {
-                            scope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = mustLoginMessage,
-                                    actionLabel = loginActionLabel,
-                                    duration = SnackbarDuration.Short
-                                )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    onAuthClick()
-                                }
-                            }
-                        } else {
-                            productViewModel.addToCart(product.code)
-                        }
+                        productViewModel.addToCart(product.code)
+                        scope.launch { showSnackbarImmediately(addMessage) }
                     },
-                    onRemove = { product -> productViewModel.removeFromCart(product.code) },
+                    onRemove = { product ->
+                        productViewModel.removeFromCart(product.code)
+                        scope.launch { snackbarHostState.showSnackbar(message = removeMessage) }
+                    },
                     localCartChanges = localCartChanges,
                 )
             }

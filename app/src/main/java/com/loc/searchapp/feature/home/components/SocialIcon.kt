@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.IconSize2
 
 @Composable
@@ -28,7 +30,7 @@ fun SocialIcon(
         Icon(
             modifier = Modifier.size(IconSize2),
             painter = painterResource(id = iconRes),
-            contentDescription = null,
+            contentDescription = stringResource(id = R.string.social_icon),
             tint = MaterialTheme.colorScheme.onBackground
         )
     }

@@ -22,11 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
+import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
@@ -43,6 +45,9 @@ fun PostItem(
 ) {
     val imageUrl = "$CATALOG_URL${post.imageUrl}"
     val typography = MaterialTheme.typography
+
+    val fallback = stringResource(id = R.string.author_fallback, post.userId)
+    val displayName = authorName ?: fallback
 
     Card(
         modifier = modifier
@@ -84,7 +89,7 @@ fun PostItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = authorName ?: "Автор №${post.userId}", // translate
+                    text = displayName,
                     style = typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

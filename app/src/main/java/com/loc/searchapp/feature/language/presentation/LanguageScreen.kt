@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.components.common.AppDialog
 import com.loc.searchapp.core.ui.components.common.SharedTopBar
-import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.utils.LanguagePreference
@@ -37,15 +34,20 @@ fun LanguageScreen(
     onBackClick: () -> Unit,
 ) {
     val context = LocalContext.current
-    val activity = context as? Activity
     var selectedLanguage by remember { mutableStateOf(LanguagePreference.getLanguage(context)) }
-    var showRestartDialog by remember { mutableStateOf(false) }
     var pendingLanguage by remember { mutableStateOf("") }
+
+    var showRestartDialog by remember { mutableStateOf(false) }
+    val activity = context as? Activity
     val coroutineScope = rememberCoroutineScope()
 
-    BackHandler {
-        onBackClick()
-    }
+    val languages = listOf(
+        Triple(stringResource(R.string.system_language), "system", R.drawable.globe),
+        Triple("English", "en", R.drawable.flag_uk),
+        Triple("Українська", "uk", R.drawable.flag_ukraine)
+    )
+
+    BackHandler { onBackClick() }
 
     Scaffold(
         modifier = modifier,
@@ -61,52 +63,25 @@ fun LanguageScreen(
         Column(
             modifier
                 .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding())
+                .padding(paddingValues)
         ) {
-            Spacer(modifier = Modifier.height(BasePadding))
+            Spacer(modifier = Modifier.height(MediumPadding1))
 
-            Text(
-                modifier = Modifier.padding(horizontal = MediumPadding1),
-                text = stringResource(id = R.string.select_language),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            languages.forEachIndexed { index, (label, code, iconRes) ->
+                LanguageOption(
+                    language = label,
+                    id = iconRes,
+                    isSelected = selectedLanguage == code,
+                    onClick = {
+                        pendingLanguage = code
+                        showRestartDialog = true
+                    }
+                )
 
-            Spacer(modifier = Modifier.height(BasePadding))
-
-            LanguageOption(
-                language = stringResource(id = R.string.system_language),
-                isSelected = selectedLanguage == "system",
-                onClick = {
-                    pendingLanguage = "system"
-                    showRestartDialog = true
-                },
-                id = R.drawable.globe
-            )
-
-            Spacer(modifier = Modifier.height(SmallPadding))
-
-            LanguageOption(
-                language = "English",
-                isSelected = selectedLanguage == "en",
-                onClick = {
-                    pendingLanguage = "en"
-                    showRestartDialog = true
-                },
-                id = R.drawable.flag_uk
-            )
-
-            Spacer(modifier = Modifier.height(SmallPadding))
-
-            LanguageOption(
-                language = "Українська",
-                isSelected = selectedLanguage == "uk",
-                onClick = {
-                    pendingLanguage = "uk"
-                    showRestartDialog = true
-                },
-                id = R.drawable.flag_ukraine
-            )
+                if (index != languages.lastIndex) {
+                    Spacer(modifier = Modifier.height(SmallPadding))
+                }
+            }
         }
 
         if (showRestartDialog) {

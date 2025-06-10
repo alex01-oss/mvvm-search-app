@@ -67,7 +67,7 @@ fun PostsScreen(
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = null,
+                        contentDescription = stringResource(id = R.string.add_post),
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
@@ -77,14 +77,16 @@ fun PostsScreen(
         when (postState) {
             UiState.Loading -> PostItemShimmer()
 
-            UiState.Empty -> Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(BasePadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(stringResource(id = R.string.empty_blog))
+            UiState.Empty -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(BasePadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(stringResource(id = R.string.empty_blog))
+                }
             }
 
             is UiState.Error -> EmptyScreen(message = postState.message)

@@ -39,7 +39,6 @@ import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.request.ImageRequest
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.domain.model.posts.PostFormState
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
@@ -50,6 +49,7 @@ import com.loc.searchapp.core.utils.FileUtil
 import com.loc.searchapp.feature.post_editor.components.EditorTopBar
 import com.loc.searchapp.feature.post_editor.components.PostImagePicker
 import com.loc.searchapp.feature.post_editor.components.RichTextToolbar
+import com.loc.searchapp.feature.post_editor.model.PostEditorState
 import com.loc.searchapp.feature.shared.components.ErrorDialog
 import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
@@ -63,7 +63,7 @@ import com.mohamedrejeb.richeditor.ui.material3.RichTextEditorDefaults
 fun PostEditorScreen(
     modifier: Modifier = Modifier,
     viewModel: PostViewModel,
-    post: Post?,
+    postEditorState: PostEditorState,
     postActionState: UiState<Unit>,
     onFinish: () -> Unit,
     onBackClick: () -> Unit
@@ -79,14 +79,23 @@ fun PostEditorScreen(
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    LaunchedEffect(post) {
-        post?.let {
-            formState = PostFormState(
-                title = it.title,
-                imageUrl = it.imageUrl,
-                content = it.content
-            )
-            richTextState.setHtml(it.content)
+    LaunchedEffect(postEditorState) {
+        when (postEditorState) {
+            is PostEditorState.EditMode -> {
+                val post = postEditorState.post
+                formState = formState.copy(
+                    title = post.title,
+                    imageUrl = post.imageUrl
+                )
+                richTextState.setHtml(post.content)
+            }
+
+            is PostEditorState.CreateMode -> {
+                formState = PostFormState()
+                richTextState.clear()
+            }
+
+            else -> {}
         }
     }
 
@@ -98,8 +107,8 @@ fun PostEditorScreen(
             }
 
             is UiState.Success -> {
-                onFinish()
                 viewModel.resetPostActionState()
+                onFinish()
             }
 
             else -> Unit
@@ -137,28 +146,39 @@ fun PostEditorScreen(
         if (formState.title.isBlank()) {
             errorMessage = context.getString(R.string.title_error)
             showErrorDialog = true
-        }
+        } else {
+            val content = richTextState.toHtml()
 
-        val content = richTextState.toHtml()
+            fun savePost(finalImageUrl: String?) {
+                when (postEditorState) {
+                    is PostEditorState.CreateMode -> {
+                        viewModel.createPost(formState.title, content, finalImageUrl)
+                    }
 
-        fun savePost(finalImageUrl: String?) {
-            if (post == null) {
-                viewModel.createPost(formState.title, content, finalImageUrl)
-            } else {
-                viewModel.editPost(post.id, formState.title, content, finalImageUrl ?: "")
-            }
-        }
+                    is PostEditorState.EditMode -> {
+                        viewModel.editPost(
+                            postEditorState.post.id,
+                            formState.title,
+                            content,
+                            finalImageUrl ?: ""
+                        )
+                    }
 
-        formState.imageFile?.let { file ->
-            viewModel.uploadImage(file) { response ->
-                if (response != null) {
-                    savePost(response.url)
-                } else {
-                    errorMessage = context.getString(R.string.upload_error)
-                    showErrorDialog = true
+                    else -> {}
                 }
             }
-        } ?: savePost(formState.imageUrl)
+
+            formState.imageFile?.let { file ->
+                viewModel.uploadImage(file) { response ->
+                    if (response != null) {
+                        savePost(response.url)
+                    } else {
+                        errorMessage = context.getString(R.string.upload_error)
+                        showErrorDialog = true
+                    }
+                }
+            } ?: savePost(formState.imageUrl)
+        }
     }
 
     Scaffold(
@@ -166,92 +186,112 @@ fun PostEditorScreen(
         containerColor = Color.Transparent,
         topBar = {
             EditorTopBar(
-                isNewPost = post == null,
+                isNewPost = postEditorState is PostEditorState.CreateMode,
                 onSaveClick = onSaveClick,
                 onCloseClick = onFinish,
                 onBackClick = onBackClick
             )
         }
     ) { paddingValues ->
-        if (postActionState is UiState.Loading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(horizontal = MediumPadding1)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(BasePadding)
-            ) {
-                Spacer(modifier = Modifier.height(MediumPadding1))
-
-                OutlinedTextField(
-                    value = formState.title,
-                    onValueChange = { formState = formState.copy(title = it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.title)) },
-                    singleLine = true
-                )
-
-                PostImagePicker(
-                    context = context,
-                    formState = formState,
-                    onImagePickClick = { showImagePicker = true },
-                    onImageClear = {
-                        val imageLoader = ImageLoader(context)
-                        val imageUri = formState.previewUri
-                        val request = ImageRequest.Builder(context).data(imageUri).build()
-                        val key = request.memoryCacheKey
-                        key?.let { imageLoader.memoryCache?.remove(it) }
-                        imageLoader.diskCache?.remove(imageUri.toString())
-                        formState = formState.copy(imageUrl = null, imageFile = null)
-                    }
-                )
-
-                RichTextToolbar(richTextState = richTextState)
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = PostImageHeight),
-                    shape = RoundedCornerShape(SmallPadding),
-                    border = ButtonDefaults.outlinedButtonBorder(enabled = true)
+        when {
+            postActionState is UiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    RichTextEditor(
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                }
+            }
+
+            postEditorState is PostEditorState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                }
+            }
+
+            postEditorState is PostEditorState.Error -> {
+                ErrorDialog(
+                    message = postEditorState.message,
+                    onDismiss = onBackClick
+                )
+            }
+
+            else -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = paddingValues.calculateTopPadding())
+                        .padding(horizontal = MediumPadding1)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(BasePadding)
+                ) {
+                    Spacer(modifier = Modifier.height(MediumPadding1))
+
+                    OutlinedTextField(
+                        value = formState.title,
+                        onValueChange = { formState = formState.copy(title = it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(stringResource(R.string.title)) },
+                        singleLine = true
+                    )
+
+                    PostImagePicker(
+                        context = context,
+                        formState = formState,
+                        onImagePickClick = { showImagePicker = true },
+                        onImageClear = {
+                            val imageLoader = ImageLoader(context)
+                            val imageUri = formState.previewUri
+                            val request = ImageRequest.Builder(context).data(imageUri).build()
+                            val key = request.memoryCacheKey
+                            key?.let { imageLoader.memoryCache?.remove(it) }
+                            imageLoader.diskCache?.remove(imageUri.toString())
+                            formState = formState.copy(imageUrl = null, imageFile = null)
+                        }
+                    )
+
+                    RichTextToolbar(richTextState = richTextState)
+
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(BasePadding),
-                        state = richTextState,
-                        colors = RichTextEditorDefaults.richTextEditorColors()
-                    )
-                }
+                            .heightIn(min = PostImageHeight),
+                        shape = RoundedCornerShape(SmallPadding),
+                        border = ButtonDefaults.outlinedButtonBorder(enabled = true)
+                    ) {
+                        RichTextEditor(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(BasePadding),
+                            state = richTextState,
+                            colors = RichTextEditorDefaults.richTextEditorColors()
+                        )
+                    }
 
-                Text(
-                    text = stringResource(R.string.preview),
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = TitleSize
-                    ),
-                    modifier = Modifier.padding(top = BasePadding),
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = SmallPadding),
-                    shape = RoundedCornerShape(SmallPadding)
-                ) {
-                    RichText(
-                        modifier = Modifier.padding(BasePadding),
-                        state = richTextState
+                    Text(
+                        text = stringResource(R.string.preview),
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = TitleSize
+                        ),
+                        modifier = Modifier.padding(top = BasePadding),
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = SmallPadding),
+                        shape = RoundedCornerShape(SmallPadding)
+                    ) {
+                        RichText(
+                            modifier = Modifier.padding(BasePadding),
+                            state = richTextState
+                        )
+                    }
                 }
             }
         }

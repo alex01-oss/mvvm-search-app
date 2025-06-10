@@ -25,10 +25,10 @@ fun EditorTopBar(
             else stringResource(id = R.string.edit_post),
         actions = {
             IconButton(onClick = onSaveClick) {
-                Icon(Icons.Default.Save, contentDescription = null)
+                Icon(Icons.Default.Save, contentDescription = stringResource(id = R.string.save_changes))
             }
             IconButton(onClick = onCloseClick) {
-                Icon(Icons.Default.Close, contentDescription = null)
+                Icon(Icons.Default.Close, contentDescription = stringResource(id = R.string.close))
             }
         },
         showBackButton = true,

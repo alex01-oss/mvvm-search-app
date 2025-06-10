@@ -31,21 +31,27 @@ import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.feature.shared.model.UiState
+import com.loc.searchapp.feature.shared.network.NetworkStatus
 
 
 @Composable
 fun HomeCategories(
     modifier: Modifier = Modifier,
     state: UiState<List<MenuCategory>>,
-    onCategoryClick: (MenuCategory) -> Unit
+    onCategoryClick: (MenuCategory) -> Unit,
+    networkStatus: NetworkStatus
 ) {
     var selectedCategory by remember { mutableStateOf<MenuCategory?>(null) }
 
-    when (state) {
-        UiState.Empty -> EmptyScreen(stringResource(id = R.string.no_categories))
-        is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
-        UiState.Loading -> CategoriesShimmer()
-        is UiState.Success -> {
+    when {
+        networkStatus != NetworkStatus.Available -> {
+            EmptyScreen(stringResource(R.string.no_internet_connection))
+        }
+
+        state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.no_categories))
+        state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+        state == UiState.Loading -> CategoriesShimmer()
+        state is UiState.Success -> {
             Column(modifier.fillMaxWidth()) {
                 state.data.forEach { category ->
                     val isSelected = selectedCategory == category

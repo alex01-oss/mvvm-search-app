@@ -52,3 +52,11 @@ data class RefreshTokenResponse(
     @SerialName("refresh_token") val refreshToken: String,
     @SerialName("token_type") val tokenType: String
 )
+
+@Serializable
+data class UpdateUserRequest(
+    @SerialName("full_name") val fullname: String? = null,
+    val email: String? = null,
+    val phone: String? = null,
+    val password: String? = null
+)

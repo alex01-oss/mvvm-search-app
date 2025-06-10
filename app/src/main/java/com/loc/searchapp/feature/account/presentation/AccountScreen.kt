@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -49,6 +48,7 @@ import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 fun AccountScreen(
     modifier: Modifier = Modifier,
     onAuthClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onLanguageClick: () -> Unit,
     onAddPostClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -123,11 +123,8 @@ fun AccountScreen(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         AccountOption(
                             icon = Icons.Default.Settings,
-                            text = stringResource(id = R.string.settings)
-                        )
-                        AccountOption(
-                            icon = Icons.Default.Lock,
-                            text = stringResource(id = R.string.change_password)
+                            text = stringResource(id = R.string.settings),
+                            onClick = onSettingsClick
                         )
                         AccountOption(
                             icon = Icons.Default.Language,

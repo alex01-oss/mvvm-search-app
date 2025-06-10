@@ -1,67 +1,71 @@
 package com.loc.searchapp.core.ui.components.common
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding2
 
 @Composable
 fun AppSnackbar(
-    modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState,
+    data: SnackbarData,
+    modifier: Modifier = Modifier
 ) {
-    SnackbarHost(
-        modifier = modifier,
-        hostState = snackbarHostState,
-    ) { data ->
-        Snackbar(
-            modifier = Modifier.padding(BasePadding),
-            action = {
-                if (data.visuals.actionLabel != null) {
-                    TextButton(
-                        onClick = { data.performAction() },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = MaterialTheme.colorScheme.inversePrimary
-                        )
-                    ) {
-                        Text(data.visuals.actionLabel!!)
-                    }
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            dismissAction = {
-                IconButton(onClick = { data.dismiss() }) {
+    Snackbar(
+        modifier = modifier.padding(BasePadding),
+        action = {
+            data.visuals.actionLabel?.let {
+                IconButton(
+                    onClick = { data.performAction() },
+                    modifier = Modifier.size(IconSize)
+                ) {
                     Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null
+                        imageVector = Icons.AutoMirrored.Filled.Undo,
+                        contentDescription = it,
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
-            }) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            }
+        },
+        dismissAction = {
+            IconButton(onClick = { data.dismiss() }) {
                 Icon(
-                    modifier = Modifier.padding(end = SmallPadding2),
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null,
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.dismiss),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Text(data.visuals.message)
             }
+        },
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier.padding(end = SmallPadding2),
+                imageVector = Icons.Default.Info,
+                contentDescription = stringResource(id = R.string.info),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.width(SmallPadding2))
+            Text(data.visuals.message)
         }
     }
 }

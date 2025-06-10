@@ -24,6 +24,8 @@ sealed class Route(
 
     data object CatalogScreen : Route(route = "catalogScreen")
 
+    data object SettingsScreen : Route(route = "settingsScreen")
+
     data object LanguageScreen : Route(route = "languageScreen")
 
     data object AboutScreen : Route(route = "aboutScreen")

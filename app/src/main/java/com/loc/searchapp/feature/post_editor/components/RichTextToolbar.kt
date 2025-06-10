@@ -23,12 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.mohamedrejeb.richeditor.model.RichTextState
@@ -88,6 +90,6 @@ fun RichTextToolbar(
 @Composable
 fun RichTextButton(icon: ImageVector, onClick: () -> Unit) {
     FilledTonalIconButton(onClick = onClick) {
-        Icon(icon, contentDescription = null)
+        Icon(icon, contentDescription = stringResource(id = R.string.editor_button))
     }
 }

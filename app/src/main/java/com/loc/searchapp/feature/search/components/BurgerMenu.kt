@@ -129,7 +129,7 @@ fun BurgerMenu(
                                         imageVector =
                                             if (expanded) Icons.Default.ExpandLess
                                             else Icons.Default.ExpandMore,
-                                        contentDescription = null
+                                        contentDescription = stringResource(id = R.string.expand)
                                     )
                                 }
                             }
@@ -181,7 +181,7 @@ fun BurgerMenu(
                                                 Icon(
                                                     modifier = Modifier.size(BurgerIconSize),
                                                     imageVector = icon,
-                                                    contentDescription = null,
+                                                    contentDescription = stringResource(id = R.string.menu),
                                                     tint = when {
                                                         item.url != null -> MaterialTheme.colorScheme.error
                                                         item.searchType != null -> MaterialTheme.colorScheme.primary

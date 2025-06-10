@@ -22,11 +22,13 @@ import com.loc.searchapp.core.domain.usecases.app_entry.AppEntryUseCases
 import com.loc.searchapp.core.domain.usecases.app_entry.ReadAppEntry
 import com.loc.searchapp.core.domain.usecases.app_entry.SaveAppEntry
 import com.loc.searchapp.core.domain.usecases.auth.AuthUseCases
+import com.loc.searchapp.core.domain.usecases.auth.DeleteUser
 import com.loc.searchapp.core.domain.usecases.auth.GetUser
 import com.loc.searchapp.core.domain.usecases.auth.LoginUser
 import com.loc.searchapp.core.domain.usecases.auth.LogoutUser
 import com.loc.searchapp.core.domain.usecases.auth.RefreshToken
 import com.loc.searchapp.core.domain.usecases.auth.RegisterUser
+import com.loc.searchapp.core.domain.usecases.auth.UpdateUser
 import com.loc.searchapp.core.domain.usecases.catalog.AddProduct
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.core.domain.usecases.catalog.DeleteProduct
@@ -242,7 +244,9 @@ object AppModule {
             registerUser = RegisterUser(authRepository),
             refreshToken = RefreshToken(authRepository),
             logoutUser = LogoutUser(authRepository),
-            getUser = GetUser(authRepository)
+            getUser = GetUser(authRepository),
+            updateUser = UpdateUser(authRepository),
+            deleteUser = DeleteUser(authRepository)
         )
     }
 

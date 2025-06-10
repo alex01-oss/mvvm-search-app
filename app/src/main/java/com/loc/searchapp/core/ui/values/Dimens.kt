@@ -23,7 +23,6 @@ object Dimens {
     val ImageMargin = 36.dp
     val BorderStroke = 2.dp
     val TextSize = 14.sp
-    val SectionSpacing = 32.dp
     val StrongCorner = 4.dp
     val SmallPadding2 = 8.dp
     val AvatarSize = 40.dp
@@ -31,7 +30,6 @@ object Dimens {
     val ButtonCorner = 6.dp
     val ExtraSmallCorner = 1.dp
     val SmallCorner = 2.dp
-    val ShimmerHeight1 = 30.dp
     val ShimmerHeight2 = 16.dp
     val CategoryHeight = 60.dp
     val DefaultCorner = 8.dp
@@ -40,10 +38,9 @@ object Dimens {
     val PostImageHeight = 200.dp
     val PagerHeight = 320.dp
     val TextBarHeight = 70.dp
-    val PostPreviewSize = 120.dp
     val PostsSpacerSize = 80.dp
-    val navBarHeight = 56.dp
-    val activeButtonSize = 64.dp
+    val NavBarHeight = 56.dp
+    val ActiveButtonSize = 64.dp
     val BottomNavMargin = 40.dp
     val BurgerPadding = 6.dp
     val BurgerIconSize = 18.dp

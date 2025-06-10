@@ -30,7 +30,10 @@ fun PostInfoTopBar(
         actions = {
             if (authViewModel.isAdmin) {
                 IconButton(onClick = { onEditClick(post) }) {
-                    Icon(Icons.Default.Edit, contentDescription = null)
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = stringResource(id = R.string.edit_post)
+                    )
                 }
             } else {
                 IconButton(onClick = {
@@ -39,7 +42,10 @@ fun PostInfoTopBar(
                     }
                     context.startActivity(intent)
                 }) {
-                    Icon(Icons.Default.Report , contentDescription = null)
+                    Icon(
+                        Icons.Default.Report,
+                        contentDescription = stringResource(id = R.string.report_icon)
+                    )
                 }
             }
         },

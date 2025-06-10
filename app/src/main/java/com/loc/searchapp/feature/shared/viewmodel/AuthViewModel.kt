@@ -3,6 +3,7 @@ package com.loc.searchapp.feature.shared.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
+import com.loc.searchapp.core.domain.model.auth.User
 import com.loc.searchapp.core.domain.usecases.auth.AuthUseCases
 import com.loc.searchapp.feature.shared.model.AuthEvent
 import com.loc.searchapp.feature.shared.model.AuthState
@@ -54,6 +55,10 @@ class AuthViewModel @Inject constructor(
 
     fun clearError() {
         _authState.value = AuthState.Unauthenticated
+    }
+
+    fun setError(message: String) {
+        _authState.value = AuthState.Error(message)
     }
 
     fun onEvent(event: AuthEvent) {
@@ -120,6 +125,58 @@ class AuthViewModel @Inject constructor(
                         }
                     } catch (e: Exception) {
                         _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
+                    }
+                }
+            }
+
+            is AuthEvent.UpdateUser -> {
+                viewModelScope.launch {
+                    _authState.value = AuthState.Loading
+                    try {
+                        val accessToken = userPreferences.getAccessToken()
+                        if (accessToken.isNullOrEmpty()) {
+                            _authState.value = AuthState.Unauthenticated
+                            return@launch
+                        }
+
+                        val response = authUseCases.updateUser(
+                            accessToken = accessToken,
+                            fullname = event.fullname,
+                            email = event.email,
+                            phone = event.phone,
+                            password = event.newPassword
+                        )
+
+                        if (response.isSuccessful) {
+                            val updatedUser = response.body()?.user
+                            if (updatedUser != null) {
+                                _authState.value = AuthState.Authenticated(updatedUser as User?)
+                            } else {
+                                _authState.value = AuthState.Error("Failed to update user")
+                            }
+                        } else {
+                            _authState.value = AuthState.Error("Update failed: ${response.message()}")
+                        }
+                    } catch (e: Exception) {
+                        _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
+                    }
+                }
+            }
+
+            is AuthEvent.DeleteUser -> {
+                viewModelScope.launch {
+                    val token = userPreferences.getAccessToken().orEmpty()
+
+                    try {
+                        val result = authUseCases.deleteUser(token)
+                        if (result.isSuccessful) {
+                            userPreferences.clearTokens()
+                            _authState.value = AuthState.Unauthenticated
+                        } else {
+                            _authState.value = AuthState.Error("Failed to delete account")
+                        }
+                    } catch (e: Exception) {
+                        _authState.value = AuthState.Error("Unexpected error: ${e.localizedMessage}")
                     }
                 }
             }

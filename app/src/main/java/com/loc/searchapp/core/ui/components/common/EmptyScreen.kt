@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.EmptyIconSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
@@ -81,7 +82,7 @@ fun EmptyContent(
         Icon(
             modifier = Modifier.size(EmptyIconSize).alpha(alphaAnim),
             painter = painterResource(id = iconId),
-            contentDescription = null,
+            contentDescription = stringResource(id = R.string.empty_icon),
             tint = if (isSystemInDarkTheme()) LightGray else DarkGray
         )
         Text(

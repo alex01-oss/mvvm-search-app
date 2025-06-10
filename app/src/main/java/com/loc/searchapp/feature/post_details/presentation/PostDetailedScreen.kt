@@ -1,7 +1,5 @@
 package com.loc.searchapp.feature.post_details.presentation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
@@ -37,12 +37,12 @@ import com.loc.searchapp.core.utils.Constants.CATALOG_URL
 import com.loc.searchapp.feature.post_details.components.PostInfoTopBar
 import com.loc.searchapp.feature.post_details.utils.formatDate
 import com.loc.searchapp.feature.posts.components.PostDetailedShimmer
+import com.loc.searchapp.feature.shared.components.PaddedContent
 import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PostDetailedScreen(
     modifier: Modifier = Modifier,
@@ -52,34 +52,48 @@ fun PostDetailedScreen(
     authViewModel: AuthViewModel,
     authorName: String? = null
 ) {
-    when (state) {
-        is UiState.Loading -> PostDetailedShimmer()
+    val post = (state as? UiState.Success)?.data
 
-        is UiState.Error -> EmptyScreen(state.message)
-
-        UiState.Empty -> EmptyScreen("Пост не знайдено")
-
-        is UiState.Success -> {
-            val post = state.data
-            val fullImageUrl = "$CATALOG_URL${post.imageUrl}"
-            val richTextState = remember { RichTextState() }
-
-            LaunchedEffect(post.id) {
-                richTextState.setHtml(post.content)
+    Scaffold(
+        modifier = modifier,
+        containerColor = Color.Transparent,
+        topBar = {
+            if (post != null) {
+                PostInfoTopBar(
+                    onEditClick = { onEditClick(post) },
+                    onBackClick = onBackClick,
+                    post = post,
+                    authViewModel = authViewModel
+                )
+            }
+        }
+    ) { paddingValues ->
+        when (state) {
+            is UiState.Loading -> {
+                PaddedContent(paddingValues) {
+                    PostDetailedShimmer()
+                }
             }
 
-            Scaffold(
-                modifier = modifier,
-                containerColor = Color.Transparent,
-                topBar = {
-                    PostInfoTopBar(
-                        onEditClick = { onEditClick(post) },
-                        onBackClick = onBackClick,
-                        post = post,
-                        authViewModel = authViewModel
-                    )
+            is UiState.Error -> {
+                PaddedContent(paddingValues) {
+                    EmptyScreen(message = state.message)
                 }
-            ) { paddingValues ->
+            }
+
+            UiState.Empty -> {
+                PaddedContent(paddingValues) {
+                    EmptyScreen(message = stringResource(id = R.string.error))
+                }
+            }
+
+            is UiState.Success -> {
+                val richTextState = remember { RichTextState() }
+
+                LaunchedEffect(post!!.id) {
+                    richTextState.setHtml(post.content)
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -101,7 +115,10 @@ fun PostDetailedScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Автор: ${authorName ?: "№${post.userId}"}",
+                            text = stringResource(
+                                id = R.string.author_label,
+                                authorName ?: "№${post.userId}"
+                            ),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -116,7 +133,7 @@ fun PostDetailedScreen(
 
                     if (post.imageUrl.isNotEmpty()) {
                         AsyncImage(
-                            model = fullImageUrl,
+                            model = "$CATALOG_URL${post.imageUrl}",
                             contentDescription = post.title,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier

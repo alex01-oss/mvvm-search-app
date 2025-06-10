@@ -74,7 +74,7 @@ fun HomeTopBar(
 
                     Image(
                         painter = painterResource(id = R.drawable.logo_white),
-                        contentDescription = null,
+                        contentDescription = stringResource(id = R.string.logo),
                         modifier = Modifier
                             .height(TopLogoHeight)
                             .graphicsLayer {

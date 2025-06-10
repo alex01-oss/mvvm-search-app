@@ -50,11 +50,7 @@ fun NavGraphBuilder.homeScreens(
 
         CatalogScreen(
             products = products,
-            authViewModel = authViewModel,
             productViewModel = productViewModel,
-            onAuthClick = {
-                navController.navigate(Route.LoginScreen.route)
-            },
             navigateToSearch = {
                 navigateToTab(navController, Route.SearchScreen.route)
             },
@@ -123,10 +119,12 @@ fun NavGraphBuilder.homeScreens(
     }
 
     composable(route = Route.AccountScreen.route) {
-
         AccountScreen(
             onAuthClick = {
                 navController.navigate(Route.LoginScreen.route)
+            },
+            onSettingsClick = {
+                navController.navigate(Route.SettingsScreen.route)
             },
             onLanguageClick = {
                 navController.navigate(Route.LanguageScreen.route)

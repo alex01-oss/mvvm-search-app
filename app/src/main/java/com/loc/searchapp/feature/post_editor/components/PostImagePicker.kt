@@ -53,9 +53,18 @@ fun PostImagePicker(
                 onClick = onImagePickClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.AddPhotoAlternate, contentDescription = null)
+                Icon(
+                    Icons.Default.AddPhotoAlternate,
+                    contentDescription = stringResource(id = R.string.pick_image),
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+
                 Spacer(Modifier.width(ExtraSmallPadding))
-                Text(stringResource(R.string.pick_image))
+
+                Text(
+                    text = stringResource(R.string.pick_image),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             if (formState.hasImage) {
@@ -66,7 +75,7 @@ fun PostImagePicker(
                         .data(formState.previewUri)
                         .crossfade(true)
                         .build(),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.preview),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,7 +89,10 @@ fun PostImagePicker(
                     onClick = onImageClear,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.Delete, contentDescription = null)
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = stringResource(id = R.string.delete_image)
+                    )
                     Spacer(Modifier.width(ExtraSmallPadding))
                     Text(stringResource(R.string.delete_image))
                 }

@@ -15,7 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
@@ -34,8 +37,8 @@ fun EquipmentRow(
         Icon(
             modifier = Modifier.size(IconSize),
             imageVector = Icons.Default.Build,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            contentDescription = stringResource(id = R.string.machine_icon),
+            tint = colorResource(id = R.color.light_red)
         )
 
         Spacer(modifier = Modifier.width(SmallPadding))

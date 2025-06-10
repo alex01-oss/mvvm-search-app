@@ -43,21 +43,27 @@ import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 import com.loc.searchapp.core.utils.Constants.CATALOG_URL
 import com.loc.searchapp.feature.shared.model.UiState
+import com.loc.searchapp.feature.shared.network.NetworkStatus
 import kotlinx.coroutines.launch
 
 @Composable
 fun PostsSlider(
     modifier: Modifier = Modifier,
+    networkStatus: NetworkStatus,
     state: UiState<List<Post>>,
     onPostClick: (Post) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    when(state) {
-        UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_news))
-        is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
-        UiState.Loading -> PostsSliderShimmer()
-        is UiState.Success -> {
+    when {
+        networkStatus != NetworkStatus.Available -> {
+            EmptyScreen(stringResource(R.string.no_internet_connection))
+        }
+
+        state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_news))
+        state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+        state == UiState.Loading -> PostsSliderShimmer()
+        state is UiState.Success -> {
             val pagerState = rememberPagerState(
                 initialPage = 0,
                 initialPageOffsetFraction = 0f,
@@ -139,7 +145,7 @@ fun PostsSlider(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(id = R.string.arrow_back),
                                     tint = Color.White
                                 )
                             }
@@ -163,7 +169,7 @@ fun PostsSlider(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(id = R.string.arrow_forward),
                                     tint = Color.White
                                 )
                             }

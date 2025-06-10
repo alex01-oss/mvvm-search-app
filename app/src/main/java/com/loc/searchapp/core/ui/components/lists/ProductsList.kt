@@ -36,8 +36,11 @@ fun ProductsList(
     localCartChanges: Map<String, Boolean>,
     showLoadingOnEmpty: Boolean = true
 ) {
-    when (items.loadState.refresh) {
-        is LoadState.Error -> EmptyScreen(message = stringResource(id = R.string.error))
+    when (val state = items.loadState.refresh) {
+        is LoadState.Error -> {
+            val errorMessage = state.error.localizedMessage ?: stringResource(R.string.error)
+            EmptyScreen(message = stringResource(R.string.error, errorMessage))
+        }
 
         LoadState.Loading -> {
             if (showLoadingOnEmpty) {
@@ -79,7 +82,7 @@ fun ProductsList(
                             ) {
                                 CircularProgressIndicator(
                                     strokeWidth = 2.dp,
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }

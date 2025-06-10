@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +42,10 @@ fun SharedTopBar(
         navigationIcon = {
             if (showBackButton && onBackClick != null) {
                 IconButton(onClick = onBackClick) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(id = R.string.arrow_back)
+                    )
                 }
             }
         },

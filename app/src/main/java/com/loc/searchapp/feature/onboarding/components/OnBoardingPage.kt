@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.Page
@@ -31,7 +32,7 @@ fun OnBoardingPage(
                 .fillMaxWidth()
                 .fillMaxHeight(fraction = 0.6f),
             painter = painterResource(id = page.image),
-            contentDescription = null,
+            contentDescription = stringResource(id = R.string.onboarding_image),
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(MediumPadding1))

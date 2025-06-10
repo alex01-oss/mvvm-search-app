@@ -2,64 +2,119 @@
 <resources>
     <string name="app_name">Search App</string>
 
-    <!-- account screen -->
+    <!-- Account screen -->
     <string name="settings">Settings</string>
     <string name="change_password">Change Password</string>
     <string name="change_language">Change Language</string>
     <string name="help">Help</string>
     <string name="logout">Logout</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="delete_account">Delete Account</string>
 
-    <!-- login screen -->
+    <!-- Login screen -->
     <string name="sign_in">Sign In</string>
+    <string name="sign_in_main">Sign</string>
+    <string name="sign_in_suffix">IN</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
     <string name="login">Login</string>
     <string name="or">OR</string>
     <string name="not_have_account">Don\'t have an account? Register</string>
 
-    <!-- register screen -->
+    <!-- Register screen -->
     <string name="sign_up">Sign Up</string>
+    <string name="sign_up_main">Sign</string>
+    <string name="sign_up_suffix">UP</string>
     <string name="full_name">Full Name</string>
+    <string name="phone">Phone Number</string>
     <string name="register">Register</string>
     <string name="have_account">Already have an account? Sign In</string>
 
-    <!-- item card -->
+    <!-- Item card -->
     <string name="code">Code: </string>
     <string name="shape">Shape: </string>
     <string name="dimensions">Dimensions: </string>
+    <string name="bond">Bond: </string>
+    <string name="grid_size">Grid Size: </string>
 
-    <!-- cart list -->
-    <string name="empty_cart">Cart is empty</string>
+    <!-- Cart -->
+    <string name="cart">Cart</string>
+    <string name="empty_cart">Cart is Empty</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="delete_from_cart">Remove from Cart</string>
+    <string name="must_login">You must be logged in to add an item to the cart.</string>
 
-    <!-- empty screen -->
+    <!-- Navigation -->
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="account">Account</string>
+    <string name="catalog">Catalog</string>
+
+    <!-- Search screen -->
+    <string name="search_placeholder">Search…</string>
+    <string name="categories">Categories</string>
+    <string name="no_categories">No Categories Yet</string>
+    <string name="not_found">Not Found</string>
+    <string name="start_searching">Start Searching</string>
+
+    <!-- Product details -->
+    <string name="detailed">Details:</string>
+    <string name="product_details">Product Details</string>
+    <string name="product_info">Product Info</string>
+    <string name="bond_info">Bond Info</string>
+    <string name="cooling_instructions">Cooling Instructions</string>
+    <string name="compatible_machines">Compatible Machines</string>
+
+    <!-- News/Blog -->
+    <string name="our_blog">Our Blog</string>
+    <string name="blog">Blog</string>
+    <string name="last_news">Latest News</string>
+    <string name="empty_news">No News Yet</string>
+    <string name="empty_blog">Empty Blog</string>
+    <string name="create_post">Create News</string>
+    <string name="edit_post">Edit News</string>
+    <string name="add_post">Add Post</string>
+    <string name="add_post_warn">No news. Tap + to add your first post.</string>
+    <string name="delete_post">Delete Post?</string>
+    <string name="delete_post_dialog">Are you sure you want to delete this post? This action cannot be undone.</string>
+    <string name="post_info">Post Information</string>
+    <string name="author_label">Author: %1$s</string>
+    <string name="author_fallback">Author #%1$d</string>
+
+    <!-- Media -->
+    <string name="our_videos">Our Videos</string>
+    <string name="empty_videos">Videos are Empty</string>
+    <string name="social_media">Social Media</string>
+
+    <!-- Edit post screen -->
+    <string name="title">Title</string>
+    <string name="image">Image</string>
+    <string name="pick_image">Pick Image</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="preview">Preview</string>
+    <string name="image_error">Image processing error: %1$s</string>
+    <string name="title_error">Title cannot be empty</string>
+    <string name="upload_error">Failed to upload image</string>
+
+    <!-- Error states -->
     <string name="unknown_state">Unknown error.</string>
     <string name="server_unavailable">Server is unavailable.</string>
     <string name="internet_unavailable">Internet is unavailable.</string>
-
-    <!-- details screen -->
-    <string name="detailed">Details:</string>
-
-    <!-- search screen -->
-    <string name="search_placeholder">Search…</string>
-    <string name="categories">Categories</string>
-
-    <!-- products list -->
-    <string name="must_login">You must be logged in to add an item to the cart.</string>
-
-    <!-- error -->
+    <string name="no_internet_connection">No internet connection</string>
     <string name="error">Something went wrong: %1$s</string>
     <string name="loading_error">Loading error</string>
 
-    <!-- guest user -->
+    <!-- User states -->
     <string name="guest">Guest</string>
     <string name="auth">Authorization</string>
 
-    <!-- onboarding -->
+    <!-- Onboarding -->
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="get_started">Get Started</string>
-
-    <!-- onboarding page -->
     <string name="first_title">Lorem ipsum dolor sit amet.</string>
     <string name="first_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eleifend risus id.</string>
     <string name="second_title">Lorem ipsum dolor sit amet.</string>
@@ -67,86 +122,63 @@
     <string name="third_title">Lorem ipsum dolor sit amet.</string>
     <string name="third_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eleifend risus id.</string>
 
-    <!-- bottom navigation -->
-    <string name="home">Home</string>
-    <string name="search">Search</string>
-    <string name="cart">Cart</string>
-    <string name="account">Account</string>
-
-    <!-- settings -->
+    <!-- Language settings -->
     <string name="select_language">Select a language: </string>
-
-    <!-- language -->
     <string name="system_language">System Language</string>
     <string name="language_settings">Language Settings</string>
     <string name="restart_app_message">Tap OK to apply the language</string>
 
-    <!-- buttons -->
+    <!-- Common buttons -->
     <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="apply_changes">Apply Changes?</string>
+    <string name="close">Close</string>
+    <string name="menu">Menu</string>
+    <string name="expand">Expand</string>
+    <string name="visibility">Visibility</string>
 
-    <!-- news screen -->
-    <string name="our_blog">Our blog</string>
-    <string name="empty_news">No news yet</string>
-    <string name="create_post">Create News</string>
-    <string name="edit_post">Edit News</string>
-    <string name="add_post_warn">No news. Tap + to add your first post.</string>
-    <string name="delete_post">Delete post?</string>
-    <string name="delete_post_dialog">Are you sure you want to delete this post? This action cannot be undone.</string>
+    <!-- Notifications -->
+    <string name="info">Info</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="added">Added to Cart</string>
+    <string name="removed">Removed from Cart</string>
+    <string name="changed">Language Changed</string>
 
-    <!-- detailed post screen -->
-    <string name="post_info">Post Information</string>
-
-    <!-- home screen -->
+    <!-- About section -->
+    <string name="about">About</string>
+    <string name="about_us">About Us</string>
     <string name="about_start">Since 1966, </string>
     <string name="about_company">PJSC «Poltava Diamond Tool» %1$s</string>
     <string name="about_end"> has continued the tradition of quality and innovation in the production of diamond and CBN tools. Our company has evolved from developing the first diamond powders in the USSR to a modern enterprise providing complex industrial solutions worldwide.</string>
-
-    <!-- catalog screen -->
-    <string name="catalog">Catalog</string>
-
-    <!-- edit post screen -->
-    <string name="image_error">Image processing error: %1$s</string>
-    <string name="title_error">Title cannot be empty</string>
-    <string name="upload_error">Failed to upload image</string>
-    <string name="title">Title</string>
-    <string name="image">Image</string>
-    <string name="pick_image">Pick Image</string>
-    <string name="delete_image">Delete Image</string>
-    <string name="preview">Preview</string>
-
-    <string name="sign_in_main">Sign</string>
-    <string name="sign_in_suffix">IN</string>
-
-    <string name="sign_up_main">Sign</string>
-    <string name="sign_up_suffix">UP</string>
-
-    <string name="not_found">Not found</string>
-    <string name="no_categories">No categories yet</string>
-    <string name="last_news">Last news</string>
-    <string name="our_videos">Our videos</string>
-    <string name="social_media">Social media</string>
-    <string name="blog">Blog</string>
-    <string name="product_details">Product details</string>
-    <string name="bond">"Bond: "</string>
-    <string name="grid_size">"Grid size: "</string>
-    <string name="bond_info">Bond info</string>
-    <string name="cooling_instructions">Cooling instructions</string>
-    <string name="compatible_machines">Compatible machines</string>
-    <string name="product_info">Product info</string>
-    <string name="about">About</string>
     <string name="version">Version %1$s</string>
-    <string name="privacy_policy">Privacy policy</string>
+
+    <!-- Legal -->
+    <string name="privacy_policy">Privacy Policy</string>
     <string name="privacy_policy_text">Privacy policy text</string>
-    <string name="terms_of_use">Terms of user</string>
+    <string name="terms_of_use">Terms of Use</string>
     <string name="terms_of_use_text">Terms of use text</string>
+
+    <!-- Support -->
     <string name="support">Support</string>
-    <string name="support_email">Support email</string>
-    <string name="about_us">About us</string>
-    <string name="empty_blog">Empty blog</string>
-    <string name="phone">Phone number</string>
-    <string name="empty_videos">Videos are empty</string>
-    <string name="start_searching">Start searching</string>
+    <string name="support_email">Support Email</string>
+
+    <!-- Password validation -->
+    <string name="empty_old_password">Enter old password to change</string>
+
+    <!-- Accessibility descriptions (Content descriptions for screen readers) -->
+    <string name="logo">Logo</string>
+    <string name="avatar">Avatar</string>
+    <string name="arrow_back">Arrow back</string>
+    <string name="search_icon">Search icon</string>
+    <string name="arrow_forward">Arrow forward</string>
+    <string name="social_icon">Social icon</string>
+    <string name="onboarding_image">Onboarding image</string>
+    <string name="report_icon">Report icon</string>
+    <string name="editor_button">Editor button</string>
+    <string name="machine_icon">Machine icon</string>
+    <string name="empty_icon">Empty icon</string>
 </resources>

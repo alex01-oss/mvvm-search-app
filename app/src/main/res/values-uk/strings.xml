@@ -1,65 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Search App</string>
 
-    <!--    account screen-->
+    <!-- Account screen -->
     <string name="settings">Налаштування</string>
     <string name="change_password">Змінити пароль</string>
     <string name="change_language">Змінити мову</string>
     <string name="help">Допомога</string>
     <string name="logout">Вихід</string>
+    <string name="profile_settings">Налаштування профілю</string>
+    <string name="edit_profile">Редагувати профіль</string>
+    <string name="delete_account">Видалити акаунт</string>
 
-    <!--    login screen-->
+    <!-- Login screen -->
     <string name="sign_in">Увійти</string>
+    <string name="sign_in_main">Увійти</string>
+    <string name="sign_in_suffix">в акаунт</string>
     <string name="email">Електронна пошта</string>
     <string name="password">Пароль</string>
+    <string name="old_password">Старий пароль</string>
+    <string name="new_password">Новий пароль</string>
     <string name="login">Увійти</string>
     <string name="or">АБО</string>
     <string name="not_have_account">Немає акаунта? Зареєструйтесь</string>
 
-    <!--    register screen-->
+    <!-- Register screen -->
     <string name="sign_up">Зареєструватись</string>
+    <string name="sign_up_main">Створити</string>
+    <string name="sign_up_suffix">акаунт</string>
     <string name="full_name">Повне ім\'я</string>
+    <string name="phone">Номер телефону</string>
     <string name="register">Зареєструватись</string>
     <string name="have_account">Вже є акаунт? Увійти</string>
 
-    <!--    item card-->
+    <!-- Item card -->
     <string name="code">Код: </string>
     <string name="shape">Форма: </string>
     <string name="dimensions">Розміри: </string>
+    <string name="bond">Зв\'язка: </string>
+    <string name="grid_size">Розмір сітки: </string>
 
-    <!--    cart list-->
+    <!-- Cart -->
+    <string name="cart">Кошик</string>
     <string name="empty_cart">Кошик порожній</string>
+    <string name="add_to_cart">Додати до кошика</string>
+    <string name="delete_from_cart">Видалити з кошика</string>
+    <string name="must_login">Щоб додати товар до кошика, потрібно увійти в акаунт.</string>
 
-    <!--    empty screen-->
+    <!-- Navigation -->
+    <string name="home">Головна</string>
+    <string name="search">Пошук</string>
+    <string name="account">Акаунт</string>
+    <string name="catalog">Каталог</string>
+
+    <!-- Search screen -->
+    <string name="search_placeholder">Пошук…</string>
+    <string name="categories">Категорії</string>
+    <string name="no_categories">Категорії відсутні</string>
+    <string name="not_found">Нічого не знайдено</string>
+    <string name="start_searching">Почніть пошук</string>
+
+    <!-- Product details -->
+    <string name="detailed">Детально:</string>
+    <string name="product_details">Деталі продукту</string>
+    <string name="product_info">Інформація про продукт</string>
+    <string name="bond_info">Інформація про зв\'язку</string>
+    <string name="cooling_instructions">Інструкції з охолодження</string>
+    <string name="compatible_machines">Сумісне обладнання</string>
+
+    <!-- News/Blog -->
+    <string name="our_blog">Наш блог</string>
+    <string name="blog">Блог</string>
+    <string name="last_news">Останні новини</string>
+    <string name="empty_news">Новин поки немає</string>
+    <string name="empty_blog">Блог порожній</string>
+    <string name="create_post">Створення новини</string>
+    <string name="edit_post">Редагування новини</string>
+    <string name="add_post">Додати публікацію</string>
+    <string name="add_post_warn">Немає новин. Натисніть +, щоб додати першу новину.</string>
+    <string name="delete_post">Видалити новину?</string>
+    <string name="delete_post_dialog">Ви впевнені, що хочете видалити цю новину? Цю дію неможливо скасувати.</string>
+    <string name="post_info">Інформація про публікацію</string>
+    <string name="author_label">Автор: %1$s</string>
+    <string name="author_fallback">Автор №%1$d</string>
+
+    <!-- Media -->
+    <string name="our_videos">Наші відео</string>
+    <string name="empty_videos">Відео відсутні</string>
+    <string name="social_media">Соціальні мережі</string>
+
+    <!-- Edit post screen -->
+    <string name="title">Заголовок</string>
+    <string name="image">Зображення</string>
+    <string name="pick_image">Вибрати зображення</string>
+    <string name="delete_image">Видалити зображення</string>
+    <string name="preview">Попередній перегляд</string>
+    <string name="image_error">Помилка при обробці зображення: %1$s</string>
+    <string name="title_error">Заголовок не може бути порожнім</string>
+    <string name="upload_error">Не вдалося завантажити зображення</string>
+
+    <!-- Error states -->
     <string name="unknown_state">Невідома помилка.</string>
     <string name="server_unavailable">Сервер недоступний.</string>
     <string name="internet_unavailable">Інтернет недоступний.</string>
-
-    <!--    details screen-->
-    <string name="detailed">Детально:</string>
-
-    <!--    search screen-->
-    <string name="search_placeholder">Пошук…</string>
-    <string name="categories">Категорії</string>
-
-    <!--    products list-->
-    <string name="must_login">Щоб додати товар до кошика, потрібно увійти в акаунт.</string>
-
-    <!--    error-->
+    <string name="no_internet_connection">Відсутнє з\'єднання з інтернетом</string>
     <string name="error">Щось пішло не так: %1$s</string>
     <string name="loading_error">Помилка завантаження</string>
 
-    <!--    guest user-->
+    <!-- User states -->
     <string name="guest">Гість</string>
     <string name="auth">Авторизація</string>
 
-    <!--    onboarding-->
+    <!-- Onboarding -->
     <string name="next">Далі</string>
     <string name="back">Назад</string>
     <string name="get_started">Розпочати</string>
-
-    <!--    onboarding page-->
     <string name="first_title">Lorem ipsum dolor sit amet.</string>
     <string name="first_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eleifend risus id.</string>
     <string name="second_title">Lorem ipsum dolor sit amet.</string>
@@ -67,86 +122,63 @@
     <string name="third_title">Lorem ipsum dolor sit amet.</string>
     <string name="third_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eleifend risus id.</string>
 
-    <!--    bottom navigation-->
-    <string name="home">Головна</string>
-    <string name="search">Пошук</string>
-    <string name="cart">Кошик</string>
-    <string name="account">Акаунт</string>
-
-    <!--    settings-->
-    <string name="select_language">"Оберіть мову: "</string>
-
-    <!--    language-->
+    <!-- Language settings -->
+    <string name="select_language">Оберіть мову: </string>
     <string name="system_language">Системна мова</string>
     <string name="language_settings">Налаштування мови</string>
     <string name="restart_app_message">Натисніть OK, щоб застосувати мову</string>
 
-    <!--    buttons-->
+    <!-- Common buttons -->
     <string name="yes">Так</string>
+    <string name="no">Ні</string>
     <string name="cancel">Скасувати</string>
     <string name="ok">OK</string>
     <string name="delete">Видалити</string>
+    <string name="save_changes">Зберегти зміни</string>
+    <string name="apply_changes">Застосувати зміни?</string>
+    <string name="close">Закрити</string>
+    <string name="menu">Меню</string>
+    <string name="expand">Розгорнути</string>
+    <string name="visibility">Видимість</string>
 
-    <!--    news screen -->
-    <string name="our_blog">Наш блог</string>
-    <string name="empty_news">Новин поки немає</string>
-    <string name="create_post">Створення новини</string>
-    <string name="edit_post">Редагування новини</string>
-    <string name="add_post_warn">Немає новин. Натисніть +, щоб додати першу новину.</string>
-    <string name="delete_post">Видалити новину?</string>
-    <string name="delete_post_dialog">Ви впевнені, що хочете видалити цю новину? Цю дію неможливо скасувати.</string>
+    <!-- Notifications -->
+    <string name="info">інформація</string>
+    <string name="dismiss">Відхилити</string>
+    <string name="added">Додано до кошика</string>
+    <string name="removed">Видалено з кошика</string>
+    <string name="changed">Мову змінено</string>
 
-    <!--    detailed post screen-->
-    <string name="post_info">Інформація про публікацію</string>
-
-    <!--    home screen-->
+    <!-- About section -->
+    <string name="about">Про нас</string>
+    <string name="about_us">Про нас</string>
     <string name="about_start">З 1966 року </string>
     <string name="about_company">ПрАТ «ПОЛТАВСЬКИЙ АЛМАЗНИЙ ІНСТРУМЕНТ» %1$s</string>
     <string name="about_end"> продовжує традиції якості та інновацій у виробництві алмазного та CBN інструменту. Наша компанія пройшла шлях від розробника перших алмазних порошків у СРСР до сучасного підприємства, що виготовляє складні рішення для промисловості по всьому світу.</string>
+    <string name="version">Версія %1$s</string>
 
-    <!--    catalog screen-->
-    <string name="catalog">Catalog</string>
-
-    <!--    edit post screen-->
-    <string name="image_error">Помилка при обробці зображення: %1$s</string>
-    <string name="title_error">Заголовок не може бути порожнім</string>
-    <string name="upload_error">Не вдалося завантажити зображення</string>
-    <string name="title">Заголовок</string>
-    <string name="image">Зображення</string>
-    <string name="pick_image">Вибрати зображення</string>
-    <string name="delete_image">Видалити зображення</string>
-    <string name="preview">Попередній перегляд</string>
-
-    <string name="sign_in_main">Увійти</string>
-    <string name="sign_in_suffix">в акаунт</string>
-
-    <string name="sign_up_main">Створити</string>
-    <string name="sign_up_suffix">акаунт</string>
-
-    <string name="not_found">Нічого не знайдено</string>
-    <string name="no_categories">Категорії відсутні</string>
-    <string name="last_news">Останні новини</string>
-    <string name="our_videos">Наші відео</string>
-    <string name="social_media">Соціальні мережі</string>
-    <string name="blog">Блог</string>
-    <string name="product_details">Деталі продукту</string>
-    <string name="bond">Зв’язка: </string>
-    <string name="grid_size">Розмір сітки: </string>
-    <string name="bond_info">Інформація про зв’язку</string>
-    <string name="cooling_instructions">Інструкції з охолодження</string>
-    <string name="compatible_machines">Сумісне обладнання</string>
-    <string name="product_info">Інформація про продукт</string>
-    <string name="about">Про нас</string>
-    <string name="version">Версія</string>
+    <!-- Legal -->
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="privacy_policy_text">Текст політики конфіденційності</string>
     <string name="terms_of_use">Умови використання</string>
     <string name="terms_of_use_text">Текст умов використання</string>
+
+    <!-- Support -->
     <string name="support">Підтримка</string>
     <string name="support_email">Пошта підтримки</string>
-    <string name="about_us">Про нас</string>
-    <string name="empty_blog">Блог порожній</string>
-    <string name="phone">Номер телефону</string>
-    <string name="empty_videos">Videos are empty</string>
-    <string name="start_searching">Start searching</string>
+
+    <!-- Password validation -->
+    <string name="empty_old_password">Введіть старий пароль для зміни</string>
+
+    <!-- Accessibility descriptions (Content descriptions for screen readers) -->
+    <string name="logo">Логотип</string>
+    <string name="avatar">Аватар</string>
+    <string name="arrow_back">Стрілка назад</string>
+    <string name="search_icon">Іконка пошуку</string>
+    <string name="arrow_forward">Стрілка вперед</string>
+    <string name="social_icon">Іконка соціальної мережі</string>
+    <string name="onboarding_image">Зображення онбордингу</string>
+    <string name="report_icon">Іконка звіту</string>
+    <string name="editor_button">Кнопка редактора</string>
+    <string name="machine_icon">Іконка обладнання</string>
+    <string name="empty_icon">Порожня іконка</string>
 </resources>

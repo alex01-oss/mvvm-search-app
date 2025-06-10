@@ -31,8 +31,8 @@ import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.BottomNavMargin
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.activeButtonSize
-import com.loc.searchapp.core.ui.values.Dimens.navBarHeight
+import com.loc.searchapp.core.ui.values.Dimens.ActiveButtonSize
+import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 
 @Composable
 fun BottomNavigation(
@@ -41,7 +41,7 @@ fun BottomNavigation(
     selected: Int,
     onItemClick: (Int) -> Unit
 ) {
-    val navBarHeight = navBarHeight
+    val navBarHeight = NavBarHeight
 
     Box(
         modifier
@@ -82,7 +82,7 @@ fun BottomNavigation(
                                 Icon(
                                     modifier = Modifier.size(IconSize),
                                     painter = painterResource(id = item.icon),
-                                    contentDescription = null,
+                                    contentDescription = item.text,
                                     tint = Color.White
                                 )
                             }
@@ -97,7 +97,7 @@ fun BottomNavigation(
                 content = {
                     Box(
                         modifier = Modifier
-                            .size(activeButtonSize)
+                            .size(ActiveButtonSize)
                             .background(
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = CircleShape
@@ -108,7 +108,7 @@ fun BottomNavigation(
                         Icon(
                             modifier = Modifier.size(IconSize),
                             painter = painterResource(id = selectedItem.icon),
-                            contentDescription = null,
+                            contentDescription = selectedItem.text,
                             tint = Color.White
                         )
                     }
@@ -127,7 +127,7 @@ fun BottomNavigation(
                 layout(constraints.maxWidth, constraints.maxHeight) {
                     buttonPlaceable.place(
                         posX,
-                        constraints.maxHeight - navBarHeight.roundToPx() - (activeButtonSize.roundToPx() - navBarHeight.roundToPx()) / 2
+                        constraints.maxHeight - navBarHeight.roundToPx() - (ActiveButtonSize.roundToPx() - navBarHeight.roundToPx()) / 2
                     )
                 }
             }

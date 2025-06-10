@@ -8,9 +8,9 @@ import com.loc.searchapp.core.data.remote.dto.ImageUploadResponse
 import com.loc.searchapp.core.data.remote.dto.PostResponse
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.domain.usecases.posts.PostsUseCases
+import com.loc.searchapp.feature.post_editor.model.PostEditorState
 import com.loc.searchapp.feature.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,6 +29,9 @@ class PostViewModel @Inject constructor(
     private val _postsState = MutableStateFlow<UiState<List<Post>>>(UiState.Loading)
     val postsState: StateFlow<UiState<List<Post>>> = _postsState.asStateFlow()
 
+    private val _postEditorState = MutableStateFlow<PostEditorState>(PostEditorState.CreateMode)
+    val postEditorState: StateFlow<PostEditorState> = _postEditorState.asStateFlow()
+
     private val _postDetailsState = MutableStateFlow<UiState<Post>>(UiState.Loading)
     val postDetailsState: StateFlow<UiState<Post>> = _postDetailsState.asStateFlow()
 
@@ -37,6 +40,44 @@ class PostViewModel @Inject constructor(
 
     init {
         loadPosts()
+    }
+
+    fun initCreateMode() {
+        _postEditorState.value = PostEditorState.CreateMode
+        resetPostActionState()
+    }
+
+    fun initEditMode(postId: Int) {
+        _postEditorState.value = PostEditorState.Loading
+        viewModelScope.launch {
+            try {
+                val response = postsUseCases.getPost(postId)
+                if (response.isSuccessful && response.body() != null) {
+                    _postEditorState.value = PostEditorState.EditMode(response.body()!!.toDomain())
+                } else {
+                    _postEditorState.value = PostEditorState.Error("Post not found")
+                }
+            } catch (e: Exception) {
+                _postEditorState.value = PostEditorState.Error(e.localizedMessage ?: "Unknown error")
+            }
+        }
+        resetPostActionState()
+    }
+
+    fun getPostById(postId: Int?) {
+        viewModelScope.launch {
+            _postDetailsState.value = UiState.Loading
+            try {
+                val response = postsUseCases.getPost(postId)
+                if (response.isSuccessful && response.body() != null) {
+                    _postDetailsState.value = UiState.Success(response.body()!!.toDomain())
+                } else {
+                    _postDetailsState.value = UiState.Error("Post not found")
+                }
+            } catch (e: Exception) {
+                _postDetailsState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
+            }
+        }
     }
 
     private fun loadPosts() {
@@ -52,22 +93,6 @@ class PostViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _postsState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
-            }
-        }
-    }
-
-    fun getPostById(postId: Int?) {
-        viewModelScope.launch {
-            _postDetailsState.value = UiState.Loading
-            try {
-                val response = postsUseCases.getPost(postId)
-                if (response.isSuccessful && response.body() != null) {
-                    _postDetailsState.value = UiState.Success(response.body()!!.toDomain())
-                } else {
-                    _postDetailsState.value = UiState.Error("Post not found")
-                }
-            } catch (e: Exception) {
-                _postDetailsState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             }
         }
     }

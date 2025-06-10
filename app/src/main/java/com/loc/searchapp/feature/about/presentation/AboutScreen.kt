@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -118,7 +119,7 @@ fun AboutScreen(
 
             Text(
                 text = stringResource(id = R.string.support_email),
-                color = MaterialTheme.colorScheme.primary,
+                color = colorResource(id = R.color.light_red),
                 modifier = Modifier.clickable {
                     val intent = Intent(Intent.ACTION_SENDTO).apply {
                         data = "mailto:sale@pdtools.shop".toUri()

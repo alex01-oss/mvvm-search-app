@@ -9,9 +9,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.loc.searchapp.feature.post_details.presentation.PostDetailedScreen
+import com.loc.searchapp.feature.post_editor.model.PostEditorState
 import com.loc.searchapp.feature.post_editor.presentation.PostEditorScreen
 import com.loc.searchapp.feature.posts.presentation.PostsScreen
-import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 
@@ -21,7 +21,6 @@ fun NavGraphBuilder.postScreens(
     postViewModel: PostViewModel
 ) {
     composable(route = Route.PostsScreen.route) {
-
         PostsScreen(
             viewModel = postViewModel,
             authViewModel = authViewModel,
@@ -32,6 +31,7 @@ fun NavGraphBuilder.postScreens(
                 navController.popBackStack()
             },
             onAddNewPost = {
+                postViewModel.initCreateMode()
                 navController.navigate(Route.PostEditorScreen.createRoute())
             }
         )
@@ -42,6 +42,7 @@ fun NavGraphBuilder.postScreens(
         arguments = listOf(navArgument("postId") { type = NavType.IntType })
     ) { backStackEntry ->
         val postId = backStackEntry.arguments?.getInt("postId") ?: -1
+        val postState by postViewModel.postDetailsState.collectAsState()
 
         LaunchedEffect(postId) {
             if (postId != -1) {
@@ -49,12 +50,11 @@ fun NavGraphBuilder.postScreens(
             }
         }
 
-        val postState by postViewModel.postDetailsState.collectAsState()
-
         PostDetailedScreen(
             state = postState,
             authViewModel = authViewModel,
             onEditClick = { post ->
+                postViewModel.initEditMode(post.id)
                 navController.navigate(Route.PostEditorScreen.createRoute(post.id))
             },
             onBackClick = {
@@ -71,21 +71,16 @@ fun NavGraphBuilder.postScreens(
         })
     ) { backStackEntry ->
         val postId = backStackEntry.arguments?.getInt("postId") ?: -1
-
-        if (postId != -1) {
-            LaunchedEffect(postId) {
-                postViewModel.getPostById(postId)
-            }
-        }
-
-        val postState by postViewModel.postDetailsState.collectAsState()
-        val post = if (postId != -1) (postState as? UiState.Success)?.data else null
-
+        val postEditorState by postViewModel.postEditorState.collectAsState()
         val postActionState by postViewModel.postActionState.collectAsState()
 
+        if (postId != -1 && postEditorState is PostEditorState.CreateMode) {
+            postViewModel.initEditMode(postId)
+        }
+
         PostEditorScreen(
-            post = post,
             postActionState = postActionState,
+            postEditorState = postEditorState,
             viewModel = postViewModel,
             onBackClick = { navController.popBackStack() },
             onFinish = {

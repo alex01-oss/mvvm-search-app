@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
@@ -52,7 +53,7 @@ fun LanguageOption(
         Image(
             modifier = Modifier.size(IconSize),
             painter = painterResource(id = id),
-            contentDescription = null,
+            contentDescription = stringResource(id = id),
             colorFilter =
                 if (isSystemIcon) ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                 else null

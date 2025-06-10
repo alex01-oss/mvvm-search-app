@@ -17,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
@@ -62,7 +64,7 @@ fun CustomTextField(
                 modifier = Modifier
                     .size(IconSize)
                     .padding(start = ExtraSmallPadding2),
-                contentDescription = null,
+                contentDescription = placeholder,
                 tint =
                     if (isError) MaterialTheme.colorScheme.error
                     else MaterialTheme.colorScheme.onSurface
@@ -111,7 +113,7 @@ fun PasswordTextField(
                 modifier = Modifier
                     .size(IconSize)
                     .padding(start = ExtraSmallPadding2),
-                contentDescription = null,
+                contentDescription = placeholder,
                 tint =
                     if (isError) MaterialTheme.colorScheme.error
                     else MaterialTheme.colorScheme.onSurface
@@ -125,7 +127,10 @@ fun PasswordTextField(
             }
 
             IconButton(onClick = { onPasswordVisibilityChange(!isPasswordVisible) }) {
-                Icon(imageVector = iconImage, contentDescription = null)
+                Icon(
+                    imageVector = iconImage,
+                    contentDescription = stringResource(id = R.string.visibility)
+                )
             }
         },
         visualTransformation = if (!isPasswordVisible)

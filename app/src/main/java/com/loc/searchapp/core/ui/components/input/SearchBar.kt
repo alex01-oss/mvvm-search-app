@@ -22,6 +22,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
@@ -59,7 +60,7 @@ fun SearchBar(
                 Icon(
                     modifier = Modifier.size(IconSize),
                     painter = painterResource(id = R.drawable.search),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.search_icon),
                     tint = colorResource(id = R.color.body)
                 )
             },

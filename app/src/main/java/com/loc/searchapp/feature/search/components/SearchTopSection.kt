@@ -20,12 +20,13 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.navBarHeight
+import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 import com.loc.searchapp.core.ui.components.input.SearchBar
 
 @Composable
@@ -43,7 +44,7 @@ fun SearchTopSection(
     ) {
         Surface(
             modifier = Modifier
-                .size(navBarHeight)
+                .size(NavBarHeight)
                 .clip(RoundedCornerShape(ExtraSmallPadding))
                 .burgerButtonBorder(),
             color =
@@ -55,7 +56,7 @@ fun SearchTopSection(
             IconButton(onClick = onBurgerClick) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = null
+                    contentDescription = stringResource(id = R.string.menu)
                 )
             }
         }
