@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
@@ -138,7 +137,6 @@ fun PostDetailedScreen(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(200.dp)
                                 .clip(RoundedCornerShape(StrongCorner))
                         )
 

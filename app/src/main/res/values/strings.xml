@@ -181,4 +181,5 @@
     <string name="editor_button">Editor button</string>
     <string name="machine_icon">Machine icon</string>
     <string name="empty_icon">Empty icon</string>
+    <string name="confirm_delete">Confirm delete</string>
 </resources>

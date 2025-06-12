@@ -181,4 +181,5 @@
     <string name="editor_button">Кнопка редактора</string>
     <string name="machine_icon">Іконка обладнання</string>
     <string name="empty_icon">Порожня іконка</string>
+    <string name="confirm_delete">Confirm delete</string>
 </resources>

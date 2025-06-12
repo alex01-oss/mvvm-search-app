@@ -3,7 +3,6 @@ package com.loc.searchapp.feature.shared.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
-import com.loc.searchapp.core.domain.model.auth.User
 import com.loc.searchapp.core.domain.usecases.auth.AuthUseCases
 import com.loc.searchapp.feature.shared.model.AuthEvent
 import com.loc.searchapp.feature.shared.model.AuthState
@@ -30,26 +29,30 @@ class AuthViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val accessToken = userPreferences.getAccessToken()
+            fetchUserAndSetState()
+        }
+    }
 
-            if (accessToken.isNullOrEmpty()) {
+    private suspend fun fetchUserAndSetState(): Boolean {
+        val token = userPreferences.getAccessToken()
+        if (token.isNullOrEmpty()) {
+            _authState.value = AuthState.Unauthenticated
+            return false
+        }
+
+        return try {
+            val response = authUseCases.getUser(token)
+            val user = response.body()?.user
+            if (response.isSuccessful && user != null) {
+                _authState.value = AuthState.Authenticated(user)
+                true
+            } else {
                 _authState.value = AuthState.Unauthenticated
-                return@launch
+                false
             }
-
-            try {
-                val response = authUseCases.getUser(accessToken)
-                val body = response.body()
-                val user = body?.user
-
-                if (response.isSuccessful && user != null) {
-                    _authState.value = AuthState.Authenticated(user)
-                } else {
-                    _authState.value = AuthState.Unauthenticated
-                }
-            } catch (_: Exception) {
-                _authState.value = AuthState.Unauthenticated
-            }
+        } catch (_: Exception) {
+            _authState.value = AuthState.Unauthenticated
+            false
         }
     }
 
@@ -62,139 +65,119 @@ class AuthViewModel @Inject constructor(
     }
 
     fun onEvent(event: AuthEvent) {
-        when (event) {
-            is AuthEvent.LoginUser -> {
-                viewModelScope.launch {
-                    _authState.value = AuthState.Loading
+        viewModelScope.launch {
+            when (event) {
+                is AuthEvent.LoginUser -> handleLogin(event.email, event.password)
+                is AuthEvent.RegisterUser -> handleRegister(event.fullname, event.email, event.phone, event.password)
+                is AuthEvent.UpdateUser -> handleUpdateUser(event)
+                is AuthEvent.DeleteUser -> handleDeleteUser()
+                is AuthEvent.LogoutUser -> handleLogout()
+            }
+        }
+    }
 
-                    try {
-                        val response = authUseCases.loginUser(
-                            event.email,
-                            event.password
-                        )
-
-                        if (response.isSuccessful) {
-                            val data = response.body()
-                            val accessToken = data?.accessToken.orEmpty()
-                            val refreshToken = data?.refreshToken.orEmpty()
-                            val user = data?.user
-
-                            if (response.isSuccessful && user != null) {
-                                userPreferences.saveTokens(accessToken, refreshToken)
-                                _authState.value = AuthState.Authenticated(user)
-                            } else {
-                                _authState.value = AuthState.Error("Invalid login or missing user data")
-                            }
-                        } else {
-                            _authState.value = AuthState.Error("Invalid credentials")
-                        }
-                    } catch (e: Exception) {
-                        _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
-                    }
+    private suspend fun handleLogin(email: String, password: String) {
+        _authState.value = AuthState.Loading
+        try {
+            val response = authUseCases.loginUser(email, password)
+            if (response.isSuccessful) {
+                val data = response.body()
+                userPreferences.saveTokens(
+                    data?.accessToken.orEmpty(),
+                    data?.refreshToken.orEmpty()
+                )
+                if (!fetchUserAndSetState()) {
+                    _authState.value = AuthState.Error("Login succeeded but failed to load user")
                 }
+            } else {
+                _authState.value = AuthState.Error("Invalid credentials")
+            }
+        } catch (e: Exception) {
+            _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
+        }
+    }
+
+    private suspend fun handleRegister(fullname: String, email: String, phone: String, password: String) {
+        _authState.value = AuthState.Loading
+        try {
+            val response = authUseCases.registerUser(fullname, email, phone, password)
+            if (response.isSuccessful) {
+                val data = response.body()
+                userPreferences.saveTokens(
+                    data?.accessToken.orEmpty(),
+                    data?.refreshToken.orEmpty()
+                )
+                if (!fetchUserAndSetState()) {
+                    _authState.value = AuthState.Error("Registration succeeded but failed to load user")
+                }
+            } else {
+                _authState.value = AuthState.Error("Registration failed")
+            }
+        } catch (e: Exception) {
+            _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
+        }
+    }
+
+    private suspend fun handleUpdateUser(event: AuthEvent.UpdateUser) {
+        _authState.value = AuthState.Loading
+        try {
+            val accessToken = userPreferences.getAccessToken()
+            if (accessToken.isNullOrEmpty()) {
+                _authState.value = AuthState.Unauthenticated
+                return
             }
 
-            is AuthEvent.RegisterUser -> {
-                viewModelScope.launch {
-                    _authState.value = AuthState.Loading
+            val response = authUseCases.updateUser(
+                accessToken = accessToken,
+                fullname = event.fullname,
+                email = event.email,
+                phone = event.phone,
+                password = event.newPassword
+            )
 
-                    try {
-                        val response = authUseCases.registerUser(
-                            event.fullname,
-                            event.email,
-                            event.phone,
-                            event.password
-                        )
-
-                        if (response.isSuccessful) {
-                            val data = response.body()
-                            val accessToken = data?.accessToken.orEmpty()
-                            val refreshToken = data?.refreshToken.orEmpty()
-                            val user = data?.user
-
-                            if (response.isSuccessful && user != null) {
-                                userPreferences.saveTokens(accessToken, refreshToken)
-                                _authState.value = AuthState.Authenticated(user)
-                            } else {
-                                _authState.value = AuthState.Error("Invalid registration or missing user data")
-                            }
-
-                            _authState.value = AuthState.Authenticated(user)
-                        } else {
-                            _authState.value = AuthState.Error("Registration failed")
-                        }
-                    } catch (e: Exception) {
-                        _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
-                    }
+            if (response.isSuccessful) {
+                val updatedUser = response.body()?.user
+                if (updatedUser != null) {
+                    _authState.value = AuthState.Authenticated(updatedUser)
+                } else {
+                    _authState.value = AuthState.Error("Failed to update user")
                 }
+            } else {
+                _authState.value = AuthState.Error("Update failed: ${response.message()}")
             }
+        } catch (e: Exception) {
+            _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
+        }
+    }
 
-            is AuthEvent.UpdateUser -> {
-                viewModelScope.launch {
-                    _authState.value = AuthState.Loading
-                    try {
-                        val accessToken = userPreferences.getAccessToken()
-                        if (accessToken.isNullOrEmpty()) {
-                            _authState.value = AuthState.Unauthenticated
-                            return@launch
-                        }
-
-                        val response = authUseCases.updateUser(
-                            accessToken = accessToken,
-                            fullname = event.fullname,
-                            email = event.email,
-                            phone = event.phone,
-                            password = event.newPassword
-                        )
-
-                        if (response.isSuccessful) {
-                            val updatedUser = response.body()?.user
-                            if (updatedUser != null) {
-                                _authState.value = AuthState.Authenticated(updatedUser as User?)
-                            } else {
-                                _authState.value = AuthState.Error("Failed to update user")
-                            }
-                        } else {
-                            _authState.value = AuthState.Error("Update failed: ${response.message()}")
-                        }
-                    } catch (e: Exception) {
-                        _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
-                    }
-                }
+    private suspend fun handleDeleteUser() {
+        try {
+            val token = userPreferences.getAccessToken().orEmpty()
+            val result = authUseCases.deleteUser(token)
+            if (result.isSuccessful) {
+                userPreferences.clearTokens()
+                _authState.value = AuthState.Unauthenticated
+            } else {
+                _authState.value = AuthState.Error("Failed to delete account")
             }
+        } catch (e: Exception) {
+            _authState.value = AuthState.Error("Unexpected error: ${e.localizedMessage}")
+        }
+    }
 
-            is AuthEvent.DeleteUser -> {
-                viewModelScope.launch {
-                    val token = userPreferences.getAccessToken().orEmpty()
-
-                    try {
-                        val result = authUseCases.deleteUser(token)
-                        if (result.isSuccessful) {
-                            userPreferences.clearTokens()
-                            _authState.value = AuthState.Unauthenticated
-                        } else {
-                            _authState.value = AuthState.Error("Failed to delete account")
-                        }
-                    } catch (e: Exception) {
-                        _authState.value = AuthState.Error("Unexpected error: ${e.localizedMessage}")
-                    }
-                }
+    private suspend fun handleLogout() {
+        try {
+            val accessToken = userPreferences.getAccessToken()
+            val refreshToken = userPreferences.getRefreshToken()
+            if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
+                authUseCases.logoutUser(accessToken, refreshToken)
             }
-
-            is AuthEvent.LogoutUser -> {
-                viewModelScope.launch {
-                    val accessToken = userPreferences.getAccessToken()
-                    val refreshToken = userPreferences.getRefreshToken()
-
-                    if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
-                        authUseCases.logoutUser(accessToken, refreshToken)
-                    }
-
-                    userPreferences.clearTokens()
-                    _authState.value = AuthState.Unauthenticated
-                    _logoutCompleted.value = true
-                }
-            }
+        } catch (_: Exception) {
+            // Ignore logout errors
+        } finally {
+            userPreferences.clearTokens()
+            _authState.value = AuthState.Unauthenticated
+            _logoutCompleted.value = true
         }
     }
 }

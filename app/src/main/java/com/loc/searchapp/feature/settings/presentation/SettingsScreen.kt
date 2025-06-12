@@ -55,6 +55,7 @@ fun SettingsScreen(
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     var showSaveDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     val emptyOldPasswordMessage = stringResource(id = R.string.empty_old_password)
 
@@ -79,13 +80,13 @@ fun SettingsScreen(
                 AuthField(
                     value = fullname,
                     onValueChange = { fullname = it },
-                    placeholder = stringResource(id = R.string.full_name), // translate
+                    placeholder = stringResource(id = R.string.full_name),
                     icon = painterResource(id = R.drawable.person)
                 ),
                 AuthField(
                     value = email,
                     onValueChange = { email = it },
-                    placeholder = "Email", // translate
+                    placeholder = "Email",
                     icon = painterResource(id = R.drawable.mail)
                 ),
                 AuthField(
@@ -149,7 +150,7 @@ fun SettingsScreen(
                         )
                     )
                 },
-                onBottomTextClick = onDeleteClick,
+                onBottomTextClick = { showDeleteDialog = true },
                 bottomContent = {
                     Text(
                         text = stringResource(id = R.string.delete_account),
@@ -167,6 +168,21 @@ fun SettingsScreen(
                 onConfirm = { showSaveDialog = false },
                 dismissLabel = stringResource(id = R.string.cancel),
                 onDismiss = { showSaveDialog = false }
+            )
+        }
+
+        if (showDeleteDialog) {
+            AppDialog(
+                title = stringResource(id = R.string.delete_account),
+                message = stringResource(id = R.string.confirm_delete),
+                confirmLabel = stringResource(id = R.string.yes),
+                onConfirm = {
+                    viewModel.onEvent(AuthEvent.DeleteUser)
+                    showDeleteDialog = false
+                    onDeleteClick()
+                },
+                dismissLabel = stringResource(id = R.string.cancel),
+                onDismiss = { showDeleteDialog = false }
             )
         }
     }
