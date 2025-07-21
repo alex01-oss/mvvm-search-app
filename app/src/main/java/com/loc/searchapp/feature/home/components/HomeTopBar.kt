@@ -42,7 +42,8 @@ fun HomeTopBar(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel,
     scrollState: Float = 0f,
-    logoAlpha: Float
+    logoAlpha: Float,
+    onAvatarClick: () -> Unit
 ) {
     val authState = viewModel.authState.collectAsState().value
 
@@ -91,6 +92,7 @@ fun HomeTopBar(
                                     ?: stringResource(id = R.string.guest),
                                 lastName = user?.fullname?.substringAfter(" ")
                                     ?: stringResource(id = R.string.guest),
+                                onAvatarClick = onAvatarClick,
                             )
                         }
 
@@ -98,6 +100,7 @@ fun HomeTopBar(
                             Avatar(
                                 firstName = "",
                                 lastName = "",
+                                onAvatarClick = onAvatarClick
                             )
                         }
 

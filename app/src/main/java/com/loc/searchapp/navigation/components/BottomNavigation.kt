@@ -27,11 +27,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.ActiveButtonSize
 import com.loc.searchapp.core.ui.values.Dimens.BottomNavMargin
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.ActiveButtonSize
 import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 
 @Composable
@@ -47,7 +46,7 @@ fun BottomNavigation(
         modifier
             .fillMaxWidth()
             .height(navBarHeight + 60.dp)
-            .padding(horizontal = BasePadding)
+            .padding(horizontal = MediumPadding1)
             .padding(bottom = BottomNavMargin),
         contentAlignment = Alignment.BottomCenter
     ) {

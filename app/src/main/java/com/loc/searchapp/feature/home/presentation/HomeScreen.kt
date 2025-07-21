@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +38,7 @@ import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 import com.loc.searchapp.core.ui.values.Dimens.TitleSize
 import com.loc.searchapp.feature.home.components.HomeCategories
 import com.loc.searchapp.feature.home.components.HomeTopBar
@@ -56,7 +58,8 @@ fun HomeScreen(
     postViewModel: PostViewModel,
     viewModel: HomeViewModel,
     onCategoryClick: () -> Unit,
-    onPostClick: (Post) -> Unit
+    onPostClick: (Post) -> Unit,
+    onAvatarClick: () -> Unit
 ) {
     val categoriesState by viewModel.categoriesState.collectAsState()
     val videoIdsState by viewModel.videoIdsState.collectAsState()
@@ -98,7 +101,8 @@ fun HomeScreen(
             HomeTopBar(
                 viewModel = authViewModel,
                 scrollState = scrolled.value,
-                logoAlpha = logoAlpha
+                logoAlpha = logoAlpha,
+                onAvatarClick = onAvatarClick
             )
         },
         content = { paddingValues ->
@@ -263,6 +267,10 @@ fun HomeScreen(
                             )
                         }
                     }
+                }
+
+                item {
+                    Box(modifier = Modifier.fillMaxWidth().height(NavBarHeight))
                 }
             }
         }

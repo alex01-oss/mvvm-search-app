@@ -26,6 +26,7 @@ fun GuestUser(
         lastName = "",
         size = AvatarHeight,
         textStyle = MaterialTheme.typography.labelLarge,
+        onAvatarClick = {}
     )
 
     Spacer(modifier = Modifier.height(MediumPadding1))

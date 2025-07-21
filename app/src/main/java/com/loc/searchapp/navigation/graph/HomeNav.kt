@@ -44,6 +44,9 @@ fun NavGraphBuilder.homeScreens(
             onPostClick = { post ->
                 navController.navigate(Route.PostDetailedScreen.createRoute(post.id))
             },
+            onAvatarClick = {
+                navigateToTab(navController, Route.AccountScreen.route)
+            },
         )
     }
 

@@ -31,7 +31,9 @@ import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.CATALOG_URL
 
 @Composable
@@ -54,7 +56,7 @@ fun PostItem(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(StrongCorner)
     ) {
         Column(
             modifier = Modifier
@@ -67,8 +69,8 @@ fun PostItem(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .height(PostImageHeight)
+                        .clip(RoundedCornerShape(StrongCorner))
                 )
                 Spacer(Modifier.height(SmallPadding))
             }

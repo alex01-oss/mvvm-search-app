@@ -187,7 +187,7 @@ fun ProductsNavigator(
                 NavHost(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                        .padding(bottom = paddingValues.calculateBottomPadding() / 2),
                     navController = navController,
                     startDestination = startDestination
                 ) {

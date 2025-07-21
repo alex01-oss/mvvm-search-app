@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
 fun ExpandableItem(
@@ -34,7 +35,7 @@ fun ExpandableItem(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(SmallPadding)
+        shape = RoundedCornerShape(StrongCorner)
     ) {
         Column(
             modifier = Modifier

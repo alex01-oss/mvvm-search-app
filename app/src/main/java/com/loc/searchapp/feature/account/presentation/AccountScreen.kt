@@ -91,7 +91,8 @@ fun AccountScreen(
                         firstName = user?.fullname?.substringBefore(" ").toString(),
                         lastName = user?.fullname?.substringAfter(" ").toString(),
                         size = AvatarHeight,
-                        textStyle = MaterialTheme.typography.titleLarge
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        onAvatarClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(SmallPadding))
