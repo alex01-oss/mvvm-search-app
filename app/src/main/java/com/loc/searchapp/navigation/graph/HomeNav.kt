@@ -18,6 +18,7 @@ import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import com.loc.searchapp.feature.product_details.presentation.DetailsScreen
 import com.loc.searchapp.feature.product_details.viewmodel.DetailsViewModel
 import com.loc.searchapp.feature.home.presentation.HomeScreen
+import com.loc.searchapp.feature.search.model.SearchEvent
 import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 import com.loc.searchapp.feature.search.presentation.SearchScreen
@@ -29,7 +30,8 @@ fun NavGraphBuilder.homeScreens(
     authViewModel: AuthViewModel,
     productViewModel: ProductViewModel,
     homeViewModel: HomeViewModel,
-    postViewModel: PostViewModel
+    postViewModel: PostViewModel,
+    onBurgerClick: () -> Unit
 ) {
     composable(route = Route.HomeScreen.route) {
         HomeScreen(
@@ -63,19 +65,30 @@ fun NavGraphBuilder.homeScreens(
         )
     }
 
-    composable(route = Route.SearchScreen.route) {
+    composable(
+        route = Route.SearchScreen.routeWithArgs,
+        arguments = listOf(navArgument("searchType") { defaultValue = "" })
+    ) { backStackEntry ->
         val searchViewModel: SearchViewModel = hiltViewModel()
         val state = searchViewModel.state.value
+
+        val searchTypeFromNav = backStackEntry.arguments?.getString("searchType") ?: ""
+
+        LaunchedEffect(searchTypeFromNav) {
+            if (searchTypeFromNav.isNotEmpty() && searchTypeFromNav != state.searchType) {
+                searchViewModel.onEvent(SearchEvent.ChangeSearchType(searchTypeFromNav))
+            }
+        }
 
         SearchScreen(
             state = state,
             event = searchViewModel::onEvent,
             viewModel = searchViewModel,
             productViewModel = productViewModel,
-            homeViewModel = homeViewModel,
             navigateToDetails = { product ->
                 navController.navigate(Route.ProductDetailsScreen.createRoute(product.code))
             },
+            onBurgerClick = onBurgerClick
         )
     }
 

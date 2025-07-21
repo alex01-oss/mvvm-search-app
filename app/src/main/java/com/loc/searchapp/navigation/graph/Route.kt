@@ -6,7 +6,12 @@ sealed class Route(
     data object OnBoardingScreen : Route(route = "onBoardingScreen")
 
     data object HomeScreen : Route(route = "homeScreen")
-    data object SearchScreen : Route(route = "searchScreen")
+
+    data object SearchScreen : Route(route = "search_screen") {
+        val routeWithArgs: String = "$route?searchType={searchType}"
+        fun createRoute(searchType: String = ""): String = "$route?searchType=$searchType"
+    }
+
     data object CartScreen : Route(route = "cartScreen")
     data object AccountScreen : Route(route = "accountScreen")
 
