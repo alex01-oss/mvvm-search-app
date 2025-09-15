@@ -10,14 +10,14 @@ fun CartItemCard(
     modifier: Modifier = Modifier,
     cartItem: CartItem,
     onClick: () -> Unit,
-    onRemove: (CartItem) -> Unit
+    onRemove: (id: Int) -> Unit
 ) {
     ProductCardBase(
         modifier = modifier,
         product = cartItem.product,
         isInCart = true,
         onClick = onClick,
-        onRemove = { onRemove(cartItem) },
+        onRemove = { onRemove(cartItem.product.id) },
         showCartActions = true
     )
 }

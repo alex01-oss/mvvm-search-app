@@ -30,7 +30,6 @@ interface AuthApi {
 
     @POST("auth/logout")
     suspend fun logout(
-        @Header("Authorization") accessToken: String,
         @Body request: LogoutRequest
     ): Response<LogoutResponse>
 
@@ -41,17 +40,12 @@ interface AuthApi {
 
     @PATCH("/api/user")
     suspend fun updateUser(
-        @Header("Authorization") token: String,
         @Body updateUserRequest: UpdateUserRequest
     ): Response<UserResponse>
 
     @DELETE("api/user")
-    suspend fun deleteUser(
-        @Header("Authorization") token: String
-    ): Response<Unit>
+    suspend fun deleteUser(): Response<Unit>
 
     @GET("user")
-    suspend fun getUser(
-        @Header("Authorization") accessToken: String
-    ): Response<UserResponse>
+    suspend fun getUser(): Response<UserResponse>
 }

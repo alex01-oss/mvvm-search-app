@@ -1,7 +1,7 @@
 package com.loc.searchapp.core.domain.repository
 
-import com.loc.searchapp.core.data.remote.dto.VideoId
+import com.loc.searchapp.core.data.remote.dto.PlaylistItem
 
 interface YoutubeRepository {
-    suspend fun getLatestVideoIds(channelId: String): List<VideoId>
+    suspend fun getLatestVideos(): List<PlaylistItem>
 }

@@ -15,5 +15,5 @@ data class ItemCartResponse(
 
 @Serializable
 data class ItemCartRequest(
-    val code: String
+    val id: Int
 )

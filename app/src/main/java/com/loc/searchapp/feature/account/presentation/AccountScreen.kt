@@ -42,7 +42,6 @@ import com.loc.searchapp.feature.shared.components.GuestUser
 import com.loc.searchapp.feature.shared.model.AuthEvent
 import com.loc.searchapp.feature.shared.model.AuthState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 
 @Composable
 fun AccountScreen(
@@ -53,7 +52,6 @@ fun AccountScreen(
     onAddPostClick: () -> Unit,
     onAboutClick: () -> Unit,
     viewModel: AuthViewModel,
-    productViewModel: ProductViewModel,
     onLogout: () -> Unit
 ) {
     val authState = viewModel.authState.collectAsState().value
@@ -149,7 +147,6 @@ fun AccountScreen(
                     Button(
                         onClick = {
                             viewModel.onEvent(AuthEvent.LogoutUser)
-                            productViewModel.clearLocalCart()
                             onLogout()
                         },
                         modifier = Modifier.fillMaxWidth(),

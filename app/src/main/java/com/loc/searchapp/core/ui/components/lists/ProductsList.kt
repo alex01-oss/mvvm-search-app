@@ -23,17 +23,16 @@ import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.catalog.components.ProductCard
+import com.loc.searchapp.feature.search.components.ProductCard
 import com.loc.searchapp.feature.shared.components.ProductListShimmer
 
 @Composable
 fun ProductsList(
     modifier: Modifier = Modifier,
     items: LazyPagingItems<Product>,
-    onClick: (Product) -> Unit,
+    onClick: (id: Int) -> Unit,
     onAdd: (Product) -> Unit,
     onRemove: (Product) -> Unit,
-    localCartChanges: Map<String, Boolean>,
     showLoadingOnEmpty: Boolean = true
 ) {
     when (val state = items.loadState.refresh) {
@@ -43,11 +42,8 @@ fun ProductsList(
         }
 
         LoadState.Loading -> {
-            if (showLoadingOnEmpty) {
-                ProductListShimmer()
-            } else {
-                EmptyScreen(message = stringResource(id = R.string.start_searching))
-            }
+            if (showLoadingOnEmpty) ProductListShimmer()
+            else EmptyScreen(message = stringResource(id = R.string.start_searching))
         }
 
         is LoadState.NotLoading -> {
@@ -64,8 +60,7 @@ fun ProductsList(
                         if (product != null) {
                             ProductCard(
                                 product = product,
-                                localCartChanges = localCartChanges,
-                                onClick = { onClick(product) },
+                                onClick = { onClick(product.id) },
                                 onAdd = { onAdd(product) },
                                 onRemove = { onRemove(product) },
                             )

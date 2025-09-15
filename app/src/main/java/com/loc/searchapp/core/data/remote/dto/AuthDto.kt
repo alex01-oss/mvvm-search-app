@@ -12,7 +12,7 @@ data class LoginRequest(
 
 @Serializable
 data class RegisterRequest(
-    val fullname: String,
+    @SerialName("full_name") val fullname: String,
     val email: String,
     val phone: String,
     val password: String
@@ -20,6 +20,7 @@ data class RegisterRequest(
 
 @Serializable
 data class AuthResponse (
+    val user: User,
     val message: String? = null,
     @SerialName("access_token") val accessToken: String,
     @SerialName("refresh_token") val refreshToken: String,

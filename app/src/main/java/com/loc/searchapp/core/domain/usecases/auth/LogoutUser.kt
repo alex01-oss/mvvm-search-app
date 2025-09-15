@@ -9,9 +9,8 @@ class LogoutUser @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        accessToken: String,
         refreshToken: String
     ): Response<LogoutResponse> {
-        return authRepository.logout("Bearer $accessToken", refreshToken)
+        return authRepository.logout(refreshToken)
     }
 }

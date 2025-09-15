@@ -1,5 +1,6 @@
 package com.loc.searchapp.core.data.remote.authenticator
 
+import androidx.media3.common.util.Log
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
 import com.loc.searchapp.core.data.remote.api.AuthApi
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
@@ -15,60 +16,77 @@ class TokenAuthenticator @Inject constructor(
     private val refreshAuthApi: AuthApi
 ) : Authenticator {
 
+    companion object {
+        private const val MAX_RETRY_COUNT = 2
+    }
+
     override fun authenticate(route: Route?, response: Response): Request? {
-        if (responseCount(response) >= 2) {
+        if (responseCount(response) >= MAX_RETRY_COUNT) {
             runBlocking { userPreferences.clearTokens() }
             return null
         }
 
         val refreshToken = runBlocking { userPreferences.getRefreshToken() }
-        if (refreshToken.isNullOrBlank()) return null
+        if (refreshToken.isNullOrBlank()) {
+            runBlocking { userPreferences.clearTokens() }
+            return null
+        }
 
         synchronized(this) {
-            val currentToken = runBlocking { userPreferences.getAccessToken() }
-            val requestToken = response.request.header("Authorization")?.removePrefix("Bearer ")
+            return refreshTokenAndRetry(response, refreshToken)
+        }
+    }
 
-            if (currentToken != null && requestToken != currentToken) {
-                return response.request.newBuilder()
-                    .removeHeader("Authorization")
-                    .addHeader("Authorization", "Bearer $currentToken")
-                    .build()
-            }
+    private fun refreshTokenAndRetry(response: Response, refreshToken: String): Request? {
+        val currentToken = runBlocking { userPreferences.getAccessToken() }
+        val requestToken = response.request.header("Authorization")?.removePrefix("Bearer ")
 
-            val newTokens = runBlocking {
-                try {
-                    val result = refreshAuthApi.refresh(RefreshTokenRequest(refreshToken))
-                    if (result.isSuccessful) result.body() else null
-                } catch (_: Exception) {
+        if (currentToken != null && requestToken != currentToken) {
+            return buildRequestWithToken(response.request, currentToken)
+        }
+
+        val newTokens = runBlocking {
+            try {
+                val result = refreshAuthApi.refresh(RefreshTokenRequest(refreshToken))
+                if (result.isSuccessful) {
+                    result.body()
+                } else {
+                    Log.w("TokenAuth", "Refresh failed: ${result.code()}")
                     null
                 }
+            } catch (e: Exception) {
+                Log.e("TokenAuth", "Refresh error", e)
+                null
             }
+        }
 
-            if (newTokens == null || newTokens.accessToken.isBlank()) {
-                runBlocking { userPreferences.clearTokens() }
-                return null
-            }
-
+        return if (newTokens?.accessToken?.isNotBlank() == true) {
             runBlocking {
                 userPreferences.saveTokens(
                     accessToken = newTokens.accessToken,
                     refreshToken = newTokens.refreshToken
                 )
             }
-
-            return response.request.newBuilder()
-                .removeHeader("Authorization")
-                .addHeader("Authorization", "Bearer ${newTokens.accessToken}")
-                .build()
+            buildRequestWithToken(response.request, newTokens.accessToken)
+        } else {
+            runBlocking { userPreferences.clearTokens() }
+            null
         }
+    }
+
+    private fun buildRequestWithToken(request: Request, token: String): Request {
+        return request.newBuilder()
+            .removeHeader("Authorization")
+            .addHeader("Authorization", "Bearer $token")
+            .build()
     }
 
     private fun responseCount(response: Response): Int {
         var count = 1
-        var res = response.priorResponse
-        while (res != null) {
+        var current = response.priorResponse
+        while (current != null) {
             count++
-            res = res.priorResponse
+            current = current.priorResponse
         }
         return count
     }

@@ -35,7 +35,8 @@ import com.loc.searchapp.core.domain.usecases.catalog.DeleteProduct
 import com.loc.searchapp.core.domain.usecases.catalog.GetCart
 import com.loc.searchapp.core.domain.usecases.catalog.GetCatalogItem
 import com.loc.searchapp.core.domain.usecases.catalog.GetCatalogPaging
-import com.loc.searchapp.core.domain.usecases.catalog.GetMenu
+import com.loc.searchapp.core.domain.usecases.catalog.GetCategories
+import com.loc.searchapp.core.domain.usecases.catalog.GetFilters
 import com.loc.searchapp.core.domain.usecases.posts.CreatePost
 import com.loc.searchapp.core.domain.usecases.posts.DeletePost
 import com.loc.searchapp.core.domain.usecases.posts.EditPost
@@ -43,7 +44,7 @@ import com.loc.searchapp.core.domain.usecases.posts.GetAllPosts
 import com.loc.searchapp.core.domain.usecases.posts.GetPost
 import com.loc.searchapp.core.domain.usecases.posts.PostsUseCases
 import com.loc.searchapp.core.domain.usecases.posts.UploadImage
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -104,7 +105,7 @@ object AppModule {
     @Named("refreshRetrofit")
     fun provideRefreshRetrofit(@Named("refreshClient") client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(CATALOG_URL)
+            .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
@@ -157,7 +158,7 @@ object AppModule {
     @Named("mainRetrofit")
     fun provideMainRetrofit(@Named("mainClient") okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(CATALOG_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
@@ -201,7 +202,7 @@ object AppModule {
     @Named("authRetrofit")
     fun provideAuthRetrofit(@Named("authClient") okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(CATALOG_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
@@ -228,9 +229,10 @@ object AppModule {
             getCart = GetCart(catalogRepository),
             addProduct = AddProduct(catalogRepository),
             deleteProduct = DeleteProduct(catalogRepository),
-            getMenu = GetMenu(catalogRepository),
             getCatalogPaging = GetCatalogPaging(catalogRepository),
-            getCatalogItem = GetCatalogItem(catalogRepository)
+            getCatalogItem = GetCatalogItem(catalogRepository),
+            getFilters = GetFilters(catalogRepository),
+            getCategories = GetCategories(catalogRepository)
         )
     }
 

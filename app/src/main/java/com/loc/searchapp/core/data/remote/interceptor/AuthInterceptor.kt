@@ -10,28 +10,30 @@ class AuthInterceptor @Inject constructor(
     private val userPreferences: UserPreferences
 ) : Interceptor {
 
+    companion object {
+        private val AUTH_SKIP_ENDPOINTS = setOf("/auth/refresh", "/auth/login", "/auth/register")
+    }
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val requestUrl = originalRequest.url.toString()
 
-        if (shouldSkipAuth(requestUrl)) {
+        if (shouldSkipAuth(originalRequest.url.toString())) {
             return chain.proceed(originalRequest)
         }
 
         val accessToken = runBlocking { userPreferences.getAccessToken() }
-
-        val requestBuilder = originalRequest.newBuilder()
+        val request = originalRequest.newBuilder()
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
+            .apply {
+                accessToken?.let { addHeader("Authorization", "Bearer $it") }
+            }
+            .build()
 
-        if (!accessToken.isNullOrBlank()) {
-            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
-        }
-
-        return chain.proceed(requestBuilder.build())
+        return chain.proceed(request)
     }
 
     private fun shouldSkipAuth(url: String): Boolean {
-        return url.contains("/auth/refresh") || url.contains("/auth/login")
+        return AUTH_SKIP_ENDPOINTS.any { url.contains(it) }
     }
 }

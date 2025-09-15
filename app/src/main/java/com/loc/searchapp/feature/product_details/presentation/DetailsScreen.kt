@@ -42,7 +42,7 @@ import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.feature.product_details.components.EquipmentRow
 import com.loc.searchapp.feature.product_details.components.ProductInfoRow
 import com.loc.searchapp.feature.shared.model.UiState
@@ -54,7 +54,6 @@ fun DetailsScreen(
     modifier: Modifier = Modifier,
     state: UiState<DetailsData>,
     onBackClick: () -> Unit,
-    localCartChanges: Map<String, Boolean>,
     productViewModel: ProductViewModel
 ) {
     val context = LocalContext.current
@@ -65,9 +64,6 @@ fun DetailsScreen(
     val removeMessage = stringResource(id = R.string.removed)
 
     val product = (state as? UiState.Success)?.data?.product
-    val isInCart = product?.let {
-        localCartChanges[it.code] ?: it.isInCart
-    } == true
 
     fun showSnackbarImmediately(message: String) {
         scope.launch {
@@ -89,10 +85,9 @@ fun DetailsScreen(
                     onBackClick = onBackClick,
                     showBackButton = true,
                     actions = {
-                        val code = product.code
-                        if (isInCart) {
+                        if (product.isInCart) {
                             IconButton(onClick = {
-                                productViewModel.removeFromCart(code)
+                                productViewModel.removeFromCart(product.id)
                                 scope.launch { showSnackbarImmediately(removeMessage) }
                             }) {
                                 Icon(
@@ -103,7 +98,7 @@ fun DetailsScreen(
                             }
                         } else {
                             IconButton(onClick = {
-                                productViewModel.addToCart(code)
+                                productViewModel.addToCart(product.id)
                                 scope.launch { showSnackbarImmediately(addMessage) }
                             }) {
                                 Icon(
@@ -143,7 +138,7 @@ fun DetailsScreen(
 
             is UiState.Success -> {
                 val data = state.data
-                val imageUrl = "$CATALOG_URL${data.product.images}"
+                val imageUrl = "$BASE_URL${data.product.images}"
 
                 LazyColumn(
                     modifier = modifierWithPadding,
@@ -189,7 +184,7 @@ fun DetailsScreen(
                         info(stringResource(id = R.string.code), data.product.code)
                         info(stringResource(id = R.string.shape), data.product.shape)
                         info(stringResource(id = R.string.dimensions), data.product.dimensions)
-                        info(stringResource(id = R.string.bond), data.product.nameBond)
+//                        info(stringResource(id = R.string.bond), data.product.nameBonds)
                         info(stringResource(id = R.string.grid_size), data.product.gridSize)
                     }
 

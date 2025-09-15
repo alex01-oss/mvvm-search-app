@@ -5,18 +5,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
-import com.loc.searchapp.core.data.remote.dto.MenuCategory
-import com.loc.searchapp.core.data.remote.dto.MenuResponse
-import com.loc.searchapp.core.data.remote.dto.VideoId
+import com.loc.searchapp.core.data.remote.dto.Category
+import com.loc.searchapp.core.data.remote.dto.PlaylistItem
 import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.core.domain.usecases.youtube.YoutubeUseCases
 import com.loc.searchapp.feature.shared.model.UiState
+import com.loc.searchapp.feature.shared.model.VideoUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -28,21 +27,18 @@ class HomeViewModel @Inject constructor(
     private val youtubeUseCases: YoutubeUseCases,
     private val userPreferences: UserPreferences,
 ) : ViewModel() {
-    private val _menuState = MutableStateFlow<UiState<MenuResponse>>(UiState.Loading)
-    val menuState: StateFlow<UiState<MenuResponse>> = _menuState.asStateFlow()
-
-    private val _categoriesState = MutableStateFlow<UiState<List<MenuCategory>>>(UiState.Loading)
+    private val _categoriesState = MutableStateFlow<UiState<List<Category>>>(UiState.Loading)
     val categoriesState = _categoriesState.asStateFlow()
 
     private val _productsState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
 
-    private val _videoIdsState = MutableStateFlow<UiState<List<VideoId>>>(UiState.Loading)
-    val videoIdsState = _videoIdsState.asStateFlow()
+    private val _videoState = MutableStateFlow<UiState<List<VideoUi>>>(UiState.Loading)
+    val videoState = _videoState.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val catalogFlow: Flow<PagingData<Product>> = userPreferences.tokenFlow
-        .flatMapLatest { token ->
-            catalogUseCases.getCatalogPaging(token = token)
+        .flatMapLatest {
+            catalogUseCases.getCatalogPaging()
         }
         .cachedIn(viewModelScope)
 
@@ -52,7 +48,6 @@ class HomeViewModel @Inject constructor(
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            // --- CATALOG ---
             try {
                 val token = userPreferences.getAccessToken()
                 if (token.isNullOrBlank()) {
@@ -64,32 +59,42 @@ class HomeViewModel @Inject constructor(
                 _productsState.value = UiState.Error(e.localizedMessage ?: "Error loading products")
             }
 
-            // --- MENU ---
             try {
-                val menu = catalogUseCases.getMenu()
-                _menuState.value = UiState.Success(menu)
+                val categories = catalogUseCases.getCategories()
+                _categoriesState.value = UiState.Success(categories)
 
-                val categories = menu.categories
                 _categoriesState.value =
                     if (categories.isEmpty()) UiState.Empty
                     else UiState.Success(categories)
 
             } catch (e: Exception) {
-                _menuState.value = UiState.Error(e.localizedMessage ?: "Error loading menu")
                 _categoriesState.value = UiState.Error(e.localizedMessage ?: "Error loading categories")
             }
 
-            // --- VIDEOS ---
             try {
-                val videos = youtubeUseCases.getLatestVideos("UC3tUVI8r3Bfr8hb9-KzfCvw")
-                    .filter { it.kind == "youtube#video" && it.videoId != null }
+                val videos = youtubeUseCases.getLatestVideos()
+                    .filter { it.snippet.resourceId.videoId?.isNotBlank() == true }
 
-                _videoIdsState.value =
-                    if (videos.isEmpty()) UiState.Empty
-                    else UiState.Success(videos.map { VideoId(it.kind, it.videoId!!) })
+                val uiVideos = videos.map { item ->
+                    VideoUi(
+                        videoId = item.snippet.resourceId.videoId!!,
+                        title = item.snippet.title,
+                        thumbnailUrl = item.snippet.thumbnails.high?.url
+                            ?: item.snippet.thumbnails.medium?.url
+                            ?: ""
+                    )
+                }
+
+                _videoState.value = if (uiVideos.isEmpty()) {
+                    UiState.Empty
+                } else {
+                    UiState.Success(uiVideos)
+                }
 
             } catch (e: Exception) {
-                _videoIdsState.value = UiState.Error(e.localizedMessage ?: "Error loading videos")
+                _videoState.value = UiState.Error(
+                    e.localizedMessage ?: "Error loading videos"
+                )
             }
         }
     }

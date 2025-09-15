@@ -38,7 +38,9 @@
     <string name="shape">Форма: </string>
     <string name="dimensions">Розміри: </string>
     <string name="bond">Зв\'язка: </string>
-    <string name="grid_size">Розмір сітки: </string>
+    <string name="grid_size">Зерно: </string>
+    <string name="fit">Посадка: </string>
+    <string name="mm">мм.</string>
 
     <!-- Cart -->
     <string name="cart">Кошик</string>

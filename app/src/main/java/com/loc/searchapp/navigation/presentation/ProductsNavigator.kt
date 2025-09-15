@@ -5,12 +5,7 @@ import android.provider.Settings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -27,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -37,10 +31,8 @@ import androidx.navigation.compose.rememberNavController
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
 import com.loc.searchapp.core.ui.components.loading.LoadingScreen
-import com.loc.searchapp.core.ui.values.Dimens.DrawerWidth
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
-import com.loc.searchapp.feature.search.components.BurgerMenu
 import com.loc.searchapp.feature.shared.model.AuthState
 import com.loc.searchapp.feature.shared.network.NetworkStatus
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
@@ -81,22 +73,7 @@ fun ProductsNavigator(
     val connectivityViewModel: ConnectivityViewModel = hiltViewModel()
     val networkStatus by connectivityViewModel.networkStatus.collectAsState()
     val backstackState by navController.currentBackStackEntryAsState()
-    val menuState by homeViewModel.menuState.collectAsState()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
-
-    val onSearchTypeSelected: (String) -> Unit = { searchType ->
-        if (navController.currentDestination?.route == Route.SearchScreen.route) {
-            navController.navigate(Route.SearchScreen.createRoute(searchType = searchType)) {
-                popUpTo(Route.HomeScreen.route) { inclusive = false }
-                launchSingleTop = true
-            }
-        } else {
-            navController.navigate(Route.SearchScreen.createRoute(searchType = searchType))
-        }
-        scope.launch { drawerState.close() }
-    }
 
     val bottomNavigationItems = listOf(
         BottomNavItem(
@@ -135,93 +112,63 @@ fun ProductsNavigator(
         }
     }
 
-    val onBurgerClick: () -> Unit = {
-        scope.launch {
-            if (drawerState.isClosed) drawerState.open()
-            else drawerState.close()
-        }
-    }
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = drawerState.isOpen,
-        drawerContent = {
-            ModalDrawerSheet(
-                modifier
-                    .width(DrawerWidth)
-                    .statusBarsPadding(),
-                drawerContainerColor = MaterialTheme.colorScheme.background
-            ) {
-                BurgerMenu(
-                    state = menuState,
-                    onOpenUrl = { url ->
-                        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                        context.startActivity(intent)
+    Scaffold(
+        modifier.fillMaxSize(),
+        containerColor = Color.Transparent,
+        bottomBar = {
+            if (isBottomBarVisible) {
+                BottomNavigation(
+                    items = bottomNavigationItems,
+                    selected = selectedItem,
+                    onItemClick = { index ->
+                        when (index) {
+                            0 -> navigateToTab(navController, Route.HomeScreen.route)
+                            1 -> navigateToTab(navController, Route.SearchScreen.route)
+                            2 -> navigateToTab(navController, Route.CartScreen.route)
+                            3 -> navigateToTab(navController, Route.AccountScreen.route)
+                        }
                     },
-                    onNavigateToSearch = onSearchTypeSelected
                 )
             }
         }
-    ) {
-        Scaffold(
-            modifier.fillMaxSize(),
-            containerColor = Color.Transparent,
-            bottomBar = {
-                if (isBottomBarVisible) {
-                    BottomNavigation(
-                        items = bottomNavigationItems,
-                        selected = selectedItem,
-                        onItemClick = { index ->
-                            when (index) {
-                                0 -> navigateToTab(navController, Route.HomeScreen.route)
-                                1 -> navigateToTab(navController, Route.SearchScreen.route)
-                                2 -> navigateToTab(navController, Route.CartScreen.route)
-                                3 -> navigateToTab(navController, Route.AccountScreen.route)
-                            }
-                        },
-                    )
-                }
+    ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            NavHost(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = paddingValues.calculateBottomPadding() / 2),
+                navController = navController,
+                startDestination = startDestination
+            ) {
+                mainNavGraph(
+                    navController,
+                    authViewModel,
+                    productViewModel,
+                    homeViewModel,
+                    postViewModel,
+                )
             }
-        ) { paddingValues ->
-            Box(modifier = Modifier.fillMaxSize()) {
-                NavHost(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = paddingValues.calculateBottomPadding() / 2),
-                    navController = navController,
-                    startDestination = startDestination
-                ) {
-                    mainNavGraph(
-                        navController,
-                        authViewModel,
-                        productViewModel,
-                        homeViewModel,
-                        postViewModel,
-                        onBurgerClick = onBurgerClick
-                    )
-                }
 
-                if (networkStatus != NetworkStatus.Available) {
-                    Snackbar(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(
-                                start = MediumPadding1,
-                                end = MediumPadding1,
-                                bottom = if (isBottomBarVisible) paddingValues.calculateBottomPadding()
-                                else TopLogoHeight
-                            ),
-                        action = {
-                            TextButton(onClick = {
-                                val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
-                                context.startActivity(intent)
-                            }) {
-                                Text(stringResource(id = R.string.settings))
-                            }
+            if (networkStatus != NetworkStatus.Available) {
+                Snackbar(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(
+                            start = MediumPadding1,
+                            end = MediumPadding1,
+                            bottom = if (isBottomBarVisible) paddingValues.calculateBottomPadding()
+                            else TopLogoHeight
+                        ),
+                    action = {
+                        TextButton(onClick = {
+                            val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+                            context.startActivity(intent)
+                        }) {
+                            Text(stringResource(id = R.string.settings))
                         }
-                    ) {
-                        Text(stringResource(R.string.no_internet_connection, networkStatus.name))
                     }
+                ) {
+                    Text(stringResource(R.string.no_internet_connection, networkStatus.name))
                 }
             }
         }
@@ -234,7 +181,6 @@ fun NavGraphBuilder.mainNavGraph(
     productViewModel: ProductViewModel,
     homeViewModel: HomeViewModel,
     postViewModel: PostViewModel,
-    onBurgerClick: () -> Unit
 ) {
     homeScreens(
         navController,
@@ -242,7 +188,6 @@ fun NavGraphBuilder.mainNavGraph(
         productViewModel,
         homeViewModel,
         postViewModel,
-        onBurgerClick
     )
     authScreens(
         navController,

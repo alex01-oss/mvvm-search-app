@@ -24,21 +24,15 @@ interface AuthRepository {
         refreshToken: String
     ): Response<RefreshTokenResponse>
 
-    suspend fun getUser(
-        accessToken: String
-    ): Response<UserResponse>
+    suspend fun getUser(): Response<UserResponse>
 
     suspend fun updateUser(
-        accessToken: String,
         updateUserRequest: UpdateUserRequest
     ): Response<UserResponse>
 
-    suspend fun deleteUser(
-        token: String
-    ): Response<Unit>
+    suspend fun deleteUser(): Response<Unit>
 
     suspend fun logout(
-        accessToken: String,
         refreshToken: String
     ): Response<LogoutResponse>
 }

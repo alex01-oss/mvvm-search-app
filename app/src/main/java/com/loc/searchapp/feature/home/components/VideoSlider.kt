@@ -23,19 +23,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.VideoId
 import com.loc.searchapp.core.ui.components.common.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.feature.home.player.YouTubeVideoPlayer
 import com.loc.searchapp.feature.shared.model.UiState
+import com.loc.searchapp.feature.shared.model.VideoUi
 import com.loc.searchapp.feature.shared.network.NetworkStatus
 import kotlinx.coroutines.launch
 
 @Composable
 fun YouTubeVideoSlider(
     modifier: Modifier = Modifier,
-    state: UiState<List<VideoId>>,
+    state: UiState<List<VideoUi>>,
     networkStatus: NetworkStatus,
 ) {
     val coroutineScope = rememberCoroutineScope()

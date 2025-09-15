@@ -4,7 +4,8 @@ data class CatalogUseCases (
     val getCart: GetCart,
     val addProduct: AddProduct,
     val deleteProduct: DeleteProduct,
-    val getMenu: GetMenu,
     val getCatalogPaging: GetCatalogPaging,
-    val getCatalogItem: GetCatalogItem
+    val getCatalogItem: GetCatalogItem,
+    val getFilters: GetFilters,
+    val getCategories: GetCategories
 )

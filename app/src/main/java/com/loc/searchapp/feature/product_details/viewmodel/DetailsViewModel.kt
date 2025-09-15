@@ -22,21 +22,23 @@ class DetailsViewModel @Inject constructor(
     private val _detailsState = mutableStateOf<UiState<DetailsData>>(UiState.Loading)
     val detailsState: State<UiState<DetailsData>> = _detailsState
 
-    fun loadProduct(code: String) {
+    fun loadProduct(id: Int) {
         viewModelScope.launch {
             _detailsState.value = UiState.Loading
 
             try {
-                val response = catalogUseCases.getCatalogItem(code)
+                val response = catalogUseCases.getCatalogItem(id)
 
                 val product = Product(
+                    id = TODO(),
                     code = response.item.code,
                     shape = response.item.shape.orEmpty(),
                     dimensions = response.item.dimensions.orEmpty(),
                     images = response.item.images.orEmpty(),
-                    nameBond = response.item.nameBond.orEmpty(),
                     gridSize = response.item.gridSize.orEmpty(),
-                    isInCart = response.item.isInCart
+                    isInCart = response.item.isInCart,
+                    nameBonds = TODO(),
+                    mounting = TODO()
                 )
 
                 val bond = response.bond?.let {

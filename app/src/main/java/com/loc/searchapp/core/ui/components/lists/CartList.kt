@@ -21,8 +21,8 @@ import com.loc.searchapp.feature.shared.model.UiState
 fun CartList(
     state: UiState<List<CartItem>>,
     modifier: Modifier = Modifier,
-    onClick: (CartItem) -> Unit,
-    onRemove: (CartItem) -> Unit,
+    onClick: (id: Int) -> Unit,
+    onRemove: (id: Int) -> Unit,
 ) {
     when(state) {
         UiState.Empty -> {
@@ -42,8 +42,8 @@ fun CartList(
             ) {
                 items(state.data) { cartItem ->
                     CartItemCard(
-                        onClick = { onClick(cartItem) },
-                        onRemove = { onRemove(cartItem) },
+                        onClick = { onClick(cartItem.product.id) },
+                        onRemove = { onRemove(cartItem.product.id) },
                         cartItem = cartItem
                     )
                 }

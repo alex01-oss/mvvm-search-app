@@ -57,12 +57,12 @@ fun HomeScreen(
     authViewModel: AuthViewModel,
     postViewModel: PostViewModel,
     viewModel: HomeViewModel,
-    onCategoryClick: () -> Unit,
+    onCategoryClick: (Int) -> Unit,
     onPostClick: (Post) -> Unit,
     onAvatarClick: () -> Unit
 ) {
     val categoriesState by viewModel.categoriesState.collectAsState()
-    val videoIdsState by viewModel.videoIdsState.collectAsState()
+    val videoIdsState by viewModel.videoState.collectAsState()
     val postsState by postViewModel.postsState.collectAsState()
 
     val scrollState = rememberLazyListState()
@@ -170,7 +170,7 @@ fun HomeScreen(
 
                     HomeCategories(
                         state = categoriesState,
-                        onCategoryClick = { onCategoryClick() },
+                        onCategoryClick = onCategoryClick,
                         networkStatus = networkStatus,
                     )
                 }

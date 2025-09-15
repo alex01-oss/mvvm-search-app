@@ -1,13 +1,16 @@
 package com.loc.searchapp.feature.search.model
 
+import com.loc.searchapp.core.utils.FilterParams
+import com.loc.searchapp.core.utils.SearchParams
+
 sealed class SearchEvent {
     data class UpdateSearchQuery(
-        val searchQuery: String,
-        val searchType: String,
+        val searchParams: SearchParams = SearchParams(),
+        val filterParams: FilterParams = FilterParams(),
+
+        val categoryId: Int,
         val page: Int
     ): SearchEvent()
 
     object SearchProducts: SearchEvent()
-
-    data class ChangeSearchType(val searchType: String): SearchEvent()
 }

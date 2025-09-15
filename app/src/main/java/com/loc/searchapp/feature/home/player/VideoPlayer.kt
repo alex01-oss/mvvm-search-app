@@ -8,15 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
-import com.loc.searchapp.core.data.remote.dto.VideoId
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
+import com.loc.searchapp.feature.shared.model.VideoUi
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
-fun YouTubeVideoPlayer(videoId: VideoId, lifecycleOwner: LifecycleOwner) {
+fun YouTubeVideoPlayer(videoId: VideoUi, lifecycleOwner: LifecycleOwner) {
     AndroidView(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,9 +28,9 @@ fun YouTubeVideoPlayer(videoId: VideoId, lifecycleOwner: LifecycleOwner) {
 
                 addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                        videoId.videoId?.let { id ->
+                        videoId.videoId.let { id ->
                             youTubePlayer.mute()
-                            youTubePlayer.loadVideo(id, 0f)
+                            youTubePlayer.cueVideo(id, 0f)
                         }
                     }
                 })

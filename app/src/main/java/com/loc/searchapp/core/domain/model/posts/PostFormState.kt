@@ -1,6 +1,6 @@
 package com.loc.searchapp.core.domain.model.posts
 
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 import java.io.File
 
 data class PostFormState(
@@ -13,7 +13,7 @@ data class PostFormState(
     val previewUri: String?
         get() = when {
             imageFile != null -> imageFile.toURI().toString()
-            imageUrl != null -> "$CATALOG_URL$imageUrl"
+            imageUrl != null -> "$BASE_URL$imageUrl"
             else -> null
         }
 }

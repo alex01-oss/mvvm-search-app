@@ -47,31 +47,24 @@ class AuthRepositoryImpl(
         )
     }
 
-    override suspend fun getUser(
-        accessToken: String
-    ): Response<UserResponse> {
-        return api.getUser(accessToken)
+    override suspend fun getUser(): Response<UserResponse> {
+        return api.getUser()
     }
 
     override suspend fun updateUser(
-        accessToken: String,
         updateUserRequest: UpdateUserRequest
     ): Response<UserResponse> {
-        return api.updateUser(accessToken, updateUserRequest)
+        return api.updateUser(updateUserRequest)
     }
 
-    override suspend fun deleteUser(
-        token: String
-    ): Response<Unit> {
-        return api.deleteUser(token)
+    override suspend fun deleteUser(): Response<Unit> {
+        return api.deleteUser()
     }
 
     override suspend fun logout(
-        accessToken: String,
         refreshToken: String
     ): Response<LogoutResponse> {
         return api.logout(
-            accessToken,
             LogoutRequest(refreshToken)
         )
     }

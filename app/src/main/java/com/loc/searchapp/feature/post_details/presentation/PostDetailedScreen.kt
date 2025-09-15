@@ -32,7 +32,7 @@ import com.loc.searchapp.core.ui.values.Dimens.LargePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.feature.post_details.components.PostInfoTopBar
 import com.loc.searchapp.feature.post_details.utils.formatDate
 import com.loc.searchapp.feature.posts.components.PostDetailedShimmer
@@ -132,7 +132,7 @@ fun PostDetailedScreen(
 
                     if (post.imageUrl.isNotEmpty()) {
                         AsyncImage(
-                            model = "$CATALOG_URL${post.imageUrl}",
+                            model = "$BASE_URL${post.imageUrl}",
                             contentDescription = post.title,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier

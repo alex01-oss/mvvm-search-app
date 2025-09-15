@@ -7,9 +7,10 @@ import com.loc.searchapp.core.domain.repository.CatalogRepository
 
 class CatalogPagingSource(
     private val repository: CatalogRepository,
-    private val token: String?,
-    private val searchQuery: String = "",
-    private val searchType: String = "code"
+    private val search: SearchParams,
+    private val filters: FilterParams,
+    private val categoryId: Int = 1,
+    private val itemsPerPage: Int = 8,
 ) : PagingSource<Int, Product>() {
 
     override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
@@ -22,11 +23,13 @@ class CatalogPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         return try {
             val page = params.key ?: 1
+            val pagination = PaginationParams(page = page, itemsPerPage = itemsPerPage)
+
             val response = repository.getCatalog(
-                searchQuery = searchQuery,
-                searchType = searchType,
-                page = page,
-                token = token
+                search = search,
+                filters = filters,
+                categoryId = categoryId,
+                pagination = pagination
             )
 
             val catalog = response

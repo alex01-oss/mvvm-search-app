@@ -34,20 +34,20 @@ import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding2
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 
 @Composable
 fun ProductCardBase(
     modifier: Modifier = Modifier,
     product: Product,
-    isInCart: Boolean = false,
+    isInCart: Boolean,
     showCartActions: Boolean = true,
     onClick: () -> Unit = {},
     onAdd: () -> Unit = {},
     onRemove: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val imageUrl = "$CATALOG_URL${product.images}"
+    val imageUrl = "$BASE_URL${product.images}"
 
     Row(
         modifier = modifier
@@ -104,12 +104,59 @@ fun ProductCardBase(
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                     color = colorResource(id = R.color.body),
                 )
+                Text(
+                    text = product.dimensions,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colorResource(id = R.color.body),
+                )
             }
-            Text(
-                text = product.dimensions,
-                style = MaterialTheme.typography.labelSmall,
-                color = colorResource(id = R.color.body),
-            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(id = R.string.bond),
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = colorResource(id = R.color.body),
+                )
+                if (product.nameBonds.isNotEmpty()) {
+                    Text(
+                        text = product.nameBonds.joinToString(", "),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = colorResource(id = R.color.body),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(id = R.string.grid_size),
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = colorResource(id = R.color.body),
+                )
+                Text(
+                    text = product.gridSize,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colorResource(id = R.color.body),
+                )
+            }
+
+            if (product.mounting?.mm?.isNotBlank() == true) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.fit),
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = colorResource(id = R.color.body),
+                    )
+                    Text(
+                        text = product.mounting.mm,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = colorResource(id = R.color.body),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
         }
 
         if (showCartActions) {

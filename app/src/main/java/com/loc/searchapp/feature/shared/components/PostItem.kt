@@ -34,7 +34,7 @@ import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 
 @Composable
 fun PostItem(
@@ -45,7 +45,7 @@ fun PostItem(
     isAdmin: Boolean = false,
     authorName: String? = null,
 ) {
-    val imageUrl = "$CATALOG_URL${post.imageUrl}"
+    val imageUrl = "$BASE_URL${post.imageUrl}"
     val typography = MaterialTheme.typography
 
     val fallback = stringResource(id = R.string.author_fallback, post.userId)

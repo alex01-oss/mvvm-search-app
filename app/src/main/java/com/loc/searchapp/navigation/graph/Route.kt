@@ -8,15 +8,15 @@ sealed class Route(
     data object HomeScreen : Route(route = "homeScreen")
 
     data object SearchScreen : Route(route = "search_screen") {
-        val routeWithArgs: String = "$route?searchType={searchType}"
-        fun createRoute(searchType: String = ""): String = "$route?searchType=$searchType"
+        val routeWithArgs: String = "$route?category_id={categoryId}"
+        fun createRoute(categoryId: Int = 1): String = "$route?category_id=$categoryId"
     }
 
     data object CartScreen : Route(route = "cartScreen")
     data object AccountScreen : Route(route = "accountScreen")
 
-    data object ProductDetailsScreen : Route(route = "catalogDetailsScreen/{code}") {
-        fun createRoute(code: String) = "catalogDetailsScreen/$code"
+    data object ProductDetailsScreen : Route(route = "catalogDetailsScreen/{id}") {
+        fun createRoute(id: Int) = "catalogDetailsScreen/$id"
     }
 
     data object AppStartNavigation : Route(route = "appStartNavigation")
@@ -25,9 +25,8 @@ sealed class Route(
     data object ProductsNavigatorScreen : Route(route = "productsNavigatorScreen")
 
     data object LoginScreen : Route(route = "loginScreen")
-    data object RegisterScreen : Route(route = "registerScreen")
 
-    data object CatalogScreen : Route(route = "catalogScreen")
+    data object RegisterScreen : Route(route = "registerScreen")
 
     data object SettingsScreen : Route(route = "settingsScreen")
 

@@ -5,12 +5,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface YoutubeApi {
-    @GET("search")
-    suspend fun getLatestVideos(
-        @Query("key") apiKey: String,
-        @Query("channelId") channelId: String,
-        @Query("part") part: String = "snippet,id",
-        @Query("order") order: String = "date",
-        @Query("maxResults") maxResults: Int = 3
+    @GET("playlistItems")
+    suspend fun getPlaylistVideos(
+        @Query("part") part: String = "snippet",
+        @Query("playlistId") playlistId: String,
+        @Query("maxResults") maxResults: Int = 3,
+        @Query("key") apiKey: String
     ): YouTubeResponse
 }

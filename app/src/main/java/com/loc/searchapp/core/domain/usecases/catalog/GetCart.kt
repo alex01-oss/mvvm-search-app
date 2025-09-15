@@ -8,9 +8,8 @@ class GetCart @Inject constructor(
     private val catalogRepository: CatalogRepository,
 ) {
     suspend operator fun invoke(
-        token: String
     ): List<CartItem> {
-        val response = catalogRepository.getCart("Bearer $token")
+        val response = catalogRepository.getCart()
         return response.cart
     }
 }

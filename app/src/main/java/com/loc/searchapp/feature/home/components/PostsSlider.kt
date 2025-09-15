@@ -41,7 +41,7 @@ import com.loc.searchapp.core.ui.values.Dimens.PagerHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
-import com.loc.searchapp.core.utils.Constants.CATALOG_URL
+import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.network.NetworkStatus
 import kotlinx.coroutines.launch
@@ -81,7 +81,7 @@ fun PostsSlider(
                     state = pagerState
                 ) { page ->
                     val post = state.data[page]
-                    val fullImageUrl = "$CATALOG_URL${post.imageUrl}"
+                    val fullImageUrl = "$BASE_URL${post.imageUrl}"
 
                     Box(
                         modifier = Modifier

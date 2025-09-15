@@ -41,7 +41,8 @@ object YoutubeModule {
         api: YoutubeApi,
         @Named("youtube_api_key") apiKey: String
     ): YoutubeRepository {
-        return YoutubeRepositoryImpl(api, apiKey)
+        val playlistId = "UU3tUVI8r3Bfr8hb9-KzfCvw"
+        return YoutubeRepositoryImpl(api, apiKey, playlistId)
     }
 
     @Provides

@@ -29,28 +29,29 @@ class AuthViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            fetchUserAndSetState()
+            val hasTokens = userPreferences.getAccessToken() != null
+            if (hasTokens) {
+                fetchUserAndSetState()
+            } else {
+                _authState.value = AuthState.Unauthenticated
+            }
         }
     }
 
     private suspend fun fetchUserAndSetState(): Boolean {
-        val token = userPreferences.getAccessToken()
-        if (token.isNullOrEmpty()) {
-            _authState.value = AuthState.Unauthenticated
-            return false
-        }
-
         return try {
-            val response = authUseCases.getUser(token)
+            val response = authUseCases.getUser()
             val user = response.body()?.user
             if (response.isSuccessful && user != null) {
                 _authState.value = AuthState.Authenticated(user)
                 true
             } else {
+                userPreferences.clearTokens()
                 _authState.value = AuthState.Unauthenticated
                 false
             }
         } catch (_: Exception) {
+            userPreferences.clearTokens()
             _authState.value = AuthState.Unauthenticated
             false
         }
@@ -82,18 +83,34 @@ class AuthViewModel @Inject constructor(
             val response = authUseCases.loginUser(email, password)
             if (response.isSuccessful) {
                 val data = response.body()
-                userPreferences.saveTokens(
-                    data?.accessToken.orEmpty(),
-                    data?.refreshToken.orEmpty()
-                )
-                if (!fetchUserAndSetState()) {
-                    _authState.value = AuthState.Error("Login succeeded but failed to load user")
+                if (data?.accessToken.isNullOrBlank() || data.refreshToken.isBlank()) {
+                    _authState.value = AuthState.Error("Invalid tokens received")
+                    return
                 }
+
+                userPreferences.saveTokens(
+                    accessToken = data.accessToken,
+                    refreshToken = data.refreshToken
+                )
+
+                val savedToken = userPreferences.getAccessToken()
+                if (savedToken.isNullOrBlank()) {
+                    _authState.value = AuthState.Error("Failed to save tokens")
+                    return
+                }
+
+                val user = data.user
+                _authState.value = AuthState.Authenticated(user)
             } else {
-                _authState.value = AuthState.Error("Invalid credentials")
+                val errorMsg = when (response.code()) {
+                    401 -> "Invalid credentials"
+                    422 -> "Invalid input data"
+                    else -> "Login failed: ${response.code()}"
+                }
+                _authState.value = AuthState.Error(errorMsg)
             }
         } catch (e: Exception) {
-            _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
+            _authState.value = AuthState.Error(e.localizedMessage ?: "Network error")
         }
     }
 
@@ -103,15 +120,32 @@ class AuthViewModel @Inject constructor(
             val response = authUseCases.registerUser(fullname, email, phone, password)
             if (response.isSuccessful) {
                 val data = response.body()
-                userPreferences.saveTokens(
-                    data?.accessToken.orEmpty(),
-                    data?.refreshToken.orEmpty()
-                )
-                if (!fetchUserAndSetState()) {
-                    _authState.value = AuthState.Error("Registration succeeded but failed to load user")
+
+                if (data?.accessToken.isNullOrBlank() || data.refreshToken.isBlank()) {
+                    _authState.value = AuthState.Error("Invalid tokens received")
+                    return
                 }
+
+                userPreferences.saveTokens(
+                    data.accessToken,
+                    data.refreshToken
+                )
+
+                val savedToken = userPreferences.getAccessToken()
+                if (savedToken.isNullOrBlank()) {
+                    _authState.value = AuthState.Error("Failed to save tokens")
+                    return
+                }
+
+                val user = data.user
+                _authState.value = AuthState.Authenticated(user)
             } else {
-                _authState.value = AuthState.Error("Registration failed")
+                val errorMsg = when (response.code()) {
+                    409 -> "Email already exists"
+                    422 -> "Invalid input data"
+                    else -> "Registration failed: ${response.code()}"
+                }
+                _authState.value = AuthState.Error(errorMsg)
             }
         } catch (e: Exception) {
             _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
@@ -121,14 +155,7 @@ class AuthViewModel @Inject constructor(
     private suspend fun handleUpdateUser(event: AuthEvent.UpdateUser) {
         _authState.value = AuthState.Loading
         try {
-            val accessToken = userPreferences.getAccessToken()
-            if (accessToken.isNullOrEmpty()) {
-                _authState.value = AuthState.Unauthenticated
-                return
-            }
-
             val response = authUseCases.updateUser(
-                accessToken = accessToken,
                 fullname = event.fullname,
                 email = event.email,
                 phone = event.phone,
@@ -152,8 +179,7 @@ class AuthViewModel @Inject constructor(
 
     private suspend fun handleDeleteUser() {
         try {
-            val token = userPreferences.getAccessToken().orEmpty()
-            val result = authUseCases.deleteUser(token)
+            val result = authUseCases.deleteUser()
             if (result.isSuccessful) {
                 userPreferences.clearTokens()
                 _authState.value = AuthState.Unauthenticated
@@ -167,13 +193,12 @@ class AuthViewModel @Inject constructor(
 
     private suspend fun handleLogout() {
         try {
-            val accessToken = userPreferences.getAccessToken()
             val refreshToken = userPreferences.getRefreshToken()
-            if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
-                authUseCases.logoutUser(accessToken, refreshToken)
+            if (!refreshToken.isNullOrEmpty()) {
+                try {
+                    authUseCases.logoutUser(refreshToken)
+                } catch (_: Exception) {}
             }
-        } catch (_: Exception) {
-            // Ignore logout errors
         } finally {
             userPreferences.clearTokens()
             _authState.value = AuthState.Unauthenticated

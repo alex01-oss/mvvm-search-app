@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.loc.searchapp.core.ui.components.loading.shimmerEffect
 import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.CategoryHeight
 import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
+import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.ShimmerHeight2
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
@@ -38,11 +38,11 @@ fun CategoriesShimmer(
     modifier: Modifier = Modifier
 ) {
     Column(modifier.fillMaxWidth()) {
-        repeat(4) {
+        repeat(2) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(CategoryHeight)
+                    .height(ProductCardSize)
                     .padding(vertical = ExtraSmallPadding)
                     .clip(RoundedCornerShape(DefaultCorner))
                     .shimmerEffect()

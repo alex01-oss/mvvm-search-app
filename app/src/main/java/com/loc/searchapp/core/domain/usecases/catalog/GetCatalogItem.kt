@@ -7,8 +7,8 @@ class GetCatalogItem(
     private val repository: CatalogRepository
 ) {
     suspend operator fun invoke(
-        code: String
+        id: Int
     ): CatalogItemDetailedResponse {
-        return repository.getCatalogItem(code)
+        return repository.getCatalogItem(id)
     }
 }

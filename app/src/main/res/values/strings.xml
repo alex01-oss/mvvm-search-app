@@ -38,7 +38,9 @@
     <string name="shape">Shape: </string>
     <string name="dimensions">Dimensions: </string>
     <string name="bond">Bond: </string>
-    <string name="grid_size">Grid Size: </string>
+    <string name="grid_size">Grit: </string>
+    <string name="fit">Fit: </string>
+    <string name="mm">mm.</string>
 
     <!-- Cart -->
     <string name="cart">Cart</string>
