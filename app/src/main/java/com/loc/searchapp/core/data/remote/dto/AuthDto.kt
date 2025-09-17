@@ -1,6 +1,7 @@
 package com.loc.searchapp.core.data.remote.dto
 
-import com.loc.searchapp.core.domain.model.auth.User
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -26,6 +27,16 @@ data class AuthResponse (
     @SerialName("refresh_token") val refreshToken: String,
     @SerialName("token_type") val tokenType: String
 )
+
+@Serializable
+@Parcelize
+data class User(
+    val id: String,
+    @SerialName("full_name") val fullname: String,
+    val email: String,
+    val phone: String,
+    val role: String
+) : Parcelable
 
 @Serializable
 data class UserResponse (

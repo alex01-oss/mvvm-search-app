@@ -1,23 +1,16 @@
-package com.loc.searchapp.feature.shared.viewmodel
+package com.loc.searchapp.feature.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
 import com.loc.searchapp.core.data.remote.dto.Category
-import com.loc.searchapp.core.data.remote.dto.PlaylistItem
-import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.core.domain.usecases.youtube.YoutubeUseCases
 import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.model.VideoUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,13 +27,6 @@ class HomeViewModel @Inject constructor(
 
     private val _videoState = MutableStateFlow<UiState<List<VideoUi>>>(UiState.Loading)
     val videoState = _videoState.asStateFlow()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val catalogFlow: Flow<PagingData<Product>> = userPreferences.tokenFlow
-        .flatMapLatest {
-            catalogUseCases.getCatalogPaging()
-        }
-        .cachedIn(viewModelScope)
 
     init {
         loadInitialData()
@@ -60,37 +46,43 @@ class HomeViewModel @Inject constructor(
             }
 
             try {
-                val categories = catalogUseCases.getCategories()
-                _categoriesState.value = UiState.Success(categories)
+                val res = catalogUseCases.getCategories()
+                if (res.isSuccessful) {
+                    val body = res.body()
 
-                _categoriesState.value =
-                    if (categories.isEmpty()) UiState.Empty
-                    else UiState.Success(categories)
+                    if (body != null) {
+                        _categoriesState.value = UiState.Success(body)
+                    } else {
+                        _categoriesState.value = UiState.Empty
+                    }
+                }
 
             } catch (e: Exception) {
                 _categoriesState.value = UiState.Error(e.localizedMessage ?: "Error loading categories")
             }
 
             try {
-                val videos = youtubeUseCases.getLatestVideos()
-                    .filter { it.snippet.resourceId.videoId?.isNotBlank() == true }
+                val res = youtubeUseCases.getLatestVideos()
+                if (res.isSuccessful) {
+                    val body = res.body()
+                    if (body != null) {
+                        val videos = body.filter { it.snippet.resourceId.videoId?.isNotBlank() == true }
 
-                val uiVideos = videos.map { item ->
-                    VideoUi(
-                        videoId = item.snippet.resourceId.videoId!!,
-                        title = item.snippet.title,
-                        thumbnailUrl = item.snippet.thumbnails.high?.url
-                            ?: item.snippet.thumbnails.medium?.url
-                            ?: ""
-                    )
+                        val uiVideos = videos.map { item ->
+                            VideoUi(
+                                videoId = item.snippet.resourceId.videoId!!,
+                                title = item.snippet.title,
+                                thumbnailUrl = item.snippet.thumbnails.high?.url
+                                    ?: item.snippet.thumbnails.medium?.url
+                                    ?: ""
+                            )
+                        }
+
+                        _videoState.value = UiState.Success(uiVideos)
+                    } else {
+                        _videoState.value = UiState.Empty
+                    }
                 }
-
-                _videoState.value = if (uiVideos.isEmpty()) {
-                    UiState.Empty
-                } else {
-                    UiState.Success(uiVideos)
-                }
-
             } catch (e: Exception) {
                 _videoState.value = UiState.Error(
                     e.localizedMessage ?: "Error loading videos"

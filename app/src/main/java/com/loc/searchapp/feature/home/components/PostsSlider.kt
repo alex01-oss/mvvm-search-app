@@ -11,20 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -33,149 +27,108 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
-import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
+import com.loc.searchapp.core.data.remote.dto.PostResponse
+import com.loc.searchapp.feature.shared.components.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.PagerHeight
+import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.feature.shared.model.UiState
 import com.loc.searchapp.feature.shared.network.NetworkStatus
-import kotlinx.coroutines.launch
 
 @Composable
 fun PostsSlider(
     modifier: Modifier = Modifier,
     networkStatus: NetworkStatus,
-    state: UiState<List<Post>>,
-    onPostClick: (Post) -> Unit,
+    state: UiState<List<PostResponse>>,
+    onPostClick: (Int) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     when {
         networkStatus != NetworkStatus.Available -> {
             EmptyScreen(stringResource(R.string.no_internet_connection))
         }
-
         state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_news))
         state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
         state == UiState.Loading -> PostsSliderShimmer()
         state is UiState.Success -> {
             val pagerState = rememberPagerState(
                 initialPage = 0,
-                initialPageOffsetFraction = 0f,
                 pageCount = { state.data.size }
             )
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .height(ArticleImageHeight)
-            ) {
-                HorizontalPager(
+
+            Column(modifier = modifier) {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(PagerHeight),
-                    state = pagerState
-                ) { page ->
-                    val post = state.data[page]
-                    val fullImageUrl = "$BASE_URL${post.imageUrl}"
-
-                    Box(
+                        .height(PostImageHeight)
+                ) {
+                    HorizontalPager(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(StrongCorner))
-                            .clickable { onPostClick(post) }
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier.fillMaxSize(),
-                            model = fullImageUrl,
-                            contentDescription = post.title,
-                            contentScale = ContentScale.Crop
-                        )
+                            .fillMaxWidth()
+                            .height(PostImageHeight),
+                        state = pagerState
+                    ) { page ->
+                        val post = state.data[page]
+                        val fullImageUrl = "$BASE_URL${post.image}"
 
-                        Column(
+                        Box(
                             modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .fillMaxWidth()
-                                .height(TextBarHeight)
-                                .background(MaterialTheme.colorScheme.background)
-                                .padding(horizontal = BasePadding, vertical = SmallPadding),
-                            verticalArrangement = Arrangement.Center
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(StrongCorner))
+                                .clickable { onPostClick(post.id) }
                         ) {
-                            val currentPost = state.data[pagerState.currentPage]
-                            Text(
-                                text = currentPost.title,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                            AsyncImage(
+                                modifier = Modifier.fillMaxSize(),
+                                model = fullImageUrl,
+                                contentDescription = post.title,
+                                contentScale = ContentScale.Crop
                             )
-                            Text(
-                                text = HtmlCompat.fromHtml(
-                                    currentPost.content,
-                                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                                )
-                                    .toString(),
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodySmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
 
-                        if (pagerState.currentPage > 0) {
-                            IconButton(
+                            Column(
                                 modifier = Modifier
-                                    .align(Alignment.CenterStart)
-                                    .padding(start = SmallPadding)
-                                    .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape),
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(
-                                            (pagerState.currentPage - 1).coerceAtLeast(
-                                                0
+                                    .align(Alignment.BottomStart)
+                                    .fillMaxWidth()
+                                    .height(TextBarHeight)
+                                    .background(
+                                        Brush.verticalGradient(
+                                            colors = listOf(
+                                                Color.Transparent,
+                                                Color.Black.copy(alpha = 0.8f)
                                             )
                                         )
-                                    }
-                                }
+                                    )
+                                    .padding(horizontal = BasePadding, vertical = SmallPadding),
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = stringResource(id = R.string.arrow_back),
-                                    tint = Color.White
+                                Text(
+                                    text = post.title,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
-                            }
-                        }
-
-                        if (pagerState.currentPage < state.data.size - 1) {
-                            IconButton(
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .padding(end = SmallPadding)
-                                    .background(Color.Black.copy(alpha = 0.3f), shape = CircleShape),
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(
-                                            (pagerState.currentPage + 1).coerceAtMost(
-                                                state.data.size - 1
-                                            )
-                                        )
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = stringResource(id = R.string.arrow_forward),
-                                    tint = Color.White
+                                Text(
+                                    text = HtmlCompat.fromHtml(
+                                        post.content,
+                                        HtmlCompat.FROM_HTML_MODE_LEGACY
+                                    ).toString(),
+                                    color = Color.White.copy(alpha = 0.9f),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
                     }
                 }
+
+                PagerIndicator(
+                    totalPages = state.data.size,
+                    currentPage = pagerState.currentPage,
+                )
             }
         }
     }

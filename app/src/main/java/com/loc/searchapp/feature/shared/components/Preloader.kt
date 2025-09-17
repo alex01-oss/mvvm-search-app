@@ -1,4 +1,4 @@
-package com.loc.searchapp.core.ui.components.loading
+package com.loc.searchapp.feature.shared.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

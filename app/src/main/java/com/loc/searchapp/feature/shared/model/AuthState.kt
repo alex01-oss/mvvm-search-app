@@ -1,6 +1,6 @@
 package com.loc.searchapp.feature.shared.model
 
-import com.loc.searchapp.core.domain.model.auth.User
+import com.loc.searchapp.core.data.remote.dto.User
 
 sealed class AuthState {
     data object Loading : AuthState()

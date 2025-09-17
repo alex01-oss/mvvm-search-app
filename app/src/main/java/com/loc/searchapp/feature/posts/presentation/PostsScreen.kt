@@ -27,10 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
-import com.loc.searchapp.core.ui.components.common.AppDialog
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.core.data.remote.dto.PostResponse
+import com.loc.searchapp.feature.shared.components.AppDialog
+import com.loc.searchapp.feature.shared.components.EmptyScreen
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostsSpacerSize
 import com.loc.searchapp.feature.posts.components.PostItemShimmer
@@ -43,12 +43,12 @@ import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 fun PostsScreen(
     viewModel: PostViewModel,
     authViewModel: AuthViewModel,
-    onPostClick: (Post) -> Unit,
+    onPostClick: (PostResponse) -> Unit,
     onBackClick: () -> Unit,
     onAddNewPost: () -> Unit,
 ) {
     val postState = viewModel.postsState.collectAsState().value
-    var showDeleteDialog by remember { mutableStateOf<Post?>(null) }
+    var showDeleteDialog by remember { mutableStateOf<PostResponse?>(null) }
 
     Scaffold(
         containerColor = Color.Transparent,

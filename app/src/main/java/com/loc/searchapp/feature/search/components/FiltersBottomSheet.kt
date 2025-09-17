@@ -99,11 +99,10 @@ fun FiltersBottomSheet(
                 }
 
                 is UiState.Success -> {
-                    val filtersMap: Map<String, List<FilterItem>> = mapOf(
-                        "bonds" to state.data.bonds,
-                        "grids" to state.data.grids,
-                        "mountings" to state.data.mountings
-                    )
+                    val filtersMap = mutableMapOf<String, List<FilterItem>>()
+                    if (state.data.bonds.isNotEmpty()) filtersMap["bonds"] = state.data.bonds
+                    if (state.data.grids.isNotEmpty()) filtersMap["grids"] = state.data.grids
+                    if (state.data.mountings.isNotEmpty()) filtersMap["mountings"] = state.data.mountings
 
                     filtersMap.forEach { (categoryKey, items) ->
                         item {

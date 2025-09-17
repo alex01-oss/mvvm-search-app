@@ -5,18 +5,15 @@ import android.provider.Settings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,14 +27,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.core.ui.components.loading.LoadingScreen
+import com.loc.searchapp.feature.shared.components.LoadingScreen
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
+import com.loc.searchapp.feature.product_details.viewmodel.DetailsViewModel
 import com.loc.searchapp.feature.shared.model.AuthState
 import com.loc.searchapp.feature.shared.network.NetworkStatus
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.feature.shared.viewmodel.ConnectivityViewModel
-import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.home.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import com.loc.searchapp.navigation.components.BottomNavigation
@@ -47,7 +45,6 @@ import com.loc.searchapp.navigation.graph.homeScreens
 import com.loc.searchapp.navigation.graph.postScreens
 import com.loc.searchapp.navigation.graph.settingsScreens
 import com.loc.searchapp.navigation.utils.navigateToTab
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProductsNavigator(
@@ -58,6 +55,7 @@ fun ProductsNavigator(
     val productViewModel: ProductViewModel = hiltViewModel()
     val homeViewModel: HomeViewModel = hiltViewModel()
     val postViewModel: PostViewModel = hiltViewModel()
+    val detailsViewModel: DetailsViewModel = hiltViewModel()
 
     val authState by authViewModel.authState.collectAsState()
 
@@ -122,7 +120,17 @@ fun ProductsNavigator(
                     selected = selectedItem,
                     onItemClick = { index ->
                         when (index) {
-                            0 -> navigateToTab(navController, Route.HomeScreen.route)
+                            0 -> {
+                                while (navController.currentDestination?.route?.startsWith(Route.SearchScreen.route) == true) {
+                                    navController.popBackStack()
+                                }
+                                navController.navigate(Route.HomeScreen.route) {
+                                    popUpTo(Route.HomeScreen.route) {
+                                        inclusive = false
+                                    }
+                                    launchSingleTop = true
+                                }
+                            }
                             1 -> navigateToTab(navController, Route.SearchScreen.route)
                             2 -> navigateToTab(navController, Route.CartScreen.route)
                             3 -> navigateToTab(navController, Route.AccountScreen.route)
@@ -146,6 +154,7 @@ fun ProductsNavigator(
                     productViewModel,
                     homeViewModel,
                     postViewModel,
+                    detailsViewModel,
                 )
             }
 
@@ -181,6 +190,7 @@ fun NavGraphBuilder.mainNavGraph(
     productViewModel: ProductViewModel,
     homeViewModel: HomeViewModel,
     postViewModel: PostViewModel,
+    detailsViewModel: DetailsViewModel,
 ) {
     homeScreens(
         navController,
@@ -188,6 +198,7 @@ fun NavGraphBuilder.mainNavGraph(
         productViewModel,
         homeViewModel,
         postViewModel,
+        detailsViewModel,
     )
     authScreens(
         navController,

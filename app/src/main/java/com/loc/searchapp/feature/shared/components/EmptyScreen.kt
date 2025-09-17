@@ -1,4 +1,4 @@
-package com.loc.searchapp.core.ui.components.common
+package com.loc.searchapp.feature.shared.components
 
 import android.content.Context
 import androidx.compose.animation.core.animateFloatAsState

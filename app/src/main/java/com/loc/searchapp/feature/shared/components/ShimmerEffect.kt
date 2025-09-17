@@ -1,4 +1,4 @@
-package com.loc.searchapp.core.ui.components.loading
+package com.loc.searchapp.feature.shared.components
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat

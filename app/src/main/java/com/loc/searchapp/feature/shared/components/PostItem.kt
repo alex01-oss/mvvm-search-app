@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
+import com.loc.searchapp.core.data.remote.dto.PostResponse
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
@@ -38,14 +38,14 @@ import com.loc.searchapp.core.utils.Constants.BASE_URL
 
 @Composable
 fun PostItem(
-    post: Post,
+    post: PostResponse,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onDeleteClick: () -> Unit,
     isAdmin: Boolean = false,
     authorName: String? = null,
 ) {
-    val imageUrl = "$BASE_URL${post.imageUrl}"
+    val imageUrl = "$BASE_URL${post.image}"
     val typography = MaterialTheme.typography
 
     val fallback = stringResource(id = R.string.author_fallback, post.userId)
@@ -62,7 +62,7 @@ fun PostItem(
             modifier = Modifier
                 .padding(MediumPadding1)
         ) {
-            if (post.imageUrl.isNotEmpty()) {
+            if (post.image?.isNotEmpty() == true ) {
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = post.title,

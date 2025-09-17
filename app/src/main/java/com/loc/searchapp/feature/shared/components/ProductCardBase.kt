@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,36 +25,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.catalog.Product
+import com.loc.searchapp.core.data.remote.dto.Product
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding2
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 
 @Composable
 fun ProductCardBase(
     modifier: Modifier = Modifier,
     product: Product,
-    isInCart: Boolean,
-    showCartActions: Boolean = true,
     onClick: () -> Unit = {},
     onAdd: () -> Unit = {},
-    onRemove: () -> Unit = {}
+    onRemove: () -> Unit = {},
+    inProgress: Set<Int>,
+    buttonStates: Map<Int, Boolean>
 ) {
     val context = LocalContext.current
     val imageUrl = "$BASE_URL${product.images}"
+    val isInCart = buttonStates[product.id] ?: product.isInCart
 
     Row(
         modifier = modifier
             .clickable { onClick() }
             .fillMaxWidth()
-            .clip(RoundedCornerShape(SmallPadding2))
+            .clip(RoundedCornerShape(StrongCorner))
             .background(MaterialTheme.colorScheme.surface)
             .padding(BasePadding)
     ) {
@@ -159,22 +162,40 @@ fun ProductCardBase(
             }
         }
 
-        if (showCartActions) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(end = SmallPadding)
-            ) {
-                if (isInCart) {
-                    IconButton(onClick = onRemove) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(end = SmallPadding)
+        ) {
+            if (isInCart) {
+                IconButton(
+                    onClick = onRemove,
+                    enabled = product.id !in inProgress
+                ) {
+                    if (product.id in inProgress) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
                         Icon(
                             painterResource(id = R.drawable.delete),
                             contentDescription = stringResource(id = R.string.delete),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                } else {
-                    IconButton(onClick = onAdd) {
+                }
+            } else {
+                IconButton(
+                    onClick = onAdd,
+                    enabled = product.id !in inProgress
+                ) {
+                    if (product.id in inProgress) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
                         Icon(
                             painterResource(id = R.drawable.add_shopping_cart),
                             contentDescription = stringResource(id = R.string.add_to_cart),

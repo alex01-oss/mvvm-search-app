@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>fullname</w>
+      <w>placeables</w>
       <w>snackbar</w>
       <w>taile</w>
     </words>

@@ -10,17 +10,8 @@ class UpdateUser @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        fullname: String,
-        email: String,
-        phone: String,
-        password: String?
+        request: UpdateUserRequest
     ): Response<UserResponse> {
-        val updateUserRequest = UpdateUserRequest(
-            fullname = fullname,
-            email = email,
-            phone = phone,
-            password = password
-        )
-        return authRepository.updateUser(updateUserRequest)
+        return authRepository.updateUser(request)
     }
 }

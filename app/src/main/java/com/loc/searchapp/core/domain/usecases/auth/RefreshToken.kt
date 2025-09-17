@@ -1,5 +1,6 @@
 package com.loc.searchapp.core.domain.usecases.auth
 
+import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenResponse
 import com.loc.searchapp.core.domain.repository.AuthRepository
 import retrofit2.Response
@@ -9,8 +10,8 @@ class RefreshToken @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        refreshToken: String
+        request: RefreshTokenRequest
     ): Response<RefreshTokenResponse> {
-        return authRepository.refresh(refreshToken)
+        return authRepository.refresh(request)
     }
 }

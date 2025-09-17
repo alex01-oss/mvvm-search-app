@@ -9,7 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

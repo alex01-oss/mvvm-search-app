@@ -85,7 +85,7 @@ fun PostEditorScreen(
                 val post = postEditorState.post
                 formState = formState.copy(
                     title = post.title,
-                    imageUrl = post.imageUrl
+                    imageUrl = post.image
                 )
                 richTextState.setHtml(post.content)
             }
@@ -132,7 +132,7 @@ fun PostEditorScreen(
 
     if (showImagePicker) {
         imagePickerLauncher.launch("image/*")
-        showImagePicker = false
+//        showImagePicker = false
     }
 
     if (showErrorDialog) {

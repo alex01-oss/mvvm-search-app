@@ -1,6 +1,7 @@
 package com.loc.searchapp.core.data.remote.dto
 
-import com.loc.searchapp.core.domain.model.catalog.Product
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,32 +15,44 @@ data class CatalogDto(
 )
 
 @Serializable
-data class CatalogItemDetailedResponse(
-    val item: CatalogItemResponse,
-    val bond: BondResponse?,
-    val machines: List<MachineResponse>
+data class DetailsData(
+    val item: Product,
+    val bonds: List<Bond>,
+    val machines: List<EquipmentModel> = emptyList(),
+    val mounting: Mounting? = null
 )
 
+@Parcelize
 @Serializable
-data class CatalogItemResponse(
+data class Product(
+    val id: Int,
     val code: String,
-    val shape: String?,
-    val dimensions: String?,
-    val images: String?,
-    @SerialName("name_bond") val nameBond: String?,
-    @SerialName("grid_size") val gridSize: String?,
-    @SerialName("is_in_cart") val isInCart: Boolean
-)
+    val shape: String,
+    val dimensions: String,
+    val images: String,
+    @SerialName("name_bonds") val nameBonds: List<String> = emptyList(),
+    @SerialName("grid_size") val gridSize: String = "",
+    val mounting: Mounting? = null,
+    @SerialName("is_in_cart") val isInCart: Boolean = false
+): Parcelable
+
+@Parcelize
+@Serializable
+data class Mounting(
+    val mm: String
+): Parcelable
 
 @Serializable
-data class BondResponse(
+@Parcelize
+data class Bond(
     @SerialName("name_bond") val nameBond: String,
     @SerialName("bond_description") val bondDescription: String,
     @SerialName("bond_cooling") val bondCooling: String
-)
+): Parcelable
 
+@Parcelize
 @Serializable
-data class MachineResponse(
-    @SerialName("name_equipment") val nameEquipment: String,
-    @SerialName("name_producer") val nameProducer: String
-)
+data class EquipmentModel(
+    val model: String,
+    @SerialName("name_producer") val name: String,
+): Parcelable

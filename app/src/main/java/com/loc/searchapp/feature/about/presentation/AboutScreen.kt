@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.core.net.toUri
 import com.loc.searchapp.BuildConfig
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.AboutLogoSize
 import com.loc.searchapp.core.ui.values.Dimens.AboutTextWidth
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding

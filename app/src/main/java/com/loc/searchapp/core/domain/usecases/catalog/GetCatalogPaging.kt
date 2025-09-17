@@ -3,7 +3,7 @@ package com.loc.searchapp.core.domain.usecases.catalog
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.loc.searchapp.core.domain.model.catalog.Product
+import com.loc.searchapp.core.data.remote.dto.Product
 import com.loc.searchapp.core.domain.repository.CatalogRepository
 import com.loc.searchapp.core.utils.CatalogPagingSource
 import com.loc.searchapp.core.utils.FilterParams
@@ -17,7 +17,7 @@ class GetCatalogPaging @Inject constructor(
     operator fun invoke(
         search: SearchParams = SearchParams(),
         filters: FilterParams = FilterParams(),
-        categoryId: Int = 1,
+        categoryId: Int,
         itemsPerPage: Int = 8,
     ): Flow<PagingData<Product>> {
         return Pager(

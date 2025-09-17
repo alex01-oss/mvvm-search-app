@@ -1,5 +1,7 @@
 package com.loc.searchapp.navigation.graph
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -15,7 +17,7 @@ import com.loc.searchapp.feature.product_details.viewmodel.DetailsViewModel
 import com.loc.searchapp.feature.search.presentation.SearchScreen
 import com.loc.searchapp.feature.search.viewmodel.SearchViewModel
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.home.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 import com.loc.searchapp.navigation.utils.navigateToTab
@@ -26,6 +28,7 @@ fun NavGraphBuilder.homeScreens(
     productViewModel: ProductViewModel,
     homeViewModel: HomeViewModel,
     postViewModel: PostViewModel,
+    detailsViewModel: DetailsViewModel,
 ) {
     composable(route = Route.HomeScreen.route) {
         HomeScreen(
@@ -35,16 +38,25 @@ fun NavGraphBuilder.homeScreens(
             onCategoryClick = { categoryId ->
                 navigateToTab(navController, Route.SearchScreen.createRoute(categoryId))
             },
-            onPostClick = { post ->
-                navController.navigate(Route.PostDetailedScreen.createRoute(post.id))
+            onPostClick = { id ->
+                navController.navigate(Route.PostDetailedScreen.createRoute(id))
             },
             onAvatarClick = {
                 navigateToTab(navController, Route.AccountScreen.route)
             },
+            onAllPostsClick = {
+                navigateToTab(navController, Route.PostsScreen.route)
+            },
         )
     }
 
-    composable(route = Route.SearchScreen.route) {
+    composable(
+        route = Route.SearchScreen.route + "?category_id={categoryId}",
+        arguments = listOf(navArgument("categoryId") {
+            type = NavType.IntType
+            defaultValue = 1
+        })
+    ) { backStackEntry ->
         val searchViewModel: SearchViewModel = hiltViewModel()
 
         SearchScreen(
@@ -71,14 +83,16 @@ fun NavGraphBuilder.homeScreens(
 
     composable(
         route = Route.ProductDetailsScreen.route,
-        arguments = listOf(navArgument("id") { type = NavType.IntType })
+        arguments = listOf(navArgument("productId") { type = NavType.IntType })
     ) { backStackEntry ->
-        val id = backStackEntry.arguments?.getInt("id") ?: return@composable
-        val detailsViewModel: DetailsViewModel = hiltViewModel()
+        val productId = backStackEntry.arguments?.getInt("productId") ?: -1
+        val state by detailsViewModel.detailsState.collectAsState()
 
-        detailsViewModel.loadProduct(id)
-
-        val state by detailsViewModel.detailsState
+        LaunchedEffect(productId) {
+            if (productId != -1) {
+                detailsViewModel.loadProduct(productId)
+            }
+        }
 
         DetailsScreen(
             state = state,

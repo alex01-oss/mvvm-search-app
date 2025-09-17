@@ -56,6 +56,7 @@
     <string name="catalog">Каталог</string>
 
     <!-- Search screen -->
+    <string name="filters">Фільтри</string>
     <string name="search_placeholder">Пошук…</string>
     <string name="categories">Категорії</string>
     <string name="no_categories">Категорії відсутні</string>
@@ -71,6 +72,7 @@
     <string name="compatible_machines">Сумісне обладнання</string>
 
     <!-- News/Blog -->
+    <string name="all_posts">Всі пости</string>
     <string name="our_blog">Наш блог</string>
     <string name="blog">Блог</string>
     <string name="last_news">Останні новини</string>

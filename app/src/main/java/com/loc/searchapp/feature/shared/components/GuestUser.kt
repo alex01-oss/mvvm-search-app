@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.AvatarHeight
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.components.common.Avatar
 
 @Composable
 fun GuestUser(

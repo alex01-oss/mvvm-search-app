@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.AppDialog
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.feature.shared.components.AppDialog
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.utils.LanguagePreference

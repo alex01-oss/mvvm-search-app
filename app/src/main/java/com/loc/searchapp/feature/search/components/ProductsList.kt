@@ -1,4 +1,4 @@
-package com.loc.searchapp.core.ui.components.lists
+package com.loc.searchapp.feature.search.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,21 +19,21 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.catalog.Product
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
+import com.loc.searchapp.core.data.remote.dto.Product
+import com.loc.searchapp.feature.shared.components.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.search.components.ProductCard
 import com.loc.searchapp.feature.shared.components.ProductListShimmer
 
 @Composable
 fun ProductsList(
     modifier: Modifier = Modifier,
     items: LazyPagingItems<Product>,
-    onClick: (id: Int) -> Unit,
-    onAdd: (Product) -> Unit,
-    onRemove: (Product) -> Unit,
-    showLoadingOnEmpty: Boolean = true
+    onClick: (Int) -> Unit,
+    onAdd: (Int) -> Unit,
+    onRemove: (Int) -> Unit,
+    inProgress: Set<Int>,
+    buttonStates: Map<Int, Boolean>
 ) {
     when (val state = items.loadState.refresh) {
         is LoadState.Error -> {
@@ -41,10 +41,7 @@ fun ProductsList(
             EmptyScreen(message = stringResource(R.string.error, errorMessage))
         }
 
-        LoadState.Loading -> {
-            if (showLoadingOnEmpty) ProductListShimmer()
-            else EmptyScreen(message = stringResource(id = R.string.start_searching))
-        }
+        LoadState.Loading -> ProductListShimmer()
 
         is LoadState.NotLoading -> {
             if (items.itemCount == 0 ) {
@@ -61,8 +58,10 @@ fun ProductsList(
                             ProductCard(
                                 product = product,
                                 onClick = { onClick(product.id) },
-                                onAdd = { onAdd(product) },
-                                onRemove = { onRemove(product) },
+                                onAdd = { onAdd(product.id) },
+                                onRemove = { onRemove(product.id) },
+                                inProgress = inProgress,
+                                buttonStates = buttonStates
                             )
                         }
                     }

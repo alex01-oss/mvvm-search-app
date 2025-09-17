@@ -3,6 +3,10 @@ package com.loc.searchapp.feature.shared.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
+import com.loc.searchapp.core.data.remote.dto.LoginRequest
+import com.loc.searchapp.core.data.remote.dto.LogoutRequest
+import com.loc.searchapp.core.data.remote.dto.RegisterRequest
+import com.loc.searchapp.core.data.remote.dto.UpdateUserRequest
 import com.loc.searchapp.core.domain.usecases.auth.AuthUseCases
 import com.loc.searchapp.feature.shared.model.AuthEvent
 import com.loc.searchapp.feature.shared.model.AuthState
@@ -80,7 +84,8 @@ class AuthViewModel @Inject constructor(
     private suspend fun handleLogin(email: String, password: String) {
         _authState.value = AuthState.Loading
         try {
-            val response = authUseCases.loginUser(email, password)
+            val request = LoginRequest(email, password)
+            val response = authUseCases.loginUser(request)
             if (response.isSuccessful) {
                 val data = response.body()
                 if (data?.accessToken.isNullOrBlank() || data.refreshToken.isBlank()) {
@@ -117,7 +122,8 @@ class AuthViewModel @Inject constructor(
     private suspend fun handleRegister(fullname: String, email: String, phone: String, password: String) {
         _authState.value = AuthState.Loading
         try {
-            val response = authUseCases.registerUser(fullname, email, phone, password)
+            val request = RegisterRequest(fullname, email, phone, password)
+            val response = authUseCases.registerUser(request)
             if (response.isSuccessful) {
                 val data = response.body()
 
@@ -155,12 +161,14 @@ class AuthViewModel @Inject constructor(
     private suspend fun handleUpdateUser(event: AuthEvent.UpdateUser) {
         _authState.value = AuthState.Loading
         try {
-            val response = authUseCases.updateUser(
+            val request = UpdateUserRequest(
                 fullname = event.fullname,
                 email = event.email,
                 phone = event.phone,
                 password = event.newPassword
             )
+
+            val response = authUseCases.updateUser(request)
 
             if (response.isSuccessful) {
                 val updatedUser = response.body()?.user
@@ -196,7 +204,8 @@ class AuthViewModel @Inject constructor(
             val refreshToken = userPreferences.getRefreshToken()
             if (!refreshToken.isNullOrEmpty()) {
                 try {
-                    authUseCases.logoutUser(refreshToken)
+                    val request = LogoutRequest(refreshToken)
+                    authUseCases.logoutUser(request)
                 } catch (_: Exception) {}
             }
         } finally {

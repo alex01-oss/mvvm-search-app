@@ -1,6 +1,8 @@
 package com.loc.searchapp.core.data.remote.authenticator
 
+import androidx.annotation.OptIn
 import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
 import com.loc.searchapp.core.data.remote.api.AuthApi
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
@@ -37,6 +39,7 @@ class TokenAuthenticator @Inject constructor(
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun refreshTokenAndRetry(response: Response, refreshToken: String): Request? {
         val currentToken = runBlocking { userPreferences.getAccessToken() }
         val requestToken = response.request.header("Authorization")?.removePrefix("Bearer ")

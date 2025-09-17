@@ -8,7 +8,9 @@ import retrofit2.Response
 class CreatePost(
     private val repository: PostsRepository
 ) {
-    suspend operator fun invoke(request: CreatePostRequest): Response<PostResponse> {
+    suspend operator fun invoke(
+        request: CreatePostRequest
+    ): Response<PostResponse> {
         return repository.createPost(request)
     }
 }

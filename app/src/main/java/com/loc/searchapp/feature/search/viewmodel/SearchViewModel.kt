@@ -2,13 +2,13 @@ package com.loc.searchapp.feature.search.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.loc.searchapp.core.data.remote.dto.FiltersResponse
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.core.utils.FilterParams
-import com.loc.searchapp.feature.search.model.SearchEvent
 import com.loc.searchapp.feature.search.model.SearchState
 import com.loc.searchapp.feature.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,9 +24,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(SearchState())
+    private val initialCategoryId: Int = savedStateHandle["categoryId"] ?: 1
+    private val _state = mutableStateOf(SearchState(categoryId = initialCategoryId))
     val state: State<SearchState> = _state
 
     private val _filtersState = MutableStateFlow<UiState<FiltersResponse>>(UiState.Loading)
@@ -39,24 +41,33 @@ class SearchViewModel @Inject constructor(
 
     init {
         loadFilters()
+        loadCatalog()
     }
 
     private fun loadFilters() {
         viewModelScope.launch {
             try {
-                val filters = catalogUseCases.getFilters()
-
-                _filtersState.value =
-                    if (filters.bonds.isEmpty() && filters.grids.isEmpty() && filters.mountings.isEmpty()) {
-                        UiState.Empty
-                    } else {
-                        UiState.Success(filters)
+                val res = catalogUseCases.getFilters(_state.value.categoryId)
+                if (res.isSuccessful) {
+                    val filters = res.body()
+                    if (filters != null) {
+                        _filtersState.value = if (
+                            filters.bonds.isEmpty() &&
+                            filters.grids.isEmpty() &&
+                            filters.mountings.isEmpty()
+                        ) UiState.Empty else UiState.Success(filters)
                     }
-
+                } else {
+                    _filtersState.value = UiState.Error("Error loading filters: ${res.code()}")
+                }
             } catch (e: Exception) {
                 _filtersState.value = UiState.Error(e.localizedMessage ?: "Error loading filters")
             }
         }
+    }
+
+    private fun loadCatalog() {
+        _searchFlow.value = _state.value
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

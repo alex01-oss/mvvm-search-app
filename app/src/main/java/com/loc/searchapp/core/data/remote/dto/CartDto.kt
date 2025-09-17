@@ -1,8 +1,16 @@
 package com.loc.searchapp.core.data.remote.dto
 
-import com.loc.searchapp.core.domain.model.catalog.CartItem
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
+@Parcelize
+data class CartItem(
+    val product: Product,
+    val quantity: Int?,
+): Parcelable
 @Serializable
 data class CartResponse(
     val cart: List<CartItem>
@@ -15,5 +23,6 @@ data class ItemCartResponse(
 
 @Serializable
 data class ItemCartRequest(
+    @SerialName("product_id")
     val id: Int
 )

@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,10 +32,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
-import com.loc.searchapp.core.ui.components.lists.ProductsList
+import com.loc.searchapp.feature.shared.components.SharedTopBar
+import com.loc.searchapp.feature.search.components.ProductsList
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.feature.search.components.FiltersBottomSheet
 import com.loc.searchapp.feature.search.components.SearchBottomSheet
 import com.loc.searchapp.feature.search.viewmodel.SearchViewModel
@@ -42,7 +45,7 @@ import com.loc.searchapp.feature.shared.viewmodel.ProductViewModel
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    navigateToDetails: (id: Int) -> Unit,
+    navigateToDetails: (Int) -> Unit,
     viewModel: SearchViewModel,
     productViewModel: ProductViewModel,
 ) {
@@ -75,43 +78,63 @@ fun SearchScreen(
                     .padding(horizontal = MediumPadding1)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = MediumPadding1),
+                    horizontalArrangement = Arrangement.spacedBy(MediumPadding1)
                 ) {
                     Button(
                         onClick = { showSearchSheet = true },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors()
+                        shape = RoundedCornerShape(StrongCorner),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.weight(1f)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                            contentDescription = stringResource(id = R.string.search),
+                            modifier = Modifier.size(18.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Пошук")
+                        Text(
+                            text = stringResource(id = R.string.search),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     }
 
                     OutlinedButton(
                         onClick = { showFiltersSheet = true },
+                        shape = RoundedCornerShape(StrongCorner),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Tune,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                            contentDescription = stringResource(id = R.string.filters),
+                            modifier = Modifier.size(18.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Фільтри")
+                        Text(
+                            text = stringResource(id = R.string.filters),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
 
                 ProductsList(
                     items = lazyProducts,
-                    onClick = navigateToDetails,
-                    onAdd = { productViewModel.addToCart(it.id) },
-                    onRemove = { productViewModel.removeFromCart(it.id) },
+                    onClick = { id -> navigateToDetails(id) },
+                    onAdd = { id -> productViewModel.addToCart(id) },
+                    onRemove = { id -> productViewModel.removeFromCart(id) },
+                    inProgress = productViewModel.inProgress.collectAsState().value,
+                    buttonStates = productViewModel.buttonStates.collectAsState().value
                 )
+
             }
 
             if (showSearchSheet) {

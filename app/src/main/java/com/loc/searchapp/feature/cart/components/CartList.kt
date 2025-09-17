@@ -1,4 +1,4 @@
-package com.loc.searchapp.core.ui.components.lists
+package com.loc.searchapp.feature.cart.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,20 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.catalog.CartItem
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
+import com.loc.searchapp.core.data.remote.dto.CartResponse
+import com.loc.searchapp.feature.shared.components.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.feature.cart.components.CartItemCard
 import com.loc.searchapp.feature.shared.components.ProductListShimmer
 import com.loc.searchapp.feature.shared.model.UiState
+import kotlin.Int
 
 
 @Composable
 fun CartList(
-    state: UiState<List<CartItem>>,
+    state: UiState<CartResponse>,
     modifier: Modifier = Modifier,
     onClick: (id: Int) -> Unit,
     onRemove: (id: Int) -> Unit,
+    inProgress: Set<Int>,
+    buttonStates: Map<Int, Boolean>
 ) {
     when(state) {
         UiState.Empty -> {
@@ -40,11 +42,13 @@ fun CartList(
                 verticalArrangement = Arrangement.spacedBy(MediumPadding1),
                 contentPadding = PaddingValues(top = MediumPadding1)
             ) {
-                items(state.data) { cartItem ->
+                items(state.data.cart) { cartItem ->
                     CartItemCard(
                         onClick = { onClick(cartItem.product.id) },
                         onRemove = { onRemove(cartItem.product.id) },
-                        cartItem = cartItem
+                        cartItem = cartItem,
+                        inProgress = inProgress,
+                        buttonStates = buttonStates
                     )
                 }
             }

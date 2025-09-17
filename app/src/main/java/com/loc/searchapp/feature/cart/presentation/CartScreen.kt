@@ -19,9 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
-import com.loc.searchapp.core.ui.components.lists.CartList
-import com.loc.searchapp.core.ui.components.loading.LoadingScreen
+import com.loc.searchapp.feature.shared.components.SharedTopBar
+import com.loc.searchapp.feature.cart.components.CartList
+import com.loc.searchapp.feature.shared.components.LoadingScreen
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.feature.shared.components.GuestUser
@@ -59,11 +59,8 @@ fun CartScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    start = MediumPadding1,
-                    end = MediumPadding1
-                ),
+                .padding(top = paddingValues.calculateTopPadding())
+                .padding(horizontal = MediumPadding1),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (authState) {
@@ -73,6 +70,8 @@ fun CartScreen(
                             state = cartState,
                             onClick = { id -> navigateToDetails(id) },
                             onRemove = { id -> viewModel.removeFromCart(id) },
+                            inProgress = viewModel.inProgress.collectAsState().value,
+                            buttonStates = viewModel.buttonStates.collectAsState().value
                         )
                     }
                 }

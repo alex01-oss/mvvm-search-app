@@ -1,6 +1,5 @@
 package com.loc.searchapp.core.data.remote.dto
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -36,7 +35,7 @@ sealed class FilterItem {
 
 @Serializable
 data class FiltersResponse(
-    val bonds: List<FilterItem.Bond>,
-    val grids: List<FilterItem.Grid>,
-    val mountings: List<FilterItem.Mounting>
+    val bonds: List<FilterItem.Bond> = emptyList(),
+    val grids: List<FilterItem.Grid> = emptyList(),
+    val mountings: List<FilterItem.Mounting> = emptyList()
 )

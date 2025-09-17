@@ -8,15 +8,14 @@ sealed class Route(
     data object HomeScreen : Route(route = "homeScreen")
 
     data object SearchScreen : Route(route = "search_screen") {
-        val routeWithArgs: String = "$route?category_id={categoryId}"
-        fun createRoute(categoryId: Int = 1): String = "$route?category_id=$categoryId"
+        fun createRoute(categoryId: Int): String = "$route?category_id=$categoryId"
     }
 
     data object CartScreen : Route(route = "cartScreen")
     data object AccountScreen : Route(route = "accountScreen")
 
-    data object ProductDetailsScreen : Route(route = "catalogDetailsScreen/{id}") {
-        fun createRoute(id: Int) = "catalogDetailsScreen/$id"
+    data object ProductDetailsScreen : Route(route = "catalogDetailsScreen/{productId}") {
+        fun createRoute(productId: Int) = "catalogDetailsScreen/$productId"
     }
 
     data object AppStartNavigation : Route(route = "appStartNavigation")

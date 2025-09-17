@@ -24,8 +24,8 @@ import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
 @Composable
 fun EquipmentRow(
-    nameEquipment: String,
-    nameProducer: String,
+    model: String,
+    name: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -45,13 +45,13 @@ fun EquipmentRow(
 
         Column {
             Text(
-                text = nameEquipment,
+                text = model,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
-                text = nameProducer,
+                text = name,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )

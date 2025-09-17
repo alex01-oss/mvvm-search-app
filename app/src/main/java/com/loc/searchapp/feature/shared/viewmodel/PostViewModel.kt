@@ -6,7 +6,6 @@ import com.loc.searchapp.core.data.remote.dto.CreatePostRequest
 import com.loc.searchapp.core.data.remote.dto.EditPostRequest
 import com.loc.searchapp.core.data.remote.dto.ImageUploadResponse
 import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.domain.usecases.posts.PostsUseCases
 import com.loc.searchapp.feature.post_editor.model.PostEditorState
 import com.loc.searchapp.feature.shared.model.UiState
@@ -26,14 +25,14 @@ class PostViewModel @Inject constructor(
     private val postsUseCases: PostsUseCases
 ) : ViewModel() {
 
-    private val _postsState = MutableStateFlow<UiState<List<Post>>>(UiState.Loading)
-    val postsState: StateFlow<UiState<List<Post>>> = _postsState.asStateFlow()
+    private val _postsState = MutableStateFlow<UiState<List<PostResponse>>>(UiState.Loading)
+    val postsState: StateFlow<UiState<List<PostResponse>>> = _postsState.asStateFlow()
 
     private val _postEditorState = MutableStateFlow<PostEditorState>(PostEditorState.CreateMode)
     val postEditorState: StateFlow<PostEditorState> = _postEditorState.asStateFlow()
 
-    private val _postDetailsState = MutableStateFlow<UiState<Post>>(UiState.Loading)
-    val postDetailsState: StateFlow<UiState<Post>> = _postDetailsState.asStateFlow()
+    private val _postDetailsState = MutableStateFlow<UiState<PostResponse>>(UiState.Loading)
+    val postDetailsState: StateFlow<UiState<PostResponse>> = _postDetailsState.asStateFlow()
 
     private val _postActionState = MutableStateFlow<UiState<Unit>>(UiState.Empty)
     val postActionState: StateFlow<UiState<Unit>> = _postActionState.asStateFlow()
@@ -53,7 +52,7 @@ class PostViewModel @Inject constructor(
             try {
                 val response = postsUseCases.getPost(postId)
                 if (response.isSuccessful && response.body() != null) {
-                    _postEditorState.value = PostEditorState.EditMode(response.body()!!.toDomain())
+                    _postEditorState.value = PostEditorState.EditMode(response.body()!!)
                 } else {
                     _postEditorState.value = PostEditorState.Error("Post not found")
                 }
@@ -64,13 +63,13 @@ class PostViewModel @Inject constructor(
         resetPostActionState()
     }
 
-    fun getPostById(postId: Int?) {
+    fun getPostById(postId: Int) {
         viewModelScope.launch {
             _postDetailsState.value = UiState.Loading
             try {
                 val response = postsUseCases.getPost(postId)
                 if (response.isSuccessful && response.body() != null) {
-                    _postDetailsState.value = UiState.Success(response.body()!!.toDomain())
+                    _postDetailsState.value = UiState.Success(response.body()!!)
                 } else {
                     _postDetailsState.value = UiState.Error("Post not found")
                 }
@@ -86,7 +85,7 @@ class PostViewModel @Inject constructor(
             try {
                 val response = postsUseCases.getAllPosts()
                 if (response.isSuccessful) {
-                    val posts = response.body()?.map { it.toDomain() }.orEmpty()
+                    val posts = response.body().orEmpty()
                     _postsState.value = if (posts.isEmpty()) UiState.Empty else UiState.Success(posts)
                 } else {
                     _postsState.value = UiState.Error("Failed to load posts")
@@ -149,18 +148,6 @@ class PostViewModel @Inject constructor(
     private fun prepareFilePart(partName: String, file: File): MultipartBody.Part {
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
-    }
-
-    private fun PostResponse.toDomain(): Post {
-        return Post(
-            id = this.id,
-            title = this.title,
-            content = this.content,
-            imageUrl = this.image.toString(),
-            createdAt = this.createdAt,
-            updatedAt = this.updatedAt,
-            userId = this.userId,
-        )
     }
 
     fun resetPostActionState() {

@@ -15,7 +15,8 @@ import com.loc.searchapp.navigation.presentation.ProductsNavigator
 @Composable
 fun NavGraph(
     startDestination: String,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    onBoardingViewModel: OnBoardingViewModel
 ) {
     val navController = rememberNavController()
 
@@ -28,11 +29,9 @@ fun NavGraph(
             startDestination = Route.OnBoardingScreen.route
         ) {
             composable(route = Route.OnBoardingScreen.route) {
-                val viewModel: OnBoardingViewModel = hiltViewModel()
-
                 OnBoardingScreen(
                     event = { event ->
-                        viewModel.onEvent(event)
+                        onBoardingViewModel.onEvent(event)
 
                         when (event) {
                             OnBoardingEvent.SaveAppEntry -> {

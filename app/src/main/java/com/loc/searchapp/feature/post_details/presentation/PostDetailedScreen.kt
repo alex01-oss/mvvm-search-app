@@ -26,8 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
+import com.loc.searchapp.core.data.remote.dto.PostResponse
+import com.loc.searchapp.feature.shared.components.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
@@ -45,8 +45,8 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 @Composable
 fun PostDetailedScreen(
     modifier: Modifier = Modifier,
-    state: UiState<Post>,
-    onEditClick: (Post) -> Unit,
+    state: UiState<PostResponse>,
+    onEditClick: (PostResponse) -> Unit,
     onBackClick: () -> Unit,
     authViewModel: AuthViewModel,
     authorName: String? = null
@@ -130,9 +130,9 @@ fun PostDetailedScreen(
 
                     Spacer(Modifier.height(MediumPadding1))
 
-                    if (post.imageUrl.isNotEmpty()) {
+                    if (post.image?.isNotEmpty() == true) {
                         AsyncImage(
-                            model = "$BASE_URL${post.imageUrl}",
+                            model = "$BASE_URL${post.image}",
                             contentDescription = post.title,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier

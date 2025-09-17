@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.Category
-import com.loc.searchapp.core.ui.components.common.EmptyScreen
+import com.loc.searchapp.feature.shared.components.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner

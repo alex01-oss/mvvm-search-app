@@ -8,7 +8,9 @@ import retrofit2.Response
 class UploadImage(
     private val repository: PostsRepository
 ) {
-    suspend operator fun invoke(file: MultipartBody.Part): Response<ImageUploadResponse> {
+    suspend operator fun invoke(
+        file: MultipartBody.Part
+    ): Response<ImageUploadResponse> {
         return repository.uploadImage(file)
     }
 }

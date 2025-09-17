@@ -30,8 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.Avatar
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.feature.shared.components.Avatar
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.AvatarHeight
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize

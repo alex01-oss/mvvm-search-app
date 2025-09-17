@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.loc.searchapp.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.loc.searchapp.feature.shared.model.AuthState
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.navigation.graph.NavGraph
@@ -13,7 +14,8 @@ import com.loc.searchapp.navigation.graph.Route
 @Composable
 fun MainContent(
     mainViewModel: MainViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    onBoardingViewModel: OnBoardingViewModel
 ) {
     val startDestination = mainViewModel.startDestination
     val authState by authViewModel.authState.collectAsState()
@@ -33,7 +35,8 @@ fun MainContent(
     if (shouldShowContent) {
         NavGraph(
             startDestination = startDestination,
-            authViewModel = authViewModel
+            authViewModel = authViewModel,
+            onBoardingViewModel = onBoardingViewModel
         )
     }
 }

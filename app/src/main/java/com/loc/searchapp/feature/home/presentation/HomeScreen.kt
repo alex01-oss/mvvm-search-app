@@ -12,11 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -34,8 +41,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
@@ -48,7 +55,7 @@ import com.loc.searchapp.feature.home.components.YouTubeVideoSlider
 import com.loc.searchapp.feature.shared.network.NetworkObserver
 import com.loc.searchapp.feature.shared.network.NetworkStatus
 import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.shared.viewmodel.HomeViewModel
+import com.loc.searchapp.feature.home.viewmodel.HomeViewModel
 import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
 
 @Composable
@@ -58,8 +65,9 @@ fun HomeScreen(
     postViewModel: PostViewModel,
     viewModel: HomeViewModel,
     onCategoryClick: (Int) -> Unit,
-    onPostClick: (Post) -> Unit,
-    onAvatarClick: () -> Unit
+    onPostClick: (Int) -> Unit,
+    onAvatarClick: () -> Unit,
+    onAllPostsClick: () -> Unit
 ) {
     val categoriesState by viewModel.categoriesState.collectAsState()
     val videoIdsState by viewModel.videoState.collectAsState()
@@ -158,7 +166,6 @@ fun HomeScreen(
                                 top = MediumPadding1,
                                 bottom = ExtraSmallPadding2
                             ),
-                        horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = stringResource(id = R.string.categories),
@@ -183,7 +190,8 @@ fun HomeScreen(
                                 top = MediumPadding1,
                                 bottom = ExtraSmallPadding2
                             ),
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = stringResource(id = R.string.last_news),
@@ -191,7 +199,27 @@ fun HomeScreen(
                             fontSize = TitleSize,
                             color = MaterialTheme.colorScheme.onBackground
                         )
+
+                        TextButton(
+                            onClick = onAllPostsClick,
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.all_posts),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = stringResource(id = R.string.all_posts),
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
                     }
+
                     PostsSlider(
                         state = postsState,
                         onPostClick = onPostClick,
@@ -203,11 +231,7 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(
-                                top = MediumPadding1,
-                                bottom = ExtraSmallPadding2
-                            ),
-                        horizontalArrangement = Arrangement.Center
+                            .padding(MediumPadding1),
                     ) {
                         Text(
                             text = stringResource(id = R.string.our_videos),
@@ -231,7 +255,6 @@ fun HomeScreen(
                                     top = MediumPadding1,
                                     bottom = ExtraSmallPadding2
                                 ),
-                            horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
                                 text = stringResource(id = R.string.social_media),

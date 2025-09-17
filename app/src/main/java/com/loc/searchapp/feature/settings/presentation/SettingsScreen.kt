@@ -28,10 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import com.loc.searchapp.R
+import com.loc.searchapp.core.data.remote.dto.User
 import com.loc.searchapp.core.domain.model.auth.AuthField
-import com.loc.searchapp.core.domain.model.auth.User
-import com.loc.searchapp.core.ui.components.common.AppDialog
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.feature.shared.components.AppDialog
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 import com.loc.searchapp.feature.shared.components.AuthForm
 import com.loc.searchapp.feature.shared.model.AuthEvent
 import com.loc.searchapp.feature.shared.model.AuthState

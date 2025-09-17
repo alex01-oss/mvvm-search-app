@@ -1,6 +1,5 @@
 package com.loc.searchapp.core.data.repository
 
-import android.util.Log
 import com.loc.searchapp.core.data.remote.api.AuthApi
 import com.loc.searchapp.core.data.remote.dto.AuthResponse
 import com.loc.searchapp.core.data.remote.dto.LoginRequest
@@ -19,32 +18,21 @@ class AuthRepositoryImpl(
 ) : AuthRepository {
 
     override suspend fun login(
-        email: String,
-        password: String
+        request: LoginRequest
     ): Response<AuthResponse> {
-        Log.d("AUTH", "About to call API")
-        return api.login(
-            LoginRequest(email, password)
-        )
+        return api.login(request)
     }
 
     override suspend fun register(
-        fullname: String,
-        email: String,
-        phone: String,
-        password: String
+        request: RegisterRequest
     ): Response<AuthResponse> {
-        return api.register(
-            RegisterRequest(fullname, email, phone, password)
-        )
+        return api.register(request)
     }
 
     override suspend fun refresh(
-        refreshToken: String
+        request: RefreshTokenRequest
     ): Response<RefreshTokenResponse> {
-        return api.refresh(
-            RefreshTokenRequest(refreshToken)
-        )
+        return api.refresh(request)
     }
 
     override suspend fun getUser(): Response<UserResponse> {
@@ -52,9 +40,9 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun updateUser(
-        updateUserRequest: UpdateUserRequest
+        request: UpdateUserRequest
     ): Response<UserResponse> {
-        return api.updateUser(updateUserRequest)
+        return api.updateUser(request)
     }
 
     override suspend fun deleteUser(): Response<Unit> {
@@ -62,10 +50,8 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun logout(
-        refreshToken: String
+        request: LogoutRequest
     ): Response<LogoutResponse> {
-        return api.logout(
-            LogoutRequest(refreshToken)
-        )
+        return api.logout(request)
     }
 }

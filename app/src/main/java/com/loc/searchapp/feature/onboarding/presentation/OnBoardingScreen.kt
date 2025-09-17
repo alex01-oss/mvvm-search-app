@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.Page
-import com.loc.searchapp.core.ui.components.common.ProductButton
-import com.loc.searchapp.core.ui.components.common.ProductTextButton
+import com.loc.searchapp.feature.shared.components.ProductButton
+import com.loc.searchapp.feature.shared.components.ProductTextButton
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding2
 import com.loc.searchapp.core.ui.values.Dimens.PageIndicatorWidth
 import com.loc.searchapp.feature.onboarding.components.OnBoardingPage

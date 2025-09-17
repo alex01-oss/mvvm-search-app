@@ -32,12 +32,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.catalog.DetailsData
-import com.loc.searchapp.core.ui.components.common.AppSnackbar
-import com.loc.searchapp.core.ui.components.common.SharedTopBar
+import com.loc.searchapp.core.data.remote.dto.DetailsData
+import com.loc.searchapp.feature.shared.components.AppSnackbar
+import com.loc.searchapp.feature.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
@@ -63,7 +64,7 @@ fun DetailsScreen(
     val addMessage = stringResource(id = R.string.added)
     val removeMessage = stringResource(id = R.string.removed)
 
-    val product = (state as? UiState.Success)?.data?.product
+    val product = (state as? UiState.Success)?.data?.item
 
     fun showSnackbarImmediately(message: String) {
         scope.launch {
@@ -138,7 +139,7 @@ fun DetailsScreen(
 
             is UiState.Success -> {
                 val data = state.data
-                val imageUrl = "$BASE_URL${data.product.images}"
+                val imageUrl = "$BASE_URL${data.item.images}"
 
                 LazyColumn(
                     modifier = modifierWithPadding,
@@ -159,7 +160,7 @@ fun DetailsScreen(
                     card {
                         AsyncImage(
                             model = ImageRequest.Builder(context).data(imageUrl).build(),
-                            contentDescription = data.product.code,
+                            contentDescription = data.item.code,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -181,14 +182,16 @@ fun DetailsScreen(
                             HorizontalDivider(modifier = Modifier.padding(vertical = ExtraSmallPadding))
                         }
 
-                        info(stringResource(id = R.string.code), data.product.code)
-                        info(stringResource(id = R.string.shape), data.product.shape)
-                        info(stringResource(id = R.string.dimensions), data.product.dimensions)
-//                        info(stringResource(id = R.string.bond), data.product.nameBonds)
-                        info(stringResource(id = R.string.grid_size), data.product.gridSize)
+                        info(stringResource(id = R.string.code), data.item.code)
+                        info(stringResource(id = R.string.shape), data.item.shape)
+                        info(stringResource(id = R.string.dimensions), data.item.dimensions)
+                        info(stringResource(id = R.string.grid_size), data.item.gridSize)
+
+                        data.mounting?.let { mounting ->
+                            info(stringResource(id = R.string.fit), mounting.mm)
+                        }
                     }
 
-                    data.bond?.let { bond ->
                         card {
                             Text(
                                 text = stringResource(id = R.string.bond_info),
@@ -197,30 +200,38 @@ fun DetailsScreen(
                                 modifier = Modifier.padding(bottom = SmallPadding)
                             )
 
-                            Text(
-                                text = bond.bondDescription,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-
-                            if (bond.bondCooling.isNotEmpty()) {
-                                HorizontalDivider(modifier = Modifier.padding(vertical = ExtraSmallPadding))
-
+                            data.bonds.forEach { bond ->
                                 Text(
-                                    text = stringResource(id = R.string.cooling_instructions),
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = colorResource(id = R.color.light_red),
-                                    modifier = Modifier.padding(top = SmallPadding, bottom = ExtraSmallPadding)
+                                    text = bond.nameBond,
+                                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.padding(bottom = SmallPadding)
                                 )
 
                                 Text(
-                                    text = bond.bondCooling,
+                                    text = bond.bondDescription,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
+
+                                if (bond.bondCooling.isNotEmpty()) {
+                                    HorizontalDivider(modifier = Modifier.padding(vertical = ExtraSmallPadding))
+
+                                    Text(
+                                        text = stringResource(id = R.string.cooling_instructions),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = colorResource(id = R.color.light_red),
+                                        modifier = Modifier.padding(top = SmallPadding, bottom = ExtraSmallPadding)
+                                    )
+
+                                    Text(
+                                        text = bond.bondCooling,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             }
                         }
-                    }
 
                     if (data.machines.isNotEmpty()) {
                         card {
@@ -232,7 +243,7 @@ fun DetailsScreen(
                             )
 
                             data.machines.forEachIndexed { index, machine ->
-                                EquipmentRow(machine.nameEquipment, machine.producerName)
+                                EquipmentRow(machine.model, machine.name)
                                 if (index < data.machines.size - 1) {
                                     HorizontalDivider(modifier = Modifier.padding(vertical = ExtraSmallPadding))
                                 }

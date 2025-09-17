@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.components.common.Avatar
+import com.loc.searchapp.feature.shared.components.Avatar
 import com.loc.searchapp.core.ui.values.Dimens.AvatarSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopBarPadding

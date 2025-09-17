@@ -36,8 +36,8 @@
     <!-- Item card -->
     <string name="code">Code: </string>
     <string name="shape">Shape: </string>
-    <string name="dimensions">Dimensions: </string>
-    <string name="bond">Bond: </string>
+    <string name="dimensions">Size: </string>
+    <string name="bond">Bonds: </string>
     <string name="grid_size">Grit: </string>
     <string name="fit">Fit: </string>
     <string name="mm">mm.</string>
@@ -56,6 +56,7 @@
     <string name="catalog">Catalog</string>
 
     <!-- Search screen -->
+    <string name="filters">Filters</string>
     <string name="search_placeholder">Search…</string>
     <string name="categories">Categories</string>
     <string name="no_categories">No Categories Yet</string>
@@ -71,6 +72,7 @@
     <string name="compatible_machines">Compatible Machines</string>
 
     <!-- News/Blog -->
+    <string name="all_posts">All posts</string>
     <string name="our_blog">Our Blog</string>
     <string name="blog">Blog</string>
     <string name="last_news">Latest News</string>

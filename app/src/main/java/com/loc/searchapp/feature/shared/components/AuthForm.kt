@@ -24,7 +24,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.auth.AuthField
-import com.loc.searchapp.core.ui.components.common.InlineErrorMessage
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
