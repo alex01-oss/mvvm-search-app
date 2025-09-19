@@ -9,8 +9,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.loc.searchapp.core.ui.theme.SearchAppTheme
 import com.loc.searchapp.core.utils.LanguagePreference
 import com.loc.searchapp.core.utils.LocaleHelper
-import com.loc.searchapp.feature.onboarding.viewmodel.OnBoardingViewModel
-import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.presentation.onboarding.viewmodel.OnBoardingViewModel
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.ui.components.AppBackground
 import dagger.hilt.android.AndroidEntryPoint
 

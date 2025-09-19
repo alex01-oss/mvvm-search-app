@@ -3,10 +3,10 @@ package com.loc.searchapp.navigation.graph
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.loc.searchapp.feature.about.presentation.AboutScreen
-import com.loc.searchapp.feature.language.presentation.LanguageScreen
-import com.loc.searchapp.feature.settings.presentation.SettingsScreen
-import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.presentation.about.presentation.AboutScreen
+import com.loc.searchapp.presentation.language.presentation.LanguageScreen
+import com.loc.searchapp.presentation.settings.presentation.SettingsScreen
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 
 fun NavGraphBuilder.settingsScreens(
     navController: NavController,

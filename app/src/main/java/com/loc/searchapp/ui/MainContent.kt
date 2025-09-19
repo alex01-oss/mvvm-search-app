@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.loc.searchapp.feature.onboarding.viewmodel.OnBoardingViewModel
-import com.loc.searchapp.feature.shared.model.AuthState
-import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.presentation.onboarding.viewmodel.OnBoardingViewModel
+import com.loc.searchapp.presentation.shared.model.AuthState
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.navigation.graph.NavGraph
 import com.loc.searchapp.navigation.graph.Route
 

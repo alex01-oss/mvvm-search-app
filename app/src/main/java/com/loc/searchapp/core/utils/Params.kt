@@ -5,7 +5,10 @@ data class SearchParams(
     val searchShape: String = "",
     val searchDimensions: String = "",
     val searchMachine: String = "",
-)
+) {
+    fun hasAnyValue(): Boolean =
+        listOf(searchCode, searchShape, searchDimensions, searchMachine).any { it.isNotBlank() }
+}
 
 data class FilterParams(
     val bondIds: List<Int> = emptyList(),

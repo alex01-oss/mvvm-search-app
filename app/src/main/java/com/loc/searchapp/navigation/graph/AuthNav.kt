@@ -3,9 +3,9 @@ package com.loc.searchapp.navigation.graph
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.loc.searchapp.feature.login.presentation.LoginScreen
-import com.loc.searchapp.feature.register.presentation.RegisterScreen
-import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.presentation.login.presentation.LoginScreen
+import com.loc.searchapp.presentation.register.presentation.RegisterScreen
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 
 fun NavGraphBuilder.authScreens(
     navController: NavController,

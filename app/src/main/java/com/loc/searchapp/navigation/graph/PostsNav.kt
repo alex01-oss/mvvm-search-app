@@ -8,12 +8,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.loc.searchapp.feature.post_details.presentation.PostDetailedScreen
-import com.loc.searchapp.feature.post_editor.model.PostEditorState
-import com.loc.searchapp.feature.post_editor.presentation.PostEditorScreen
-import com.loc.searchapp.feature.posts.presentation.PostsScreen
-import com.loc.searchapp.feature.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.feature.shared.viewmodel.PostViewModel
+import com.loc.searchapp.presentation.post_details.presentation.PostDetailedScreen
+import com.loc.searchapp.presentation.post_editor.model.PostEditorState
+import com.loc.searchapp.presentation.post_editor.presentation.PostEditorScreen
+import com.loc.searchapp.presentation.posts.presentation.PostsScreen
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
 
 fun NavGraphBuilder.postScreens(
     navController: NavController,
