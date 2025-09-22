@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.User
 import com.loc.searchapp.core.domain.model.auth.AuthField
-import com.loc.searchapp.presentation.shared.components.AppDialog
+import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.components.AuthForm
 import com.loc.searchapp.presentation.shared.model.AuthEvent

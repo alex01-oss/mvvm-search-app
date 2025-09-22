@@ -3,6 +3,9 @@ package com.loc.searchapp.core.utils
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.loc.searchapp.core.data.remote.dto.Product
+import com.loc.searchapp.core.domain.model.catalog.FilterParams
+import com.loc.searchapp.core.domain.model.catalog.PaginationParams
+import com.loc.searchapp.core.domain.model.catalog.SearchParams
 import com.loc.searchapp.core.domain.repository.CatalogRepository
 
 class CatalogPagingSource(

@@ -1,7 +1,7 @@
 package com.loc.searchapp.presentation.search.model
 
-import com.loc.searchapp.core.utils.FilterParams
-import com.loc.searchapp.core.utils.SearchParams
+import com.loc.searchapp.core.domain.model.catalog.FilterParams
+import com.loc.searchapp.core.domain.model.catalog.SearchParams
 
 sealed class SearchEvent {
     data class UpdateSearchQuery(

@@ -1,4 +1,4 @@
-package com.loc.searchapp.core.utils
+package com.loc.searchapp.core.domain.model.catalog
 
 data class SearchParams(
     val searchCode: String = "",

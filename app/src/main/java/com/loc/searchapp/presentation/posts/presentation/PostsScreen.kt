@@ -28,8 +28,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.presentation.shared.components.AppDialog
-import com.loc.searchapp.presentation.shared.components.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostsSpacerSize

@@ -27,7 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.presentation.shared.components.LoadingScreen
+import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.presentation.product_details.viewmodel.DetailsViewModel

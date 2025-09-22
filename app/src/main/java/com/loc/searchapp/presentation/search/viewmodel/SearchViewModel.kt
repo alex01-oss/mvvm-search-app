@@ -1,5 +1,6 @@
 package com.loc.searchapp.presentation.search.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -7,9 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.loc.searchapp.core.data.remote.dto.FiltersResponse
+import com.loc.searchapp.core.domain.model.autocomplete.AutocompleteParams
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
-import com.loc.searchapp.core.utils.FilterParams
-import com.loc.searchapp.core.utils.SearchParams
+import com.loc.searchapp.core.domain.model.catalog.FilterParams
+import com.loc.searchapp.core.domain.model.catalog.SearchParams
+import com.loc.searchapp.core.domain.usecases.autocomplete.AutocompleteUseCases
 import com.loc.searchapp.presentation.search.model.SearchState
 import com.loc.searchapp.presentation.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases,
+    private val autocompleteUseCases: AutocompleteUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -39,6 +43,15 @@ class SearchViewModel @Inject constructor(
     val selectedFilters = _selectedFilters.asStateFlow()
 
     private val _searchFlow = MutableStateFlow<SearchState?>(null)
+
+    private val _autocompleteSuggestions = MutableStateFlow<List<String>>(emptyList())
+    val autocompleteSuggestions = _autocompleteSuggestions.asStateFlow()
+
+    private val _isLoadingAutocomplete = MutableStateFlow(false)
+    val isLoadingAutocomplete = _isLoadingAutocomplete.asStateFlow()
+
+    private val _currentAutocompleteField = MutableStateFlow<String?>(null)
+    val currentAutocompleteField = _currentAutocompleteField.asStateFlow()
 
     init {
         loadFilters()
@@ -115,5 +128,52 @@ class SearchViewModel @Inject constructor(
     fun getCurrentSearchParams(): SearchParams {
         val params = _state.value.searchParams
         return params
+    }
+
+    fun getAutocomplete(query: String, fieldType: String) {
+        if (query.isEmpty()) {
+            _autocompleteSuggestions.value = emptyList()
+            return
+        }
+
+        _currentAutocompleteField.value = fieldType
+        _isLoadingAutocomplete.value = true
+
+        viewModelScope.launch {
+            try {
+                val currentState = _state.value
+                val params = AutocompleteParams(
+                    query = query,
+                    categoryId = currentState.categoryId,
+                    searchCode = if (fieldType != "code") currentState.searchParams.searchCode else null,
+                    searchShape = if (fieldType != "shape") currentState.searchParams.searchShape else null,
+                    searchDimensions = if (fieldType != "dimensions") currentState.searchParams.searchDimensions else null,
+                    searchMachine = if (fieldType != "machine") currentState.searchParams.searchMachine else null,
+                    bondIds = currentState.filterParams.bondIds,
+                    gridSizeIds = currentState.filterParams.gridSizeIds,
+                    mountingIds = currentState.filterParams.mountingIds
+                )
+
+                val suggestions = when (fieldType) {
+                    "code" -> autocompleteUseCases.autocompleteCode(params)
+                    "shape" -> autocompleteUseCases.autocompleteShape(params)
+                    "dimensions" -> autocompleteUseCases.autocompleteDimensions(params)
+                    "machine" -> autocompleteUseCases.autocompleteMachine(params)
+                    else -> emptyList()
+                }
+                _autocompleteSuggestions.value = suggestions
+            } catch (e: Exception) {
+                Log.e("SearchViewModel", "Autocomplete Error", e)
+                _autocompleteSuggestions.value = emptyList()
+            } finally {
+                _isLoadingAutocomplete.value = false
+            }
+        }
+    }
+
+    fun clearAutocomplete() {
+        _autocompleteSuggestions.value = emptyList()
+        _currentAutocompleteField.value = null
+        _isLoadingAutocomplete.value = false
     }
 }

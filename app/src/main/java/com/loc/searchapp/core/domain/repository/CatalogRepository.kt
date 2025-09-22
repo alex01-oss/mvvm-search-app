@@ -6,9 +6,9 @@ import com.loc.searchapp.core.data.remote.dto.Category
 import com.loc.searchapp.core.data.remote.dto.DetailsData
 import com.loc.searchapp.core.data.remote.dto.FiltersResponse
 import com.loc.searchapp.core.data.remote.dto.ItemCartResponse
-import com.loc.searchapp.core.utils.FilterParams
-import com.loc.searchapp.core.utils.PaginationParams
-import com.loc.searchapp.core.utils.SearchParams
+import com.loc.searchapp.core.domain.model.catalog.FilterParams
+import com.loc.searchapp.core.domain.model.catalog.PaginationParams
+import com.loc.searchapp.core.domain.model.catalog.SearchParams
 import retrofit2.Response
 
 interface CatalogRepository {

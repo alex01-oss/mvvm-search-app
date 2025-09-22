@@ -13,15 +13,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -30,15 +28,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.DetailsData
-import com.loc.searchapp.presentation.shared.components.AppSnackbar
-import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
@@ -46,35 +41,35 @@ import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.presentation.product_details.components.EquipmentRow
 import com.loc.searchapp.presentation.product_details.components.ProductInfoRow
+import com.loc.searchapp.presentation.shared.components.CartActionButton
+import com.loc.searchapp.presentation.shared.components.SharedTopBar
+import com.loc.searchapp.presentation.shared.components.notifications.SnackbarManager
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
     state: UiState<DetailsData>,
     onBackClick: () -> Unit,
-    productViewModel: ProductViewModel
+    viewModel: ProductViewModel
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+
+    val snackbarManager = SnackbarManager(
+        scope = rememberCoroutineScope(),
+        snackbarHostState = remember { SnackbarHostState() }
+    )
 
     val addMessage = stringResource(id = R.string.added)
     val removeMessage = stringResource(id = R.string.removed)
 
     val product = (state as? UiState.Success)?.data?.item
 
-    fun showSnackbarImmediately(message: String) {
-        scope.launch {
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short
-            )
-        }
-    }
+    val inProgress by viewModel.inProgress.collectAsState()
+    val buttonStates by viewModel.buttonStates.collectAsState()
+
+    val isInCart = buttonStates[product?.id] ?: product?.isInCart
 
     Scaffold(
         modifier = modifier,
@@ -86,39 +81,22 @@ fun DetailsScreen(
                     onBackClick = onBackClick,
                     showBackButton = true,
                     actions = {
-                        if (product.isInCart) {
-                            IconButton(onClick = {
-                                productViewModel.removeFromCart(product.id)
-                                scope.launch { showSnackbarImmediately(removeMessage) }
-                            }) {
-                                Icon(
-                                    painterResource(id = R.drawable.delete),
-                                    contentDescription = stringResource(id = R.string.delete_from_cart),
-                                    tint = MaterialTheme.colorScheme.onSurface
-                                )
+                        CartActionButton(
+                            isInCart = isInCart == true,
+                            isInProgress = product.id in inProgress,
+                            onAddToCart = {
+                                viewModel.addToCart(product.id)
+                                snackbarManager.show(addMessage)
+                            },
+                            onRemoveFromCart = {
+                                viewModel.removeFromCart(product.id)
+                                snackbarManager.show(removeMessage)
                             }
-                        } else {
-                            IconButton(onClick = {
-                                productViewModel.addToCart(product.id)
-                                scope.launch { showSnackbarImmediately(addMessage) }
-                            }) {
-                                Icon(
-                                    painterResource(id = R.drawable.add_shopping_cart),
-                                    contentDescription = stringResource(id = R.string.add_to_cart),
-                                    tint = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
+                        )
                     }
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { data -> AppSnackbar(data) }
-            )
-        }
     ) { paddingValues ->
         val modifierWithPadding = modifier
             .fillMaxSize()

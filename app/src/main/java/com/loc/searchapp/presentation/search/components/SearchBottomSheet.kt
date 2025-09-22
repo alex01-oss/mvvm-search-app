@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,20 +33,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
-import com.loc.searchapp.core.utils.SearchParams
+import com.loc.searchapp.core.domain.model.catalog.SearchParams
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBottomSheet(
     currentSearchParams: SearchParams,
     onSearch: (SearchParams) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    suggestions: List<String> = emptyList(),
+    isLoadingSuggestion: Boolean = false,
+    currentAutocompleteField: String? = null,
+    onAutocompleteRequest: (String, String) -> Unit = { _, _ -> },
+    onClearAutocomplete: () -> Unit = {}
 ) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var searchFields by remember { mutableStateOf(currentSearchParams) }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            onClearAutocomplete()
+        }
+    }
+
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            onClearAutocomplete()
+            onDismiss()
+        },
         sheetState = bottomSheetState,
     ) {
         Column(
@@ -64,7 +79,10 @@ fun SearchBottomSheet(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                IconButton(onClick = onDismiss) {
+                IconButton(onClick = {
+                    onClearAutocomplete()
+                    onDismiss()
+                }) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = stringResource(R.string.close)
@@ -76,28 +94,60 @@ fun SearchBottomSheet(
                 value = searchFields.searchCode,
                 onValueChange = { searchFields = searchFields.copy(searchCode = it) },
                 label = stringResource(R.string.enter_code),
-                leadingIcon = Icons.Default.Search
+                leadingIcon = Icons.Default.Search,
+                suggestions = if (currentAutocompleteField === "code") suggestions else emptyList(),
+                isLoadingSuggestions = isLoadingSuggestion && currentAutocompleteField === "code",
+                onTextChanged = {query -> onAutocompleteRequest(query, "code") },
+                onSuggestionClick = { suggestion ->
+                    searchFields = searchFields.copy(searchCode = suggestion)
+                    onClearAutocomplete()
+                },
+                fieldType = "code"
             )
 
             SearchTextField(
                 value = searchFields.searchShape,
                 onValueChange = { searchFields = searchFields.copy(searchShape = it) },
                 label = stringResource(R.string.enter_shape),
-                leadingIcon = Icons.Default.Search
+                leadingIcon = Icons.Default.Search,
+                suggestions = if (currentAutocompleteField === "shape") suggestions else emptyList(),
+                isLoadingSuggestions = isLoadingSuggestion && currentAutocompleteField === "shape",
+                onTextChanged = {query -> onAutocompleteRequest(query, "shape") },
+                onSuggestionClick = { suggestion ->
+                    searchFields = searchFields.copy(searchShape = suggestion)
+                    onClearAutocomplete()
+                },
+                fieldType = "shape"
             )
 
             SearchTextField(
                 value = searchFields.searchDimensions,
                 onValueChange = { searchFields = searchFields.copy(searchDimensions = it) },
                 label = stringResource(R.string.enter_dimensions),
-                leadingIcon = Icons.Default.Search
+                leadingIcon = Icons.Default.Search,
+                suggestions = if (currentAutocompleteField === "dimensions") suggestions else emptyList(),
+                isLoadingSuggestions = isLoadingSuggestion && currentAutocompleteField === "dimensions",
+                onTextChanged = {query -> onAutocompleteRequest(query, "dimensions") },
+                onSuggestionClick = { suggestion ->
+                    searchFields = searchFields.copy(searchDimensions = suggestion)
+                    onClearAutocomplete()
+                },
+                fieldType = "dimensions"
             )
 
             SearchTextField(
                 value = searchFields.searchMachine,
                 onValueChange = { searchFields = searchFields.copy(searchMachine = it) },
                 label = stringResource(R.string.enter_machine),
-                leadingIcon = Icons.Default.Search
+                leadingIcon = Icons.Default.Search,
+                suggestions = if (currentAutocompleteField === "machine") suggestions else emptyList(),
+                isLoadingSuggestions = isLoadingSuggestion && currentAutocompleteField === "machine",
+                onTextChanged = {query -> onAutocompleteRequest(query, "machine") },
+                onSuggestionClick = { suggestion ->
+                    searchFields = searchFields.copy(searchMachine = suggestion)
+                    onClearAutocomplete()
+                },
+                fieldType = "machine"
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -105,6 +155,7 @@ fun SearchBottomSheet(
             Button(
                 onClick = {
                     onSearch(searchFields)
+                    onClearAutocomplete()
                     onDismiss()
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -119,6 +170,7 @@ fun SearchBottomSheet(
                 onClick = {
                     searchFields = SearchParams()
                     onSearch(SearchParams())
+                    onClearAutocomplete()
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

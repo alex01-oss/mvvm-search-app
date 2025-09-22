@@ -20,10 +20,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.Product
-import com.loc.searchapp.presentation.shared.components.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.shared.components.ProductListShimmer
+import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
 
 @Composable
 fun ProductsList(

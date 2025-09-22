@@ -50,7 +50,7 @@ import com.loc.searchapp.presentation.post_editor.components.EditorTopBar
 import com.loc.searchapp.presentation.post_editor.components.PostImagePicker
 import com.loc.searchapp.presentation.post_editor.components.RichTextToolbar
 import com.loc.searchapp.presentation.post_editor.model.PostEditorState
-import com.loc.searchapp.presentation.shared.components.ErrorDialog
+import com.loc.searchapp.presentation.shared.components.notifications.ErrorDialog
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
 import com.mohamedrejeb.richeditor.model.RichTextState

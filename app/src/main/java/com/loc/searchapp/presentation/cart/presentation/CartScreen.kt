@@ -21,10 +21,10 @@ import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.cart.components.CartList
-import com.loc.searchapp.presentation.shared.components.LoadingScreen
+import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.shared.components.GuestUser
+import com.loc.searchapp.presentation.shared.components.notifications.GuestUser
 import com.loc.searchapp.presentation.shared.model.AuthState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel

@@ -10,22 +10,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
@@ -37,6 +35,7 @@ import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
+import com.loc.searchapp.presentation.shared.components.notifications.SnackbarManager
 
 @Composable
 fun ProductCardBase(
@@ -51,6 +50,14 @@ fun ProductCardBase(
     val context = LocalContext.current
     val imageUrl = "$BASE_URL${product.images}"
     val isInCart = buttonStates[product.id] ?: product.isInCart
+
+    val addMessage = stringResource(id = R.string.added)
+    val removeMessage = stringResource(id = R.string.removed)
+
+    val snackbarManager = SnackbarManager(
+        scope = rememberCoroutineScope(),
+        snackbarHostState = remember { SnackbarHostState() }
+    )
 
     Row(
         modifier = modifier
@@ -167,43 +174,18 @@ fun ProductCardBase(
                 .align(Alignment.CenterVertically)
                 .padding(end = SmallPadding)
         ) {
-            if (isInCart) {
-                IconButton(
-                    onClick = onRemove,
-                    enabled = product.id !in inProgress
-                ) {
-                    if (product.id in inProgress) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Icon(
-                            painterResource(id = R.drawable.delete),
-                            contentDescription = stringResource(id = R.string.delete),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+            CartActionButton(
+                isInCart = isInCart,
+                isInProgress = product.id in inProgress,
+                onAddToCart = {
+                    onAdd()
+                    snackbarManager.show(addMessage)
+                },
+                onRemoveFromCart = {
+                    onRemove()
+                    snackbarManager.show(removeMessage)
                 }
-            } else {
-                IconButton(
-                    onClick = onAdd,
-                    enabled = product.id !in inProgress
-                ) {
-                    if (product.id in inProgress) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
-                        )
-                    } else {
-                        Icon(
-                            painterResource(id = R.drawable.add_shopping_cart),
-                            contentDescription = stringResource(id = R.string.add_to_cart),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
+            )
         }
     }
 }

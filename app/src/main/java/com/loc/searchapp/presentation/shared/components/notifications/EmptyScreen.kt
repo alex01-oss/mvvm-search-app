@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.shared.components
+package com.loc.searchapp.presentation.shared.components.notifications
 
 import android.content.Context
 import androidx.compose.animation.core.animateFloatAsState

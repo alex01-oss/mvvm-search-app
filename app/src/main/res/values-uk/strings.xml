@@ -66,6 +66,7 @@
     <string name="apply">Застосувати</string>
     <string name="clear_all">Очистити все</string>
     <string name="empty_filters">Фільтри відсутні</string>
+    <string name="suggestions">Пропозиції</string>
 
     <string name="enter_code">Введіть код…</string>
     <string name="enter_shape">Введіть форму…</string>

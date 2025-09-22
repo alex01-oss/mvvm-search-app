@@ -38,7 +38,7 @@ import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.presentation.account.components.AccountOption
-import com.loc.searchapp.presentation.shared.components.GuestUser
+import com.loc.searchapp.presentation.shared.components.notifications.GuestUser
 import com.loc.searchapp.presentation.shared.model.AuthEvent
 import com.loc.searchapp.presentation.shared.model.AuthState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel

@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.shared.components
+package com.loc.searchapp.presentation.shared.components.notifications
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

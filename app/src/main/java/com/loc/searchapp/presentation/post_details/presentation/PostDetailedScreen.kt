@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.presentation.shared.components.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding

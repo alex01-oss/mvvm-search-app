@@ -6,8 +6,8 @@ import androidx.paging.PagingData
 import com.loc.searchapp.core.data.remote.dto.Product
 import com.loc.searchapp.core.domain.repository.CatalogRepository
 import com.loc.searchapp.core.utils.CatalogPagingSource
-import com.loc.searchapp.core.utils.FilterParams
-import com.loc.searchapp.core.utils.SearchParams
+import com.loc.searchapp.core.domain.model.catalog.FilterParams
+import com.loc.searchapp.core.domain.model.catalog.SearchParams
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

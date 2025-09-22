@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.loc.searchapp.R
-import com.loc.searchapp.presentation.shared.components.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.presentation.shared.model.UiState

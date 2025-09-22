@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.shared.components
+package com.loc.searchapp.presentation.shared.components.notifications
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

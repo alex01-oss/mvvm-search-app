@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.CartResponse
-import com.loc.searchapp.presentation.shared.components.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.presentation.shared.components.ProductListShimmer
+import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
 import com.loc.searchapp.presentation.shared.model.UiState
 import kotlin.Int
 

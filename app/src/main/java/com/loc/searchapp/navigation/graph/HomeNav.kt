@@ -97,7 +97,7 @@ fun NavGraphBuilder.homeScreens(
         DetailsScreen(
             state = state,
             onBackClick = { navController.navigateUp() },
-            productViewModel = productViewModel,
+            viewModel = productViewModel,
         )
     }
 

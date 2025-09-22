@@ -31,6 +31,7 @@ import com.loc.searchapp.core.ui.values.Dimens.InputFieldHeight
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.TextSize
+import com.loc.searchapp.presentation.shared.components.notifications.InlineErrorMessage
 
 @Composable
 fun AuthForm(

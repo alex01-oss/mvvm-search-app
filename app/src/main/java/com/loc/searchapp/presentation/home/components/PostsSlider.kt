@@ -28,7 +28,7 @@ import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.presentation.shared.components.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding

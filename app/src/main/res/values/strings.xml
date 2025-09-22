@@ -66,6 +66,7 @@
     <string name="apply">Apply</string>
     <string name="clear_all">Clear All</string>
     <string name="empty_filters">There are no filters</string>
+    <string name="suggestions">Suggestions</string>
 
     <string name="enter_code">Enter code…</string>
     <string name="enter_shape">Enter shape…</string>
