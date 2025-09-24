@@ -1,41 +1,21 @@
 package com.loc.searchapp.core.domain.repository
 
-import com.loc.searchapp.core.data.remote.dto.CartResponse
-import com.loc.searchapp.core.data.remote.dto.CatalogDto
-import com.loc.searchapp.core.data.remote.dto.Category
-import com.loc.searchapp.core.data.remote.dto.DetailsData
-import com.loc.searchapp.core.data.remote.dto.FiltersResponse
-import com.loc.searchapp.core.data.remote.dto.ItemCartResponse
-import com.loc.searchapp.core.domain.model.catalog.FilterParams
-import com.loc.searchapp.core.domain.model.catalog.PaginationParams
-import com.loc.searchapp.core.domain.model.catalog.SearchParams
-import retrofit2.Response
+import com.loc.searchapp.core.domain.model.catalog.Cart
+import com.loc.searchapp.core.domain.model.catalog.Catalog
+import com.loc.searchapp.core.domain.model.catalog.CatalogId
+import com.loc.searchapp.core.domain.model.catalog.CatalogParams
+import com.loc.searchapp.core.domain.model.catalog.Category
+import com.loc.searchapp.core.domain.model.catalog.CategoryId
+import com.loc.searchapp.core.domain.model.catalog.Filters
+import com.loc.searchapp.core.domain.model.catalog.MessageResult
+import com.loc.searchapp.core.domain.model.catalog.ProductDetails
 
 interface CatalogRepository {
-    suspend fun getCatalog(
-        search: SearchParams = SearchParams(),
-        filters: FilterParams = FilterParams(),
-        pagination: PaginationParams = PaginationParams(),
-        categoryId: Int,
-    ): Response<CatalogDto>
-
-    suspend fun getCatalogItem(
-        id: Int
-    ): Response<DetailsData>
-
-    suspend fun getCart(): Response<CartResponse>
-
-    suspend fun addProduct(
-        id: Int
-    ): Response<ItemCartResponse>
-
-    suspend fun deleteProduct(
-        id: Int
-    ): Response<ItemCartResponse>
-
-    suspend fun getCategories(): Response<List<Category>>
-
-    suspend fun getFilters(
-        categoryId: Int
-    ): Response<FiltersResponse>
+    suspend fun getCatalog(params: CatalogParams, page: Int): Catalog
+    suspend fun getCatalogItem(data: CatalogId): ProductDetails
+    suspend fun getCart(): Cart
+    suspend fun addProduct(data: CatalogId): MessageResult
+    suspend fun deleteProduct(data: CatalogId): MessageResult
+    suspend fun getCategories(): List<Category>
+    suspend fun getFilters(data: CategoryId): Filters
 }

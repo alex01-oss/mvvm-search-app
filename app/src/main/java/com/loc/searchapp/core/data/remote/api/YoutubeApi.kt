@@ -1,16 +1,13 @@
 package com.loc.searchapp.core.data.remote.api
 
-import com.loc.searchapp.core.data.remote.dto.YouTubeResponse
+import com.loc.searchapp.core.data.remote.dto.YoutubeResponse
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface YoutubeApi {
     @GET("playlistItems")
     suspend fun getPlaylistVideos(
-        @Query("part") part: String = "snippet",
-        @Query("playlistId") playlistId: String,
-        @Query("maxResults") maxResults: Int = 3,
-        @Query("key") apiKey: String
-    ): Response<YouTubeResponse>
+        @QueryMap params: Map<String, String>
+    ): Response<YoutubeResponse>
 }

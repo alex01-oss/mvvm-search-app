@@ -2,9 +2,8 @@ package com.loc.searchapp.presentation.search.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.loc.searchapp.core.data.remote.dto.Product
+import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.presentation.shared.components.ProductCardBase
-import kotlin.Int
 
 @Composable
 fun ProductCard(

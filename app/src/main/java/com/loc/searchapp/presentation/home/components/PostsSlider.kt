@@ -27,14 +27,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 import com.loc.searchapp.core.utils.Constants.BASE_URL
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.network.NetworkStatus
 
@@ -42,7 +42,7 @@ import com.loc.searchapp.presentation.shared.network.NetworkStatus
 fun PostsSlider(
     modifier: Modifier = Modifier,
     networkStatus: NetworkStatus,
-    state: UiState<List<PostResponse>>,
+    state: UiState<List<Post>>,
     onPostClick: (Int) -> Unit
 ) {
     when {

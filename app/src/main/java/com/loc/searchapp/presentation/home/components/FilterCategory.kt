@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.loc.searchapp.core.data.remote.dto.FilterItem
+import com.loc.searchapp.core.domain.model.catalog.FilterItem
 
 @Composable
 fun FilterCategory(
@@ -41,8 +41,8 @@ fun FilterCategory(
 
         items.forEach { item ->
             val displayName = when (item) {
-                is FilterItem.Bond -> item.nameBond
-                is FilterItem.Grid -> item.gridSize
+                is FilterItem.Bond -> item.name
+                is FilterItem.Grid -> item.size
                 is FilterItem.Mounting -> item.mm
             }
 

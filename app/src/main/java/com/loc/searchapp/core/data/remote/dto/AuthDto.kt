@@ -21,7 +21,7 @@ data class RegisterRequest(
 
 @Serializable
 data class AuthResponse (
-    val user: User,
+    val user: UserDto,
     val message: String? = null,
     @SerialName("access_token") val accessToken: String,
     @SerialName("refresh_token") val refreshToken: String,
@@ -29,24 +29,18 @@ data class AuthResponse (
 )
 
 @Serializable
+data class UserResponse(
+    val user: UserDto
+)
+@Serializable
 @Parcelize
-data class User(
+data class UserDto(
     val id: String,
     @SerialName("full_name") val fullname: String,
     val email: String,
     val phone: String,
     val role: String
 ) : Parcelable
-
-@Serializable
-data class UserResponse (
-    val user: User
-)
-
-@Serializable
-data class LogoutRequest(
-    @SerialName("refresh_token") val refreshToken: String
-)
 
 @Serializable
 data class LogoutResponse(

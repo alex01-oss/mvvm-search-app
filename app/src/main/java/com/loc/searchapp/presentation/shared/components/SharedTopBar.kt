@@ -9,11 +9,13 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,9 +36,13 @@ fun SharedTopBar(
     TopAppBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (leadingIcon != null) leadingIcon()
+                if (leadingIcon != null) {
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                        leadingIcon()
+                    }
+                }
                 Spacer(modifier = Modifier.width(SmallPadding))
-                if (title != null) Text(text = title)
+                if (title != null) Text(text = title, color = MaterialTheme.colorScheme.onBackground)
             }
         },
         navigationIcon = {
@@ -44,6 +50,7 @@ fun SharedTopBar(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
+                        tint = MaterialTheme.colorScheme.onBackground,
                         contentDescription = stringResource(id = R.string.arrow_back)
                     )
                 }

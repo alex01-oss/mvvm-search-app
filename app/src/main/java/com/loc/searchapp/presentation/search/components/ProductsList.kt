@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,11 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.Product
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 
 @Composable
 fun ProductsList(
@@ -90,6 +92,10 @@ fun ProductsList(
                         }
 
                         else -> Unit
+                    }
+
+                    item {
+                        Box(modifier = Modifier.fillMaxWidth().height(NavBarHeight))
                     }
                 }
             }

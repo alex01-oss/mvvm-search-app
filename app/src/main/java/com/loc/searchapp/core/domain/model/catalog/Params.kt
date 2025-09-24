@@ -15,8 +15,3 @@ data class FilterParams(
     val gridSizeIds: List<Int> = emptyList(),
     val mountingIds: List<Int> = emptyList(),
 )
-
-data class PaginationParams(
-    val page: Int = 1,
-    val itemsPerPage: Int = 8
-)

@@ -1,6 +1,8 @@
 package com.loc.searchapp.core.domain.usecases.posts
 
-data class PostsUseCases(
+import jakarta.inject.Inject
+
+data class PostsUseCases @Inject constructor(
     val createPost: CreatePost,
     val editPost: EditPost,
     val deletePost: DeletePost,

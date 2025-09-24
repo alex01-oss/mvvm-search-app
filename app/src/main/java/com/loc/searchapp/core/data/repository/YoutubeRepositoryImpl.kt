@@ -1,38 +1,30 @@
 package com.loc.searchapp.core.data.repository
 
-import android.util.Log
+import com.loc.searchapp.core.data.mappers.toDomain
+import com.loc.searchapp.core.data.mappers.toQueryMap
 import com.loc.searchapp.core.data.remote.api.YoutubeApi
-import com.loc.searchapp.core.data.remote.dto.PlaylistItem
+import com.loc.searchapp.core.domain.model.youtube.Video
+import com.loc.searchapp.core.domain.model.youtube.YoutubeData
 import com.loc.searchapp.core.domain.repository.YoutubeRepository
-import retrofit2.Response
+import jakarta.inject.Inject
 
-class YoutubeRepositoryImpl(
+class YoutubeRepositoryImpl @Inject constructor(
     private val api: YoutubeApi,
-    private val apiKey: String,
-    private val playlistId: String
+    private val data: YoutubeData
 ) : YoutubeRepository {
 
-    override suspend fun getLatestVideos(): Response<List<PlaylistItem>> {
+    override suspend fun getLatestVideos(): List<Video> {
         return try {
-            val response = api.getPlaylistVideos(
-                playlistId = playlistId,
-                apiKey = apiKey
-            )
+            val response = api.getPlaylistVideos(data.toQueryMap())
 
             if (response.isSuccessful) {
-                val body = response.body()
-                val items = body?.items?.filter {
-                    it.snippet.resourceId.videoId?.isNotBlank() == true
-                } ?: emptyList()
-
-                Response.success(items)
+                response.body()?.items?.toDomain() ?: emptyList()
             } else {
-                Response.error(response.code(), response.errorBody()!!)
+                throw RuntimeException("YouTube API error: ${response.code()} ${response.message()}")
             }
 
         } catch (e: Exception) {
-            Log.e("YouTube", "API error: ${e.localizedMessage}", e)
-            Response.success(emptyList())
+            throw RuntimeException("Failed to fetch latest videos: ${e.localizedMessage}", e)
         }
     }
 }

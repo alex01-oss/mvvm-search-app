@@ -7,12 +7,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.loc.searchapp.core.data.remote.dto.FiltersResponse
 import com.loc.searchapp.core.domain.model.autocomplete.AutocompleteParams
-import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
+import com.loc.searchapp.core.domain.model.catalog.CatalogParams
+import com.loc.searchapp.core.domain.model.catalog.CategoryId
 import com.loc.searchapp.core.domain.model.catalog.FilterParams
+import com.loc.searchapp.core.domain.model.catalog.Filters
 import com.loc.searchapp.core.domain.model.catalog.SearchParams
 import com.loc.searchapp.core.domain.usecases.autocomplete.AutocompleteUseCases
+import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.presentation.search.model.SearchState
 import com.loc.searchapp.presentation.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +38,7 @@ class SearchViewModel @Inject constructor(
     private val _state = mutableStateOf(SearchState(categoryId = initialCategoryId))
     val state: State<SearchState> = _state
 
-    private val _filtersState = MutableStateFlow<UiState<FiltersResponse>>(UiState.Loading)
+    private val _filtersState = MutableStateFlow<UiState<Filters>>(UiState.Loading)
     val filtersState = _filtersState.asStateFlow()
 
     private val _selectedFilters = MutableStateFlow<Map<String, List<Int>>>(emptyMap())
@@ -61,19 +63,14 @@ class SearchViewModel @Inject constructor(
     private fun loadFilters() {
         viewModelScope.launch {
             try {
-                val res = catalogUseCases.getFilters(_state.value.categoryId)
-                if (res.isSuccessful) {
-                    val filters = res.body()
-                    if (filters != null) {
-                        _filtersState.value = if (
-                            filters.bonds.isEmpty() &&
-                            filters.grids.isEmpty() &&
-                            filters.mountings.isEmpty()
-                        ) UiState.Empty else UiState.Success(filters)
-                    }
-                } else {
-                    _filtersState.value = UiState.Error("Error loading filters: ${res.code()}")
-                }
+                val filters = catalogUseCases.getFilters(
+                    CategoryId(_state.value.categoryId)
+                )
+                _filtersState.value = if (
+                    filters.bonds.isEmpty() &&
+                    filters.grids.isEmpty() &&
+                    filters.mountings.isEmpty()
+                ) UiState.Empty else UiState.Success(filters)
             } catch (e: Exception) {
                 _filtersState.value = UiState.Error(e.localizedMessage ?: "Error loading filters")
             }
@@ -88,13 +85,20 @@ class SearchViewModel @Inject constructor(
     val products = _searchFlow
         .filterNotNull()
         .distinctUntilChanged()
-        .flatMapLatest { params ->
-            catalogUseCases.getCatalogPaging(
-                search = state.value.searchParams,
-                filters = state.value.filterParams,
+        .flatMapLatest {
+            val params = CatalogParams(
+                searchCode = state.value.searchParams.searchCode,
+                searchShape = state.value.searchParams.searchShape,
+                searchDimensions = state.value.searchParams.searchDimensions,
+                searchMachine = state.value.searchParams.searchMachine,
+                bondIds = state.value.filterParams.bondIds,
+                gridSizeIds = state.value.filterParams.gridSizeIds,
+                mountingIds = state.value.filterParams.mountingIds,
                 categoryId = state.value.categoryId,
-                itemsPerPage = 8
+                itemsPerPage = 8,
             )
+
+            catalogUseCases.getCatalogPaging(params)
         }
         .cachedIn(viewModelScope)
 

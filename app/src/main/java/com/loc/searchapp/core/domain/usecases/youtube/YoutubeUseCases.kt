@@ -1,5 +1,7 @@
 package com.loc.searchapp.core.domain.usecases.youtube
 
-data class YoutubeUseCases(
+import jakarta.inject.Inject
+
+data class YoutubeUseCases @Inject constructor(
     val getLatestVideos: GetLatestVideos
 )

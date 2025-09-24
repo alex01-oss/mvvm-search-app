@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.Product
+import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1

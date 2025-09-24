@@ -161,9 +161,15 @@ fun SearchBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = searchFields.hasAnyValue()
             ) {
-                Icon(Icons.Default.Search, contentDescription = null)
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = stringResource(R.string.search)
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.apply))
+                Text(
+                    text = stringResource(R.string.apply),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             OutlinedButton(

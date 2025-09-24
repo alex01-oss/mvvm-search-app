@@ -17,7 +17,8 @@ fun CartActionButton(
     isInCart: Boolean,
     isInProgress: Boolean,
     onAddToCart: () -> Unit,
-    onRemoveFromCart: () -> Unit
+    onRemoveFromCart: () -> Unit,
+    isDetailedScreen: Boolean = false
 ) {
     IconButton(
         onClick = if (isInCart) onRemoveFromCart else onAddToCart
@@ -25,17 +26,19 @@ fun CartActionButton(
         when {
             isInProgress -> CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
-                strokeWidth = 2.dp
+                strokeWidth = 2.dp,
+                color = if (isDetailedScreen) MaterialTheme.colorScheme.onBackground
+                    else MaterialTheme.colorScheme.onBackground
             )
             isInCart -> Icon(
                 painterResource(id = R.drawable.delete),
                 contentDescription = stringResource(id = R.string.delete_from_cart),
-                tint = MaterialTheme.colorScheme.onSurface
+                tint = MaterialTheme.colorScheme.onBackground
             )
             else -> Icon(
                 painterResource(id = R.drawable.add_shopping_cart),
                 contentDescription = stringResource(id = R.string.add_to_cart),
-                tint = MaterialTheme.colorScheme.onSurface
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }

@@ -4,13 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreatePostRequest(
-    val title: String,
-    val content: String,
-    val image: String? = null
-)
-
-@Serializable
 data class PostResponse(
     val id: Int,
     val title: String,
@@ -22,7 +15,7 @@ data class PostResponse(
 )
 
 @Serializable
-data class EditPostRequest(
+data class PostRequest(
     val title: String,
     val content: String,
     val image: String? = null
@@ -37,4 +30,10 @@ data class DeletePostResponse(
 data class ImageUploadResponse(
     val filename: String,
     val url: String
+)
+
+@Serializable
+data class EditPostRequest(
+    val id: Int,
+    val body: PostRequest
 )

@@ -1,15 +1,14 @@
 package com.loc.searchapp.core.domain.usecases.posts
 
-import com.loc.searchapp.core.data.remote.dto.PostResponse
+import com.loc.searchapp.core.domain.model.posts.Post
+import com.loc.searchapp.core.domain.model.posts.PostId
 import com.loc.searchapp.core.domain.repository.PostsRepository
-import retrofit2.Response
+import jakarta.inject.Inject
 
-class GetPost(
+class GetPost @Inject constructor(
     private val repository: PostsRepository
 ) {
-    suspend operator fun invoke(
-        postId: Int
-    ): Response<PostResponse> {
-        return repository.getPostById(postId)
+    suspend operator fun invoke(data: PostId): Post {
+        return repository.getPostById(data)
     }
 }

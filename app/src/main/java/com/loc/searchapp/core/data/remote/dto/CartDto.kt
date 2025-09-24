@@ -7,17 +7,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class CartItem(
-    val product: Product,
+data class CartItemDto(
+    val product: ProductDto,
     val quantity: Int?,
 ): Parcelable
 @Serializable
 data class CartResponse(
-    val cart: List<CartItem>
+    val cart: List<CartItemDto>
 )
 
 @Serializable
-data class ItemCartResponse(
+data class MessageResponse(
     val message: String
 )
 

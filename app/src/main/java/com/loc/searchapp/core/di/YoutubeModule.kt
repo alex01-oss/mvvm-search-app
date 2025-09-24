@@ -4,9 +4,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.loc.searchapp.BuildConfig
 import com.loc.searchapp.core.data.remote.api.YoutubeApi
 import com.loc.searchapp.core.data.repository.YoutubeRepositoryImpl
+import com.loc.searchapp.core.domain.model.youtube.YoutubeData
 import com.loc.searchapp.core.domain.repository.YoutubeRepository
-import com.loc.searchapp.core.domain.usecases.youtube.GetLatestVideos
-import com.loc.searchapp.core.domain.usecases.youtube.YoutubeUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,15 +41,12 @@ object YoutubeModule {
         @Named("youtube_api_key") apiKey: String
     ): YoutubeRepository {
         val playlistId = "UU3tUVI8r3Bfr8hb9-KzfCvw"
-        return YoutubeRepositoryImpl(api, apiKey, playlistId)
-    }
-
-    @Provides
-    fun provideYoutubeUseCases(
-        repo: YoutubeRepository
-    ): YoutubeUseCases {
-        return YoutubeUseCases(
-            getLatestVideos = GetLatestVideos(repo)
+        return YoutubeRepositoryImpl(
+            api,
+            YoutubeData(
+                apiKey = apiKey,
+                playlistId = playlistId
+            )
         )
     }
 }

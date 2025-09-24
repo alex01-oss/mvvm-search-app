@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.DetailsData
+import com.loc.searchapp.core.domain.model.catalog.ProductDetails
 import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
@@ -50,7 +50,7 @@ import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
-    state: UiState<DetailsData>,
+    state: UiState<ProductDetails>,
     onBackClick: () -> Unit,
     viewModel: ProductViewModel
 ) {
@@ -91,7 +91,8 @@ fun DetailsScreen(
                             onRemoveFromCart = {
                                 viewModel.removeFromCart(product.id)
                                 snackbarManager.show(removeMessage)
-                            }
+                            },
+                            isDetailedScreen = true
                         )
                     }
                 )

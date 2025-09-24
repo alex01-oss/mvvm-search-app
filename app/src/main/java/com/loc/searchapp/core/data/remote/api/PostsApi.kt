@@ -1,9 +1,9 @@
 package com.loc.searchapp.core.data.remote.api
 
-import com.loc.searchapp.core.data.remote.dto.CreatePostRequest
 import com.loc.searchapp.core.data.remote.dto.DeletePostResponse
 import com.loc.searchapp.core.data.remote.dto.EditPostRequest
 import com.loc.searchapp.core.data.remote.dto.ImageUploadResponse
+import com.loc.searchapp.core.data.remote.dto.PostRequest
 import com.loc.searchapp.core.data.remote.dto.PostResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -19,7 +19,7 @@ import retrofit2.http.Path
 interface PostsApi {
     @POST("blog")
     suspend fun createPost(
-        @Body request: CreatePostRequest
+        @Body request: PostRequest
     ): Response<PostResponse>
 
     @DELETE("blog/{post_id}")
@@ -29,8 +29,7 @@ interface PostsApi {
 
     @PUT("blog/{post_id}")
     suspend fun editPost(
-        @Path("post_id") postId: Int,
-        @Body request: EditPostRequest
+        request: EditPostRequest
     ): Response<PostResponse>
 
     @GET("blog")

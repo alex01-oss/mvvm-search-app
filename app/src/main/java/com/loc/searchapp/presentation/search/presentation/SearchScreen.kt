@@ -32,14 +32,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
-import com.loc.searchapp.presentation.shared.components.SharedTopBar
-import com.loc.searchapp.presentation.search.components.ProductsList
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.presentation.search.components.FiltersBottomSheet
+import com.loc.searchapp.presentation.search.components.ProductsList
 import com.loc.searchapp.presentation.search.components.SearchBottomSheet
 import com.loc.searchapp.presentation.search.viewmodel.SearchViewModel
+import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
 
 @Composable
@@ -69,7 +69,7 @@ fun SearchScreen(
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.search),
                         modifier.size(IconSize)
                     )
                 }
@@ -99,12 +99,12 @@ fun SearchScreen(
                             imageVector = Icons.Default.Search,
                             contentDescription = stringResource(id = R.string.search),
                             modifier = Modifier.size(18.dp),
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(id = R.string.search),
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -138,7 +138,6 @@ fun SearchScreen(
                     inProgress = productViewModel.inProgress.collectAsState().value,
                     buttonStates = productViewModel.buttonStates.collectAsState().value
                 )
-
             }
 
             if (showSearchSheet) {

@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +28,8 @@ fun Avatar(
     size: Dp = AvatarSize,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     placeholder: @Composable (() -> Unit)? = null,
-    onAvatarClick: () -> Unit
+    onAvatarClick: () -> Unit,
+    isTopBar: Boolean = false
 ) {
     Box(
         modifier
@@ -38,7 +38,7 @@ fun Avatar(
             .clip(CircleShape)
             .border(
                 width = BorderStroke,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = if (isTopBar) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -47,7 +47,11 @@ fun Avatar(
 
         if (hasName) {
             val initials = (firstName.take(1) + lastName.take(1)).uppercase()
-            Text(text = initials, style = textStyle, color = Color.White)
+            Text(
+                text = initials,
+                style = textStyle,
+                color = if (isTopBar) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+            )
         } else {
             placeholder?.invoke() ?: DefaultPlaceholder(size = size)
         }
@@ -66,8 +70,8 @@ fun DefaultPlaceholder(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.person),
-            contentDescription = stringResource(id = R.string.avatar),
+            painter = painterResource(R.drawable.person),
+            contentDescription = stringResource(R.string.avatar),
             modifier = Modifier.size(size * 0.55f)
         )
     }

@@ -1,57 +1,81 @@
 package com.loc.searchapp.core.data.repository
 
+import com.loc.searchapp.core.data.mappers.toDomain
+import com.loc.searchapp.core.data.mappers.toDto
 import com.loc.searchapp.core.data.remote.api.AuthApi
-import com.loc.searchapp.core.data.remote.dto.AuthResponse
-import com.loc.searchapp.core.data.remote.dto.LoginRequest
-import com.loc.searchapp.core.data.remote.dto.LogoutRequest
-import com.loc.searchapp.core.data.remote.dto.LogoutResponse
-import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
-import com.loc.searchapp.core.data.remote.dto.RefreshTokenResponse
-import com.loc.searchapp.core.data.remote.dto.RegisterRequest
-import com.loc.searchapp.core.data.remote.dto.UpdateUserRequest
-import com.loc.searchapp.core.data.remote.dto.UserResponse
+import com.loc.searchapp.core.domain.model.auth.AuthResult
+import com.loc.searchapp.core.domain.model.auth.LoginData
+import com.loc.searchapp.core.domain.model.auth.LogoutResult
+import com.loc.searchapp.core.domain.model.auth.RefreshData
+import com.loc.searchapp.core.domain.model.auth.RefreshResult
+import com.loc.searchapp.core.domain.model.auth.RegisterData
+import com.loc.searchapp.core.domain.model.auth.UpdateData
+import com.loc.searchapp.core.domain.model.auth.User
 import com.loc.searchapp.core.domain.repository.AuthRepository
-import retrofit2.Response
+import jakarta.inject.Inject
 
-class AuthRepositoryImpl(
+class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
 ) : AuthRepository {
 
-    override suspend fun login(
-        request: LoginRequest
-    ): Response<AuthResponse> {
-        return api.login(request)
+    override suspend fun login(data: LoginData): AuthResult {
+        val res = api.login(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Login successful but response body is null")
+        } else {
+            throw RuntimeException("Login failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun register(
-        request: RegisterRequest
-    ): Response<AuthResponse> {
-        return api.register(request)
+    override suspend fun register(data: RegisterData): AuthResult {
+        val res = api.register(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Registration successful but response body is null")
+        } else {
+            throw RuntimeException("Registration failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun refresh(
-        request: RefreshTokenRequest
-    ): Response<RefreshTokenResponse> {
-        return api.refresh(request)
+    override suspend fun refresh(data: RefreshData): RefreshResult {
+        val res = api.refresh(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Refresh token successful but body is null")
+        } else {
+            throw RuntimeException("Refresh token failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun getUser(): Response<UserResponse> {
-        return api.getUser()
+    override suspend fun getUser(): User {
+        val res = api.getUser()
+        return if (res.isSuccessful) {
+            res.body()?.user?.toDomain() ?: throw RuntimeException("Get user successful but body is null")
+        } else {
+            throw RuntimeException("Get user failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun updateUser(
-        request: UpdateUserRequest
-    ): Response<UserResponse> {
-        return api.updateUser(request)
+    override suspend fun updateUser(data: UpdateData): User {
+        val res = api.updateUser(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Update user successful but body is null")
+        } else {
+            throw RuntimeException("Update user failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun deleteUser(): Response<Unit> {
-        return api.deleteUser()
+    override suspend fun deleteUser() {
+        val res = api.deleteUser()
+        if (!res.isSuccessful) {
+            throw RuntimeException("Delete user failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun logout(
-        request: LogoutRequest
-    ): Response<LogoutResponse> {
-        return api.logout(request)
+    override suspend fun logout(data: RefreshData): LogoutResult {
+        val res = api.logout(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Logout successful but body is null")
+        } else {
+            throw RuntimeException("Logout failed: ${res.code()} ${res.message()}")
+        }
     }
 }

@@ -18,33 +18,8 @@ import com.loc.searchapp.core.domain.manager.LocalUserManger
 import com.loc.searchapp.core.domain.repository.AuthRepository
 import com.loc.searchapp.core.domain.repository.CatalogRepository
 import com.loc.searchapp.core.domain.repository.PostsRepository
-import com.loc.searchapp.core.domain.usecases.app_entry.AppEntryUseCases
-import com.loc.searchapp.core.domain.usecases.app_entry.ReadAppEntry
-import com.loc.searchapp.core.domain.usecases.app_entry.SaveAppEntry
-import com.loc.searchapp.core.domain.usecases.auth.AuthUseCases
-import com.loc.searchapp.core.domain.usecases.auth.DeleteUser
-import com.loc.searchapp.core.domain.usecases.auth.GetUser
-import com.loc.searchapp.core.domain.usecases.auth.LoginUser
-import com.loc.searchapp.core.domain.usecases.auth.LogoutUser
-import com.loc.searchapp.core.domain.usecases.auth.RefreshToken
-import com.loc.searchapp.core.domain.usecases.auth.RegisterUser
-import com.loc.searchapp.core.domain.usecases.auth.UpdateUser
-import com.loc.searchapp.core.domain.usecases.catalog.AddProduct
-import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
-import com.loc.searchapp.core.domain.usecases.catalog.DeleteProduct
-import com.loc.searchapp.core.domain.usecases.catalog.GetCart
-import com.loc.searchapp.core.domain.usecases.catalog.GetCatalogItem
-import com.loc.searchapp.core.domain.usecases.catalog.GetCatalogPaging
-import com.loc.searchapp.core.domain.usecases.catalog.GetCategories
-import com.loc.searchapp.core.domain.usecases.catalog.GetFilters
-import com.loc.searchapp.core.domain.usecases.posts.CreatePost
-import com.loc.searchapp.core.domain.usecases.posts.DeletePost
-import com.loc.searchapp.core.domain.usecases.posts.EditPost
-import com.loc.searchapp.core.domain.usecases.posts.GetAllPosts
-import com.loc.searchapp.core.domain.usecases.posts.GetPost
-import com.loc.searchapp.core.domain.usecases.posts.PostsUseCases
-import com.loc.searchapp.core.domain.usecases.posts.UploadImage
 import com.loc.searchapp.core.utils.Constants.BASE_URL
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -210,81 +185,40 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        authApi: AuthApi,
-    ): AuthRepository = AuthRepositoryImpl(authApi)
-
-    @Provides
-    @Singleton
-    fun provideCatalogRepository(
-        catalogApi: CatalogApi,
-    ): CatalogRepository = CatalogRepositoryImpl(catalogApi)
-
-    @Provides
-    @Singleton
-    fun provideCatalogUseCases(
-        catalogRepository: CatalogRepository,
-    ): CatalogUseCases {
-        return CatalogUseCases(
-            getCart = GetCart(catalogRepository),
-            addProduct = AddProduct(catalogRepository),
-            deleteProduct = DeleteProduct(catalogRepository),
-            getCatalogPaging = GetCatalogPaging(catalogRepository),
-            getCatalogItem = GetCatalogItem(catalogRepository),
-            getFilters = GetFilters(catalogRepository),
-            getCategories = GetCategories(catalogRepository)
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthUseCases(
-        authRepository: AuthRepository
-    ): AuthUseCases {
-        return AuthUseCases(
-            loginUser = LoginUser(authRepository),
-            registerUser = RegisterUser(authRepository),
-            refreshToken = RefreshToken(authRepository),
-            logoutUser = LogoutUser(authRepository),
-            getUser = GetUser(authRepository),
-            updateUser = UpdateUser(authRepository),
-            deleteUser = DeleteUser(authRepository)
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun providePostsRepository(
-        postsApi: PostsApi
-    ): PostsRepository = PostsRepositoryImpl(postsApi)
-
-    @Provides
-    @Singleton
-    fun providePostsUseCases(
-        postsRepository: PostsRepository,
-    ): PostsUseCases {
-        return PostsUseCases(
-            createPost = CreatePost(postsRepository),
-            editPost = EditPost(postsRepository),
-            deletePost = DeletePost(postsRepository),
-            uploadImage = UploadImage(postsRepository),
-            getPost = GetPost(postsRepository),
-            getAllPosts = GetAllPosts(postsRepository)
-        )
-    }
-
-    @Provides
-    @Singleton
     fun provideLocalUserManger(
         application: Application
     ): LocalUserManger = LocalUserManagerImpl(application)
 
-    @Provides
-    @Singleton
-    fun provideAppEntryUseCases(
-        localUserManger: LocalUserManger
-    ) = AppEntryUseCases(
-        readAppEntry = ReadAppEntry(localUserManger),
-        saveAppEntry = SaveAppEntry(localUserManger)
-    )
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class AuthModule {
+
+        @Binds
+        @Singleton
+        abstract fun bindAuthRepository(
+            repositoryImpl: AuthRepositoryImpl
+        ): AuthRepository
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class CatalogModule {
+
+        @Binds
+        @Singleton
+        abstract fun bindCatalogRepository(
+            repositoryImpl: CatalogRepositoryImpl
+        ): CatalogRepository
+    }
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    abstract class PostsModule {
+
+        @Binds
+        @Singleton
+        abstract fun bindPostsRepository(
+            repositoryImpl: PostsRepositoryImpl
+        ): PostsRepository
+    }
 }

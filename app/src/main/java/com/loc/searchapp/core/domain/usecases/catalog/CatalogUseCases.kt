@@ -1,6 +1,8 @@
 package com.loc.searchapp.core.domain.usecases.catalog
 
-data class CatalogUseCases (
+import jakarta.inject.Inject
+
+data class CatalogUseCases @Inject constructor(
     val getCart: GetCart,
     val addProduct: AddProduct,
     val deleteProduct: DeleteProduct,

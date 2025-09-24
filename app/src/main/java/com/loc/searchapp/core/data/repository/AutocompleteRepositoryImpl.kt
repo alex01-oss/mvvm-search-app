@@ -10,38 +10,38 @@ class AutocompleteRepositoryImpl @Inject constructor(
     private val api: AutocompleteApi
 ): AutocompleteRepository {
     override suspend fun autocompleteCode(params: AutocompleteParams): List<String> {
-        val response = api.autocompleteCode(params.toQueryMap())
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
+        val res = api.autocompleteCode(params.toQueryMap())
+        if (res.isSuccessful) {
+            return res.body() ?: emptyList()
         } else {
-            throw RuntimeException("Autocomplete API error: ${response.code()}")
+            throw RuntimeException("Autocomplete API error: ${res.code()}")
         }
     }
 
     override suspend fun autocompleteShape(params: AutocompleteParams): List<String> {
-        val response = api.autocompleteShape(params.toQueryMap())
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
+        val res = api.autocompleteShape(params.toQueryMap())
+        if (res.isSuccessful) {
+            return res.body() ?: emptyList()
         } else {
-            throw RuntimeException("Autocomplete API error: ${response.code()}")
+            throw RuntimeException("Autocomplete API error: ${res.code()}")
         }
     }
 
     override suspend fun autocompleteDimensions(params: AutocompleteParams): List<String> {
-        val response = api.autocompleteDimensions(params.toQueryMap())
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
+        val res = api.autocompleteDimensions(params.toQueryMap())
+        if (res.isSuccessful) {
+            return res.body() ?: emptyList()
         } else {
-            throw RuntimeException("Autocomplete API error: ${response.code()}")
+            throw RuntimeException("Autocomplete API error: ${res.code()}")
         }
     }
 
     override suspend fun autocompleteMachine(params: AutocompleteParams): List<String> {
-        val response = api.autocompleteMachine(params.toQueryMap())
-        if (response.isSuccessful) {
-            return response.body() ?: emptyList()
+        val res = api.autocompleteMachine(params.toQueryMap())
+        if (res.isSuccessful) {
+            return res.body() ?: emptyList()
         } else {
-            throw RuntimeException("Autocomplete API error: ${response.code()}")
+            throw RuntimeException("Autocomplete API error: ${res.code()}")
         }
     }
 }

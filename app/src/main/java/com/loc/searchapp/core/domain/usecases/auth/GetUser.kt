@@ -1,14 +1,13 @@
 package com.loc.searchapp.core.domain.usecases.auth
 
-import com.loc.searchapp.core.data.remote.dto.UserResponse
+import com.loc.searchapp.core.domain.model.auth.User
 import com.loc.searchapp.core.domain.repository.AuthRepository
-import retrofit2.Response
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class GetUser @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(): Response<UserResponse> {
+    suspend operator fun invoke(): User {
         return authRepository.getUser()
     }
 }

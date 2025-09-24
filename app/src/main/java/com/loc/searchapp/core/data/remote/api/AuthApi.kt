@@ -2,12 +2,12 @@ package com.loc.searchapp.core.data.remote.api
 
 import com.loc.searchapp.core.data.remote.dto.AuthResponse
 import com.loc.searchapp.core.data.remote.dto.LoginRequest
-import com.loc.searchapp.core.data.remote.dto.LogoutRequest
 import com.loc.searchapp.core.data.remote.dto.LogoutResponse
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenResponse
 import com.loc.searchapp.core.data.remote.dto.RegisterRequest
 import com.loc.searchapp.core.data.remote.dto.UpdateUserRequest
+import com.loc.searchapp.core.data.remote.dto.UserDto
 import com.loc.searchapp.core.data.remote.dto.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -29,7 +29,7 @@ interface AuthApi {
 
     @POST("auth/logout")
     suspend fun logout(
-        @Body request: LogoutRequest
+        @Body request: RefreshTokenRequest
     ): Response<LogoutResponse>
 
     @POST("auth/refresh")
@@ -40,7 +40,7 @@ interface AuthApi {
     @PATCH("/api/user")
     suspend fun updateUser(
         @Body updateUserRequest: UpdateUserRequest
-    ): Response<UserResponse>
+    ): Response<UserDto>
 
     @DELETE("api/user")
     suspend fun deleteUser(): Response<Unit>

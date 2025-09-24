@@ -1,75 +1,87 @@
 package com.loc.searchapp.core.data.repository
 
+import com.loc.searchapp.core.data.mappers.toDomain
+import com.loc.searchapp.core.data.mappers.toDto
+import com.loc.searchapp.core.data.mappers.toQueryMap
+import com.loc.searchapp.core.data.mappers.toQueryParam
 import com.loc.searchapp.core.data.remote.api.CatalogApi
-import com.loc.searchapp.core.data.remote.dto.CartResponse
-import com.loc.searchapp.core.data.remote.dto.CatalogDto
-import com.loc.searchapp.core.data.remote.dto.Category
-import com.loc.searchapp.core.data.remote.dto.DetailsData
-import com.loc.searchapp.core.data.remote.dto.FiltersResponse
 import com.loc.searchapp.core.data.remote.dto.ItemCartRequest
-import com.loc.searchapp.core.data.remote.dto.ItemCartResponse
+import com.loc.searchapp.core.domain.model.catalog.Cart
+import com.loc.searchapp.core.domain.model.catalog.Catalog
+import com.loc.searchapp.core.domain.model.catalog.CatalogId
+import com.loc.searchapp.core.domain.model.catalog.CatalogParams
+import com.loc.searchapp.core.domain.model.catalog.Category
+import com.loc.searchapp.core.domain.model.catalog.CategoryId
+import com.loc.searchapp.core.domain.model.catalog.Filters
+import com.loc.searchapp.core.domain.model.catalog.MessageResult
+import com.loc.searchapp.core.domain.model.catalog.ProductDetails
 import com.loc.searchapp.core.domain.repository.CatalogRepository
-import com.loc.searchapp.core.domain.model.catalog.FilterParams
-import com.loc.searchapp.core.domain.model.catalog.PaginationParams
-import com.loc.searchapp.core.domain.model.catalog.SearchParams
-import retrofit2.Response
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class CatalogRepositoryImpl @Inject constructor(
     private val api: CatalogApi
-): CatalogRepository {
+) : CatalogRepository {
 
-    override suspend fun getCatalog(
-        search: SearchParams,
-        filters: FilterParams,
-        pagination: PaginationParams,
-        categoryId: Int
-    ): Response<CatalogDto> {
-        return api.getCatalog(
-            searchCode = search.searchCode.takeIf { it.isNotBlank() },
-            searchShape = search.searchShape.takeIf { it.isNotBlank() },
-            searchDimensions = search.searchDimensions.takeIf { it.isNotBlank() },
-            searchMachine = search.searchMachine.takeIf { it.isNotBlank() },
-            bondIds = filters.bondIds.takeIf { it.isNotEmpty() },
-            gridSizeIds = filters.gridSizeIds.takeIf { it.isNotEmpty() },
-            mountingIds = filters.mountingIds.takeIf { it.isNotEmpty() },
-            categoryId = categoryId,
-            page = pagination.page,
-            itemsPerPage = pagination.itemsPerPage
-        )
+    override suspend fun getCatalog(params: CatalogParams, page: Int): Catalog {
+        val res = api.getCatalog(params.toQueryMap(page))
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Catalog fetch successful but body is null")
+        } else {
+            throw RuntimeException("Catalog fetch failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun getCatalogItem(
-        id: Int
-    ): Response<DetailsData> {
-        return api.getCatalogItem(id)
+    override suspend fun getCatalogItem(data: CatalogId): ProductDetails {
+        val res = api.getCatalogItem(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Catalog item fetch successful but body is null")
+        } else {
+            throw RuntimeException("Catalog item fetch failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun getCart(): Response<CartResponse> {
-        return api.getCart()
+    override suspend fun getCart(): Cart {
+        val res = api.getCart()
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Get cart successful but body is null")
+        } else {
+            throw RuntimeException("Get cart failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun addProduct(
-        id: Int
-    ): Response<ItemCartResponse> {
-        return api.addToCart(
-            ItemCartRequest(id)
-        )
+    override suspend fun addProduct(data: CatalogId): MessageResult {
+        val res = api.addToCart(ItemCartRequest(data.toDto()))
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Add product successful but body is null")
+        } else {
+            throw RuntimeException("Add product failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun deleteProduct(
-        id: Int
-    ): Response<ItemCartResponse> {
-        return api.removeFromCart(id)
+    override suspend fun deleteProduct(data: CatalogId): MessageResult {
+        val res = api.removeFromCart(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Delete product successful but body is null")
+        } else {
+            throw RuntimeException("Delete product failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun getCategories(): Response<List<Category>> {
-        return api.getCategories()
+    override suspend fun getCategories(): List<Category> {
+        val res = api.getCategories()
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Get categories successful but body is null")
+        } else {
+            throw RuntimeException("Get categories failed: ${res.code()} ${res.message()}")
+        }
     }
 
-    override suspend fun getFilters(
-        categoryId: Int
-    ): Response<FiltersResponse> {
-        return api.getFilters(categoryId)
+    override suspend fun getFilters(data: CategoryId): Filters {
+        val res = api.getFilters(data.toQueryParam())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain() ?: throw RuntimeException("Get filters successful but body is null")
+        } else {
+            throw RuntimeException("Get filters failed: ${res.code()} ${res.message()}")
+        }
     }
 }

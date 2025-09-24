@@ -3,34 +3,33 @@ package com.loc.searchapp.core.data.remote.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class YouTubeResponse(
-    val items: List<PlaylistItem>
+data class YoutubeResponse(
+    val items: List<PlaylistItemDto>
+)
+@Serializable
+data class PlaylistItemDto(
+    val snippet: SnippetDto
 )
 
 @Serializable
-data class PlaylistItem(
-    val snippet: Snippet
-)
-
-@Serializable
-data class Snippet(
+data class SnippetDto(
     val title: String,
-    val thumbnails: Thumbnails,
-    val resourceId: ResourceId
+    val thumbnails: ThumbnailsDto,
+    val resourceId: ResourceIdDto
 )
 
 @Serializable
-data class Thumbnails(
-    val high: Thumbnail? = null,
-    val medium: Thumbnail? = null,
+data class ThumbnailsDto(
+    val high: ThumbnailDto? = null,
+    val medium: ThumbnailDto? = null,
 )
 
 @Serializable
-data class Thumbnail(
+data class ThumbnailDto(
     val url: String
 )
 
 @Serializable
-data class ResourceId(
+data class ResourceIdDto(
     val videoId: String? = null
 )

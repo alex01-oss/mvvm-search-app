@@ -27,14 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
-import com.loc.searchapp.presentation.shared.components.SharedTopBar
+import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostsSpacerSize
 import com.loc.searchapp.presentation.posts.components.PostItemShimmer
 import com.loc.searchapp.presentation.shared.components.PostItem
+import com.loc.searchapp.presentation.shared.components.SharedTopBar
+import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
@@ -43,12 +43,12 @@ import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
 fun PostsScreen(
     viewModel: PostViewModel,
     authViewModel: AuthViewModel,
-    onPostClick: (PostResponse) -> Unit,
+    onPostClick: (Post) -> Unit,
     onBackClick: () -> Unit,
     onAddNewPost: () -> Unit,
 ) {
     val postState = viewModel.postsState.collectAsState().value
-    var showDeleteDialog by remember { mutableStateOf<PostResponse?>(null) }
+    var showDeleteDialog by remember { mutableStateOf<Post?>(null) }
 
     Scaffold(
         containerColor = Color.Transparent,

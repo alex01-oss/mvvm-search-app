@@ -4,38 +4,38 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Category(
+data class CategoryDto(
     val id: Int,
     val name: String,
     @SerialName("img_url") val imgUrl: String
 )
 
 @Serializable
-sealed class FilterItem {
+sealed class FilterItemDto {
     abstract val id: Int
 
     @Serializable
-    data class Bond(
+    data class BondDto(
         override val id: Int,
         @SerialName("name_bond") val nameBond: String
-    ) : FilterItem()
+    ) : FilterItemDto()
 
     @Serializable
-    data class Grid(
+    data class GridDto(
         override val id: Int,
         @SerialName("grid_size") val gridSize: String
-    ) : FilterItem()
+    ) : FilterItemDto()
 
     @Serializable
-    data class Mounting(
+    data class MountingDto(
         override val id: Int,
         val mm: String
-    ) : FilterItem()
+    ) : FilterItemDto()
 }
 
 @Serializable
 data class FiltersResponse(
-    val bonds: List<FilterItem.Bond> = emptyList(),
-    val grids: List<FilterItem.Grid> = emptyList(),
-    val mountings: List<FilterItem.Mounting> = emptyList()
+    val bonds: List<FilterItemDto.BondDto> = emptyList(),
+    val grids: List<FilterItemDto.GridDto> = emptyList(),
+    val mountings: List<FilterItemDto.MountingDto> = emptyList()
 )

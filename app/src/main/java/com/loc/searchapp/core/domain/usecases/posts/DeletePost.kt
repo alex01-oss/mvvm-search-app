@@ -1,15 +1,14 @@
 package com.loc.searchapp.core.domain.usecases.posts
 
-import com.loc.searchapp.core.data.remote.dto.DeletePostResponse
+import com.loc.searchapp.core.domain.model.posts.DeletePostResult
+import com.loc.searchapp.core.domain.model.posts.PostId
 import com.loc.searchapp.core.domain.repository.PostsRepository
-import retrofit2.Response
+import jakarta.inject.Inject
 
-class DeletePost(
+class DeletePost @Inject constructor(
     private val repository: PostsRepository
 ) {
-    suspend operator fun invoke(
-        postId: Int
-    ): Response<DeletePostResponse> {
-        return repository.deletePost(postId)
+    suspend operator fun invoke(data: PostId): DeletePostResult {
+        return repository.deletePost(data)
     }
 }

@@ -3,9 +3,10 @@ package com.loc.searchapp.presentation.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
-import com.loc.searchapp.core.data.remote.dto.Category
+import com.loc.searchapp.core.domain.model.catalog.Category
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.core.domain.usecases.youtube.YoutubeUseCases
+import com.loc.searchapp.presentation.shared.mapper.toUi
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.model.VideoUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,43 +47,16 @@ class HomeViewModel @Inject constructor(
             }
 
             try {
-                val res = catalogUseCases.getCategories()
-                if (res.isSuccessful) {
-                    val body = res.body()
-
-                    if (body != null) {
-                        _categoriesState.value = UiState.Success(body)
-                    } else {
-                        _categoriesState.value = UiState.Empty
-                    }
-                }
-
+                val categories = catalogUseCases.getCategories()
+                _categoriesState.value = UiState.Success(categories)
             } catch (e: Exception) {
-                _categoriesState.value = UiState.Error(e.localizedMessage ?: "Error loading categories")
+                _categoriesState.value =
+                    UiState.Error(e.localizedMessage ?: "Error loading categories")
             }
 
             try {
-                val res = youtubeUseCases.getLatestVideos()
-                if (res.isSuccessful) {
-                    val body = res.body()
-                    if (body != null) {
-                        val videos = body.filter { it.snippet.resourceId.videoId?.isNotBlank() == true }
-
-                        val uiVideos = videos.map { item ->
-                            VideoUi(
-                                videoId = item.snippet.resourceId.videoId!!,
-                                title = item.snippet.title,
-                                thumbnailUrl = item.snippet.thumbnails.high?.url
-                                    ?: item.snippet.thumbnails.medium?.url
-                                    ?: ""
-                            )
-                        }
-
-                        _videoState.value = UiState.Success(uiVideos)
-                    } else {
-                        _videoState.value = UiState.Empty
-                    }
-                }
+                val videos = youtubeUseCases.getLatestVideos().mapNotNull { it.toUi() }
+                _videoState.value = if (videos.isEmpty()) UiState.Empty else UiState.Success(videos)
             } catch (e: Exception) {
                 _videoState.value = UiState.Error(
                     e.localizedMessage ?: "Error loading videos"

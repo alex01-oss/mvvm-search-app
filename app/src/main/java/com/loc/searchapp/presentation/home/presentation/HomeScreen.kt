@@ -67,7 +67,7 @@ fun HomeScreen(
     onCategoryClick: (Int) -> Unit,
     onPostClick: (Int) -> Unit,
     onAvatarClick: () -> Unit,
-    onAllPostsClick: () -> Unit
+    onAllPostsClick: () -> Unit,
 ) {
     val categoriesState by viewModel.categoriesState.collectAsState()
     val videoIdsState by viewModel.videoState.collectAsState()

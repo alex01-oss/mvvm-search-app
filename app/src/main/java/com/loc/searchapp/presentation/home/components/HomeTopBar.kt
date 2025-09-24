@@ -100,7 +100,8 @@ fun HomeTopBar(
                             Avatar(
                                 firstName = "",
                                 lastName = "",
-                                onAvatarClick = onAvatarClick
+                                onAvatarClick = onAvatarClick,
+                                isTopBar = true
                             )
                         }
 

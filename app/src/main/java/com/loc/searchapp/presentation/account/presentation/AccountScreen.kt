@@ -157,7 +157,7 @@ fun AccountScreen(
                     ) {
                         Text(
                             text = stringResource(id = R.string.logout),
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
                         )
                     }
                 }

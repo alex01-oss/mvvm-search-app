@@ -26,8 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.PostResponse
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
@@ -37,6 +36,7 @@ import com.loc.searchapp.presentation.post_details.components.PostInfoTopBar
 import com.loc.searchapp.presentation.post_details.utils.formatDate
 import com.loc.searchapp.presentation.posts.components.PostDetailedShimmer
 import com.loc.searchapp.presentation.shared.components.PaddedContent
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.mohamedrejeb.richeditor.model.RichTextState
@@ -45,8 +45,8 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 @Composable
 fun PostDetailedScreen(
     modifier: Modifier = Modifier,
-    state: UiState<PostResponse>,
-    onEditClick: (PostResponse) -> Unit,
+    state: UiState<Post>,
+    onEditClick: (Post) -> Unit,
     onBackClick: () -> Unit,
     authViewModel: AuthViewModel,
     authorName: String? = null

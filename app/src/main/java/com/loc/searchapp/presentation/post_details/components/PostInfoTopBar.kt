@@ -11,15 +11,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.PostResponse
+import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 
 
 @Composable
 fun PostInfoTopBar(
-    post: PostResponse,
-    onEditClick: (PostResponse) -> Unit,
+    post: Post,
+    onEditClick: (Post) -> Unit,
     onBackClick: () -> Unit,
     authViewModel: AuthViewModel,
 ) {

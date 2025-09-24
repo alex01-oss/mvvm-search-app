@@ -12,7 +12,6 @@ import jakarta.inject.Named
 import jakarta.inject.Singleton
 import retrofit2.Retrofit
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AutocompleteModule {

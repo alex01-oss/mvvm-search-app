@@ -1,16 +1,14 @@
 package com.loc.searchapp.core.domain.usecases.catalog
 
-import com.loc.searchapp.core.data.remote.dto.ItemCartResponse
+import com.loc.searchapp.core.domain.model.catalog.CatalogId
+import com.loc.searchapp.core.domain.model.catalog.MessageResult
 import com.loc.searchapp.core.domain.repository.CatalogRepository
-import retrofit2.Response
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class AddProduct @Inject constructor(
     private val catalogRepository: CatalogRepository
 ) {
-    suspend operator fun invoke(
-        id: Int
-    ): Response<ItemCartResponse> {
-        return catalogRepository.addProduct(id)
+    suspend operator fun invoke(data: CatalogId): MessageResult {
+        return catalogRepository.addProduct(data)
     }
 }

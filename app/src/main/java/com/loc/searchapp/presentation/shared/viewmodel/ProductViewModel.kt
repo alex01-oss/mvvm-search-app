@@ -3,7 +3,8 @@ package com.loc.searchapp.presentation.shared.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
-import com.loc.searchapp.core.data.remote.dto.CartResponse
+import com.loc.searchapp.core.domain.model.catalog.Cart
+import com.loc.searchapp.core.domain.model.catalog.CatalogId
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.presentation.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ class ProductViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases,
     private val userPreferences: UserPreferences
 ) : ViewModel() {
-    private val _cartState = MutableStateFlow<UiState<CartResponse>>(UiState.Loading)
+    private val _cartState = MutableStateFlow<UiState<Cart>>(UiState.Loading)
     val cartState = _cartState.asStateFlow()
 
     private val _inProgress = MutableStateFlow<Set<Int>>(emptySet())
@@ -36,17 +37,8 @@ class ProductViewModel @Inject constructor(
             _cartState.value = UiState.Loading
 
             try {
-                val res = catalogUseCases.getCart()
-                if (res.isSuccessful) {
-                    val body = res.body()
-
-                    if (body != null) {
-                        _cartState.value = UiState.Success(body)
-                    } else {
-                        _cartState.value = UiState.Empty
-                    }
-                }
-
+                val cart = catalogUseCases.getCart()
+                _cartState.value = UiState.Success(cart)
             } catch (e: Exception) {
                 _cartState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             }
@@ -59,13 +51,9 @@ class ProductViewModel @Inject constructor(
             try {
                 val token = userPreferences.getAccessToken()
                 if (!token.isNullOrBlank()) {
-                    val res = catalogUseCases.addProduct(id)
-                    if (res.isSuccessful) {
-                        _buttonStates.update { it + (id to true) }
-                        loadCart()
-                    } else {
-                        _cartState.value = UiState.Error("Не вдалося додати товар")
-                    }
+                    catalogUseCases.addProduct(CatalogId(id))
+                    _buttonStates.update { it + (id to true) }
+                    loadCart()
                 }
             } catch (e: Exception) {
                 _cartState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
@@ -79,13 +67,9 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             _inProgress.update { it + id }
             try {
-                val res = catalogUseCases.deleteProduct(id)
-                if (res.isSuccessful) {
-                    _buttonStates.update { it + (id to false) }
-                    loadCart()
-                } else {
-                    _cartState.value = UiState.Error("Не вдалося видалити товар")
-                }
+                catalogUseCases.deleteProduct(CatalogId(id))
+                _buttonStates.update { it + (id to false) }
+                loadCart()
             } catch (e: Exception) {
                 _cartState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             } finally {

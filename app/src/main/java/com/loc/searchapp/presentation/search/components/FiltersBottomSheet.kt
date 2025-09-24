@@ -28,15 +28,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
-import com.loc.searchapp.core.data.remote.dto.FilterItem
-import com.loc.searchapp.core.data.remote.dto.FiltersResponse
+import com.loc.searchapp.core.domain.model.catalog.FilterItem
+import com.loc.searchapp.core.domain.model.catalog.Filters
 import com.loc.searchapp.presentation.home.components.FilterCategory
 import com.loc.searchapp.presentation.shared.model.UiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersBottomSheet(
-    state: UiState<FiltersResponse>,
+    state: UiState<Filters>,
     selectedFilters: Map<String, List<Int>>,
     onFilterToggle: (String, Int, Boolean) -> Unit,
     onDismiss: () -> Unit,
@@ -135,9 +135,16 @@ fun FiltersBottomSheet(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.Done, contentDescription = null)
+                    Icon(
+                        Icons.Default.Done,
+                        contentDescription = stringResource(R.string.apply),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.apply))
+                    Text(
+                        text = stringResource(R.string.apply),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
         }
