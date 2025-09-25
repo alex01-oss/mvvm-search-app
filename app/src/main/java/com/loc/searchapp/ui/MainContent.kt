@@ -4,20 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.loc.searchapp.presentation.onboarding.viewmodel.OnBoardingViewModel
-import com.loc.searchapp.presentation.shared.model.AuthState
-import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.loc.searchapp.navigation.graph.NavGraph
 import com.loc.searchapp.navigation.graph.Route
+import com.loc.searchapp.presentation.shared.model.AuthState
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 
 
 @Composable
 fun MainContent(
     mainViewModel: MainViewModel,
-    authViewModel: AuthViewModel,
-    onBoardingViewModel: OnBoardingViewModel
 ) {
     val startDestination = mainViewModel.startDestination
+    val authViewModel: AuthViewModel = hiltViewModel()
     val authState by authViewModel.authState.collectAsState()
 
     LaunchedEffect(startDestination, authState) {
@@ -36,7 +35,6 @@ fun MainContent(
         NavGraph(
             startDestination = startDestination,
             authViewModel = authViewModel,
-            onBoardingViewModel = onBoardingViewModel
         )
     }
 }

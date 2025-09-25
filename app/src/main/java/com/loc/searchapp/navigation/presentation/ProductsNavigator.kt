@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -27,17 +27,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
-import com.loc.searchapp.presentation.product_details.viewmodel.DetailsViewModel
-import com.loc.searchapp.presentation.shared.model.AuthState
-import com.loc.searchapp.presentation.shared.network.NetworkStatus
-import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.presentation.shared.viewmodel.ConnectivityViewModel
-import com.loc.searchapp.presentation.home.viewmodel.HomeViewModel
-import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
-import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
 import com.loc.searchapp.navigation.components.BottomNavigation
 import com.loc.searchapp.navigation.graph.Route
 import com.loc.searchapp.navigation.graph.authScreens
@@ -45,19 +36,29 @@ import com.loc.searchapp.navigation.graph.homeScreens
 import com.loc.searchapp.navigation.graph.postScreens
 import com.loc.searchapp.navigation.graph.settingsScreens
 import com.loc.searchapp.navigation.utils.navigateToTab
+import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
+import com.loc.searchapp.presentation.shared.model.AuthState
+import com.loc.searchapp.presentation.shared.network.NetworkStatus
+import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
+import com.loc.searchapp.presentation.shared.viewmodel.ConnectivityViewModel
+import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
+import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
 
 @Composable
 fun ProductsNavigator(
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
 ) {
     val navController = rememberNavController()
-    val productViewModel: ProductViewModel = hiltViewModel()
-    val homeViewModel: HomeViewModel = hiltViewModel()
-    val postViewModel: PostViewModel = hiltViewModel()
-    val detailsViewModel: DetailsViewModel = hiltViewModel()
 
+    val connectivityViewModel: ConnectivityViewModel = hiltViewModel()
+    val postViewModel: PostViewModel = hiltViewModel()
+    val productViewModel: ProductViewModel = hiltViewModel()
+
+    val networkStatus by connectivityViewModel.networkStatus.collectAsState()
     val authState by authViewModel.authState.collectAsState()
+    val backstackState by navController.currentBackStackEntryAsState()
+    val context = LocalContext.current
 
     val startDestination = when (authState) {
         is AuthState.Authenticated -> Route.HomeScreen.route
@@ -67,11 +68,6 @@ fun ProductsNavigator(
             return
         }
     }
-
-    val connectivityViewModel: ConnectivityViewModel = hiltViewModel()
-    val networkStatus by connectivityViewModel.networkStatus.collectAsState()
-    val backstackState by navController.currentBackStackEntryAsState()
-    val context = LocalContext.current
 
     val bottomNavigationItems = listOf(
         BottomNavItem(
@@ -151,10 +147,8 @@ fun ProductsNavigator(
                 mainNavGraph(
                     navController,
                     authViewModel,
-                    productViewModel,
-                    homeViewModel,
                     postViewModel,
-                    detailsViewModel,
+                    productViewModel
                 )
             }
 
@@ -187,30 +181,26 @@ fun ProductsNavigator(
 fun NavGraphBuilder.mainNavGraph(
     navController: NavController,
     authViewModel: AuthViewModel,
-    productViewModel: ProductViewModel,
-    homeViewModel: HomeViewModel,
     postViewModel: PostViewModel,
-    detailsViewModel: DetailsViewModel,
+    productViewModel: ProductViewModel
 ) {
     homeScreens(
         navController,
         authViewModel,
-        productViewModel,
-        homeViewModel,
         postViewModel,
-        detailsViewModel,
+        productViewModel
     )
     authScreens(
         navController,
-        authViewModel
+        authViewModel,
     )
     postScreens(
         navController,
         authViewModel,
-        postViewModel
+        postViewModel,
     )
     settingsScreens(
         navController,
-        authViewModel
+        authViewModel,
     )
 }

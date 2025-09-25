@@ -9,16 +9,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.loc.searchapp.core.ui.theme.SearchAppTheme
 import com.loc.searchapp.core.utils.LanguagePreference
 import com.loc.searchapp.core.utils.LocaleHelper
-import com.loc.searchapp.presentation.onboarding.viewmodel.OnBoardingViewModel
-import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.ui.components.AppBackground
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val mainViewModel by viewModels<MainViewModel>()
-    private val authViewModel by viewModels<AuthViewModel>()
-    private val onBoardingViewModel by viewModels<OnBoardingViewModel>()
 
     override fun attachBaseContext(newBase: Context) {
         val language = LanguagePreference.getLanguage(newBase)
@@ -38,11 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SearchAppTheme {
                 AppBackground {
-                    MainContent(
-                        mainViewModel = mainViewModel,
-                        authViewModel = authViewModel,
-                        onBoardingViewModel = onBoardingViewModel
-                    )
+                    MainContent(mainViewModel = mainViewModel)
                 }
             }
         }

@@ -1,9 +1,10 @@
 package com.loc.searchapp.navigation.graph
 
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -25,12 +26,12 @@ import com.loc.searchapp.navigation.utils.navigateToTab
 fun NavGraphBuilder.homeScreens(
     navController: NavController,
     authViewModel: AuthViewModel,
-    productViewModel: ProductViewModel,
-    homeViewModel: HomeViewModel,
     postViewModel: PostViewModel,
-    detailsViewModel: DetailsViewModel,
+    productViewModel: ProductViewModel
 ) {
     composable(route = Route.HomeScreen.route) {
+        val homeViewModel: HomeViewModel = hiltViewModel()
+
         HomeScreen(
             authViewModel = authViewModel,
             postViewModel = postViewModel,
@@ -69,6 +70,17 @@ fun NavGraphBuilder.homeScreens(
     }
 
     composable(route = Route.CartScreen.route) {
+        LaunchedEffect(Unit) {
+            productViewModel.setCartScreenActive(true)
+            productViewModel.loadCart()
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                productViewModel.setCartScreenActive(false)
+            }
+        }
+
         CartScreen(
             viewModel = productViewModel,
             authViewModel = authViewModel,
@@ -85,6 +97,8 @@ fun NavGraphBuilder.homeScreens(
         route = Route.ProductDetailsScreen.route,
         arguments = listOf(navArgument("productId") { type = NavType.IntType })
     ) { backStackEntry ->
+        val detailsViewModel: DetailsViewModel = hiltViewModel()
+
         val productId = backStackEntry.arguments?.getInt("productId") ?: -1
         val state by detailsViewModel.detailsState.collectAsState()
 

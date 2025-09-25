@@ -1,21 +1,21 @@
 package com.loc.searchapp.navigation.graph
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.loc.searchapp.navigation.presentation.ProductsNavigator
 import com.loc.searchapp.presentation.onboarding.model.OnBoardingEvent
 import com.loc.searchapp.presentation.onboarding.presentation.OnBoardingScreen
 import com.loc.searchapp.presentation.onboarding.viewmodel.OnBoardingViewModel
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.navigation.presentation.ProductsNavigator
 
 @Composable
 fun NavGraph(
     startDestination: String,
     authViewModel: AuthViewModel,
-    onBoardingViewModel: OnBoardingViewModel
 ) {
     val navController = rememberNavController()
 
@@ -28,6 +28,8 @@ fun NavGraph(
             startDestination = Route.OnBoardingScreen.route
         ) {
             composable(route = Route.OnBoardingScreen.route) {
+                val onBoardingViewModel: OnBoardingViewModel = hiltViewModel()
+
                 OnBoardingScreen(
                     event = { event ->
                         onBoardingViewModel.onEvent(event)

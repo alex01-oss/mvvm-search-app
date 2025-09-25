@@ -19,6 +19,12 @@ class ProductViewModel @Inject constructor(
     private val catalogUseCases: CatalogUseCases,
     private val userPreferences: UserPreferences
 ) : ViewModel() {
+
+    private var isCartScreenActive = false
+
+    fun setCartScreenActive(active: Boolean) {
+        isCartScreenActive = active
+    }
     private val _cartState = MutableStateFlow<UiState<Cart>>(UiState.Loading)
     val cartState = _cartState.asStateFlow()
 
@@ -27,10 +33,6 @@ class ProductViewModel @Inject constructor(
 
     private val _buttonStates = MutableStateFlow<Map<Int, Boolean>>(emptyMap())
     val buttonStates = _buttonStates.asStateFlow()
-
-    init {
-        loadCart()
-    }
 
     fun loadCart() {
         viewModelScope.launch {
@@ -53,7 +55,9 @@ class ProductViewModel @Inject constructor(
                 if (!token.isNullOrBlank()) {
                     catalogUseCases.addProduct(CatalogId(id))
                     _buttonStates.update { it + (id to true) }
-                    loadCart()
+                    if (isCartScreenActive) {
+                        loadCart()
+                    }
                 }
             } catch (e: Exception) {
                 _cartState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
@@ -69,16 +73,14 @@ class ProductViewModel @Inject constructor(
             try {
                 catalogUseCases.deleteProduct(CatalogId(id))
                 _buttonStates.update { it + (id to false) }
-                loadCart()
+                if (isCartScreenActive) {
+                    loadCart()
+                }
             } catch (e: Exception) {
                 _cartState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             } finally {
                 _inProgress.update { it - id }
             }
         }
-    }
-
-    fun getButtonState(productId: Int, originalIsInCart: Boolean): Boolean {
-        return _buttonStates.value[productId] ?: originalIsInCart
     }
 }
