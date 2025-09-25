@@ -8,11 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.loc.searchapp.core.domain.model.autocomplete.AutocompleteParams
-import com.loc.searchapp.core.domain.model.catalog.CatalogParams
 import com.loc.searchapp.core.domain.model.catalog.CategoryId
 import com.loc.searchapp.core.domain.model.catalog.FilterParams
 import com.loc.searchapp.core.domain.model.catalog.Filters
 import com.loc.searchapp.core.domain.model.catalog.SearchParams
+import com.loc.searchapp.core.domain.model.catalog.toCatalogParams
 import com.loc.searchapp.core.domain.usecases.autocomplete.AutocompleteUseCases
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
 import com.loc.searchapp.presentation.search.model.SearchState
@@ -86,16 +86,9 @@ class SearchViewModel @Inject constructor(
         .filterNotNull()
         .distinctUntilChanged()
         .flatMapLatest {
-            val params = CatalogParams(
-                searchCode = state.value.searchParams.searchCode,
-                searchShape = state.value.searchParams.searchShape,
-                searchDimensions = state.value.searchParams.searchDimensions,
-                searchMachine = state.value.searchParams.searchMachine,
-                bondIds = state.value.filterParams.bondIds,
-                gridSizeIds = state.value.filterParams.gridSizeIds,
-                mountingIds = state.value.filterParams.mountingIds,
-                categoryId = state.value.categoryId,
-                itemsPerPage = 8,
+            val params = state.value.searchParams.toCatalogParams(
+                filterParams = state.value.filterParams,
+                categoryId = state.value.categoryId
             )
 
             catalogUseCases.getCatalogPaging(params)

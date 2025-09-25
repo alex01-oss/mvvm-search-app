@@ -15,3 +15,19 @@ data class FilterParams(
     val gridSizeIds: List<Int> = emptyList(),
     val mountingIds: List<Int> = emptyList(),
 )
+
+fun SearchParams.toCatalogParams(
+    filterParams: FilterParams,
+    categoryId: Int,
+    itemsPerPage: Int = 8
+) = CatalogParams(
+    searchCode = searchCode.takeIf { it.isNotBlank() },
+    searchShape = searchShape.takeIf { it.isNotBlank() },
+    searchDimensions = searchDimensions.takeIf { it.isNotBlank() },
+    searchMachine = searchMachine.takeIf { it.isNotBlank() },
+    bondIds = filterParams.bondIds.takeIf { it.isNotEmpty() },
+    gridSizeIds = filterParams.gridSizeIds.takeIf { it.isNotEmpty() },
+    mountingIds = filterParams.mountingIds.takeIf { it.isNotEmpty() },
+    categoryId = categoryId,
+    itemsPerPage = itemsPerPage,
+)
