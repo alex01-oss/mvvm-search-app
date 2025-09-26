@@ -53,13 +53,14 @@ fun NavGraphBuilder.postScreens(
         PostDetailedScreen(
             state = postState,
             authViewModel = authViewModel,
-            onEditClick = { post ->
-                postViewModel.initEditMode(post.id)
-                navController.navigate(Route.PostEditorScreen.createRoute(post.id))
+            onEditClick = { id ->
+                postViewModel.initEditMode(id)
+                navController.navigate(Route.PostEditorScreen.createRoute(id))
             },
             onBackClick = {
                 navController.popBackStack()
-            }
+            },
+            postId = postId,
         )
     }
 

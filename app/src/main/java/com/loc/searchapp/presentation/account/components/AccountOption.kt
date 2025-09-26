@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 
 @Composable
 fun AccountOption(
@@ -26,7 +26,7 @@ fun AccountOption(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(vertical = SmallPadding)
+            .padding(vertical = BasePadding)
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -36,7 +36,7 @@ fun AccountOption(
             contentDescription = null,
         )
 
-        Spacer(modifier = Modifier.width(SmallPadding))
+        Spacer(modifier = Modifier.width(BasePadding))
 
         Text(
             text = text,

@@ -21,8 +21,7 @@ import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.utils.LanguagePreference
 import com.loc.searchapp.presentation.language.components.LanguageOption
 import kotlinx.coroutines.delay
@@ -65,7 +64,7 @@ fun LanguageScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Spacer(modifier = Modifier.height(MediumPadding1))
+            Spacer(modifier = Modifier.height(BasePadding))
 
             languages.forEachIndexed { index, (label, code, iconRes) ->
                 LanguageOption(
@@ -79,7 +78,7 @@ fun LanguageScreen(
                 )
 
                 if (index != languages.lastIndex) {
-                    Spacer(modifier = Modifier.height(SmallPadding))
+                    Spacer(modifier = Modifier.height(BasePadding))
                 }
             }
         }

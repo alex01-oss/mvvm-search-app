@@ -70,10 +70,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout(data: RefreshData): LogoutResult {
+    override suspend fun logout(data: RefreshData): LogoutResult? {
         val res = api.logout(data.toDto())
         return if (res.isSuccessful) {
-            res.body()?.toDomain() ?: throw RuntimeException("Logout successful but body is null")
+            res.body()?.toDomain()
         } else {
             throw RuntimeException("Logout failed: ${res.code()} ${res.message()}")
         }

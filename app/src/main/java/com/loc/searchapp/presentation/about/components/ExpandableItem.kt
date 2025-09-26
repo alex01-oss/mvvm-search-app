@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,8 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
@@ -35,7 +36,11 @@ fun ExpandableItem(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(StrongCorner)
+        shape = RoundedCornerShape(StrongCorner),
+        elevation = CardDefaults.cardElevation(0.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        )
     ) {
         Column(
             modifier = Modifier
@@ -61,7 +66,7 @@ fun ExpandableItem(
                 Text(
                     text = content,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = SmallPadding)
+                    modifier = Modifier.padding(top = BasePadding)
                 )
             }
         }

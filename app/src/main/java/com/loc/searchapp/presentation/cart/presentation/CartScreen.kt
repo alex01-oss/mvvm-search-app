@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.presentation.cart.components.CartList
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
@@ -60,7 +60,7 @@ fun CartScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = paddingValues.calculateTopPadding())
-                .padding(horizontal = MediumPadding1),
+                .padding(horizontal = BasePadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (authState) {
@@ -77,7 +77,7 @@ fun CartScreen(
                 }
 
                 AuthState.Unauthenticated -> {
-                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(BasePadding))
                     GuestUser(onAuthClick = onAuthClick)
                 }
 

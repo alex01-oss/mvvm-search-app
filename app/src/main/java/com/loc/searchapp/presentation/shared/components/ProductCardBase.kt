@@ -1,8 +1,9 @@
 package com.loc.searchapp.presentation.shared.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,22 +23,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.EmptyIconSize
+import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
+import com.loc.searchapp.core.ui.values.Dimens.ImageSize
+import com.loc.searchapp.core.ui.values.Dimens.SmallCorner
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
+import com.loc.searchapp.presentation.search.components.ProductDetailRowGrid
 import com.loc.searchapp.presentation.shared.components.notifications.SnackbarManager
 
 @Composable
@@ -59,133 +68,138 @@ fun ProductCardBase(
         snackbarHostState = remember { SnackbarHostState() }
     )
 
-    Row(
+    Card(
         modifier = modifier
             .clickable { onClick() }
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(StrongCorner))
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(BasePadding)
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(ProductCardSize)
-                .clip(MaterialTheme.shapes.small),
-            model = ImageRequest.Builder(context)
-                .data(imageUrl)
-                .crossfade(true)
-                .error(R.drawable.placeholder_image)
-                .fallback(R.drawable.placeholder_image)
-                .build(),
-            contentDescription = product.code,
-        )
-
-        Column(
-            verticalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
-                .padding(start = MediumPadding1, end = ExtraSmallPadding)
-                .height(ProductCardSize)
-                .weight(1f)
-        ) {
-            Text(
-                text = product.code,
-                style = MaterialTheme.typography.bodyMedium,
-                color = colorResource(id = R.color.text_title),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(StrongCorner),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = if (isInCart) {
+            BorderStroke(SmallCorner, MaterialTheme.colorScheme.primary)
+        } else {
+            BorderStroke(
+                ExtraSmallCorner,
+                MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)
             )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(BasePadding)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = BasePadding),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(SmallCorner),
+                    border = BorderStroke(
+                        ExtraSmallCorner,
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                    ,
+                    color = Color.Transparent
+                ) {
+                    Text(
+                        text = product.code,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.padding(
+                            horizontal = SmallPadding,
+                            vertical = ExtraSmallPadding
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(id = R.string.shape),
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = colorResource(id = R.color.body),
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(EmptyIconSize),
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .size(ImageSize)
+                        .clip(MaterialTheme.shapes.small),
+                    model = ImageRequest.Builder(context)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .error(R.drawable.placeholder_image)
+                        .fallback(R.drawable.placeholder_image)
+                        .build(),
+                    contentDescription = product.code,
+                    contentScale = ContentScale.Fit
                 )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = BasePadding),
+                verticalArrangement = Arrangement.spacedBy(SmallPadding)
+            ) {
                 Text(
                     text = product.shape,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colorResource(id = R.color.body),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
-            }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(id = R.string.dimensions),
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = colorResource(id = R.color.body),
+                ProductDetailRowGrid(
+                    label = stringResource(id = R.string.dimensions),
+                    value = product.dimensions
                 )
-                Text(
-                    text = product.dimensions,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colorResource(id = R.color.body),
-                )
-            }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(id = R.string.bond),
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = colorResource(id = R.color.body),
-                )
                 if (product.nameBonds.isNotEmpty()) {
-                    Text(
-                        text = product.nameBonds.joinToString(", "),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = colorResource(id = R.color.body),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                    ProductDetailRowGrid(
+                        label = stringResource(id = R.string.bond),
+                        value = product.nameBonds.joinToString(", ")
+                    )
+                }
+
+                if (product.gridSize.isNotBlank()) {
+                    ProductDetailRowGrid(
+                        label = stringResource(id = R.string.grid_size),
+                        value = product.gridSize
+                    )
+                }
+
+                if (product.mounting?.mm?.isNotBlank() == true) {
+                    ProductDetailRowGrid(
+                        label = stringResource(id = R.string.fit),
+                        value = product.mounting.mm
                     )
                 }
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(id = R.string.grid_size),
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = colorResource(id = R.color.body),
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CartActionButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    isInCart = isInCart,
+                    isInProgress = product.id in inProgress,
+                    onAddToCart = {
+                        onAdd()
+                        snackbarManager.show(addMessage)
+                    },
+                    onRemoveFromCart = {
+                        onRemove()
+                        snackbarManager.show(removeMessage)
+                    }
                 )
-                Text(
-                    text = product.gridSize,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colorResource(id = R.color.body),
-                )
             }
-
-            if (product.mounting?.mm?.isNotBlank() == true) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(id = R.string.fit),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                        color = colorResource(id = R.color.body),
-                    )
-                    Text(
-                        text = product.mounting.mm,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = colorResource(id = R.color.body),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(end = SmallPadding)
-        ) {
-            CartActionButton(
-                isInCart = isInCart,
-                isInProgress = product.id in inProgress,
-                onAddToCart = {
-                    onAdd()
-                    snackbarManager.show(addMessage)
-                },
-                onRemoveFromCart = {
-                    onRemove()
-                    snackbarManager.show(removeMessage)
-                }
-            )
         }
     }
 }

@@ -3,6 +3,7 @@ package com.loc.searchapp.presentation.home.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,11 +29,11 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.presentation.shared.components.Avatar
 import com.loc.searchapp.core.ui.values.Dimens.AvatarSize
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.TopBarPadding
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
+import com.loc.searchapp.presentation.shared.components.Avatar
 import com.loc.searchapp.presentation.shared.model.AuthState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 
@@ -47,6 +48,8 @@ fun HomeTopBar(
 ) {
     val authState = viewModel.authState.collectAsState().value
 
+    val isDark = isSystemInDarkTheme()
+
     val backgroundColor by animateColorAsState(
         targetValue = lerp(
             Color.Transparent,
@@ -55,6 +58,16 @@ fun HomeTopBar(
         ),
         animationSpec = tween(300),
         label = "AppBarColor"
+    )
+
+    val dynamicColor by animateColorAsState(
+        targetValue = if (isDark) {
+            Color.White
+        } else {
+            lerp(Color.Black, Color.White, scrollState.coerceIn(0f, 1f))
+        },
+        animationSpec = tween(300),
+        label = "AvatarColor"
     )
 
     Surface(
@@ -67,7 +80,7 @@ fun HomeTopBar(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = TopBarPadding, end = MediumPadding1),
+                        .padding(start = TopBarPadding, end = BasePadding),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -93,6 +106,8 @@ fun HomeTopBar(
                                 lastName = user?.fullname?.substringAfter(" ")
                                     ?: stringResource(id = R.string.guest),
                                 onAvatarClick = onAvatarClick,
+                                dynamicColor = dynamicColor,
+                                isTopBar = true
                             )
                         }
 
@@ -101,7 +116,8 @@ fun HomeTopBar(
                                 firstName = "",
                                 lastName = "",
                                 onAvatarClick = onAvatarClick,
-                                isTopBar = true
+                                isTopBar = true,
+                                dynamicColor = dynamicColor,
                             )
                         }
 

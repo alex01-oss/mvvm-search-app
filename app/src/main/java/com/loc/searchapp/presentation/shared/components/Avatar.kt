@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +30,8 @@ fun Avatar(
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     placeholder: @Composable (() -> Unit)? = null,
     onAvatarClick: () -> Unit,
-    isTopBar: Boolean = false
+    isTopBar: Boolean = false,
+    dynamicColor: Color = Color.White
 ) {
     Box(
         modifier
@@ -38,7 +40,7 @@ fun Avatar(
             .clip(CircleShape)
             .border(
                 width = BorderStroke,
-                color = if (isTopBar) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+                color = if (isTopBar) dynamicColor else MaterialTheme.colorScheme.onBackground,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -50,7 +52,7 @@ fun Avatar(
             Text(
                 text = initials,
                 style = textStyle,
-                color = if (isTopBar) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+                color = if (isTopBar) dynamicColor else MaterialTheme.colorScheme.onBackground,
             )
         } else {
             placeholder?.invoke() ?: DefaultPlaceholder(size = size)

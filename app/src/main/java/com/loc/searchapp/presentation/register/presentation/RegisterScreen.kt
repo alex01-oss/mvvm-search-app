@@ -26,10 +26,11 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.auth.AuthField
+import com.loc.searchapp.core.ui.values.Dimens.AboutLogoSize
 import com.loc.searchapp.core.ui.values.Dimens.LogoHeight
+import com.loc.searchapp.core.ui.values.Dimens.TitleSize
 import com.loc.searchapp.core.utils.FormValidator
 import com.loc.searchapp.presentation.shared.components.AuthForm
 import com.loc.searchapp.presentation.shared.model.AuthEvent
@@ -72,20 +73,21 @@ fun RegisterScreen(
         phoneError = FormValidator.validatePhone(phone)
         passwordError = FormValidator.validatePassword(password)
 
-        return fullnameError == null && emailError == null && phoneError == null && passwordError == null
+        return fullnameError == null
+            && emailError == null
+            && phoneError == null
+            && passwordError == null
     }
 
     LaunchedEffect(authState) {
-        if (authState is AuthState.Authenticated) {
-            onAuthenticated()
-        }
+        if (authState is AuthState.Authenticated) onAuthenticated()
     }
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(LogoHeight))
+        Spacer(modifier = Modifier.height(AboutLogoSize))
 
         Image(
             modifier = Modifier.height(LogoHeight),
@@ -100,7 +102,7 @@ fun RegisterScreen(
                 withStyle(
                     SpanStyle(
                         color = MaterialTheme.colorScheme.onBackground,
-                        fontSize = 28.sp,
+                        fontSize = TitleSize,
                         fontWeight = FontWeight.Bold
                     )
                 ) {
@@ -110,7 +112,7 @@ fun RegisterScreen(
                 withStyle(
                     SpanStyle(
                         color = colorResource(id = R.color.light_red),
-                        fontSize = 28.sp,
+                        fontSize = TitleSize,
                         fontWeight = FontWeight.Bold
                     )
                 ) {

@@ -30,7 +30,7 @@ import com.loc.searchapp.core.domain.model.common.BottomNavItem
 import com.loc.searchapp.core.ui.values.Dimens.ActiveButtonSize
 import com.loc.searchapp.core.ui.values.Dimens.BottomNavMargin
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 
 @Composable
@@ -46,7 +46,7 @@ fun BottomNavigation(
         modifier
             .fillMaxWidth()
             .height(navBarHeight + 60.dp)
-            .padding(horizontal = MediumPadding1)
+            .padding(horizontal = BasePadding)
             .padding(bottom = BottomNavMargin),
         contentAlignment = Alignment.BottomCenter
     ) {
@@ -64,7 +64,7 @@ fun BottomNavigation(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = MediumPadding1),
+                    .padding(horizontal = BasePadding),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -116,10 +116,10 @@ fun BottomNavigation(
                 val placeables = measurables.map { it.measure(constraints) }
                 val buttonPlaceable = placeables.first()
 
-                val availableWidth = constraints.maxWidth - (2 * MediumPadding1.roundToPx())
+                val availableWidth = constraints.maxWidth - (2 * BasePadding.roundToPx())
                 val itemWidth = availableWidth / items.size
 
-                val paddingOffset = MediumPadding1.roundToPx()
+                val paddingOffset = BasePadding.roundToPx()
                 val centerX = paddingOffset + (selected * itemWidth) + (itemWidth / 2)
                 val posX = centerX - (buttonPlaceable.width / 2)
 

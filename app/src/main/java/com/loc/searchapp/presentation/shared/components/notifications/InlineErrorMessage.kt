@@ -16,8 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 
 @Composable
 fun InlineErrorMessage(
@@ -27,12 +26,12 @@ fun InlineErrorMessage(
     Surface(
         modifier
             .fillMaxWidth()
-            .padding(bottom = MediumPadding1),
+            .padding(bottom = BasePadding),
         color = MaterialTheme.colorScheme.errorContainer,
         shape = MaterialTheme.shapes.small
     ) {
         Row(
-            modifier = Modifier.padding(MediumPadding1),
+            modifier = Modifier.padding(BasePadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -40,7 +39,7 @@ fun InlineErrorMessage(
                 contentDescription = stringResource(id = R.string.error),
                 tint = MaterialTheme.colorScheme.error
             )
-            Spacer(modifier = Modifier.width(SmallPadding))
+            Spacer(modifier = Modifier.width(BasePadding))
             Text(
                 text = message,
                 color = MaterialTheme.colorScheme.onErrorContainer,

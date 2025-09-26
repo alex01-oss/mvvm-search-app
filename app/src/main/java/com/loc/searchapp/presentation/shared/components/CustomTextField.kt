@@ -22,9 +22,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
 fun CustomTextField(
@@ -57,13 +57,13 @@ fun CustomTextField(
                 else MaterialTheme.colorScheme.onBackground
         ),
         keyboardOptions = KeyboardOptions.Default,
-        shape = RoundedCornerShape(BasePadding),
+        shape = RoundedCornerShape(StrongCorner),
         leadingIcon = {
             Icon(
                 painter = painterResource,
                 modifier = Modifier
                     .size(IconSize)
-                    .padding(start = ExtraSmallPadding2),
+                    .padding(start = SmallPadding),
                 contentDescription = placeholder,
                 tint =
                     if (isError) MaterialTheme.colorScheme.error
@@ -106,13 +106,13 @@ fun PasswordTextField(
                 else MaterialTheme.colorScheme.onBackground
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        shape = RoundedCornerShape(BasePadding),
+        shape = RoundedCornerShape(StrongCorner),
         leadingIcon = {
             Icon(
                 painter = painterResource,
                 modifier = Modifier
                     .size(IconSize)
-                    .padding(start = ExtraSmallPadding2),
+                    .padding(start = SmallPadding),
                 contentDescription = placeholder,
                 tint =
                     if (isError) MaterialTheme.colorScheme.error

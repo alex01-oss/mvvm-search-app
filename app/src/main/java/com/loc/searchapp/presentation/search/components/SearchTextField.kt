@@ -25,8 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
+import com.loc.searchapp.core.ui.values.Dimens.AboutTextWidth
+import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
+import com.loc.searchapp.core.ui.values.Dimens.IconSize
+import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,8 +73,8 @@ fun SearchTextField(
             trailingIcon = {
                 if (isLoadingSuggestions) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp
+                        modifier = Modifier.size(IconSize),
+                        strokeWidth = BorderStroke
                     )
                 } else if (suggestions.isNotEmpty()) {
                     Icon(
@@ -86,14 +89,14 @@ fun SearchTextField(
                 .menuAnchor()
             ,
             singleLine = true,
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(IndicatorSize)
         )
 
         if (suggestions.isNotEmpty()) {
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.heightIn(max = 200.dp)
+                modifier = Modifier.heightIn(max = AboutTextWidth)
             ) {
                 suggestions.take(5).forEach { suggestion ->
                     DropdownMenuItem(
@@ -112,7 +115,7 @@ fun SearchTextField(
                             Icon(
                                 Icons.Default.Search,
                                 contentDescription = null,
-                                modifier = Modifier.size(16.dp),
+                                modifier = Modifier.size(IndicatorSize),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }

@@ -10,7 +10,7 @@ class LogoutUser @Inject constructor(
 ) {
     suspend operator fun invoke(
         data: RefreshData
-    ): LogoutResult {
+    ): LogoutResult? {
         return authRepository.logout(data)
     }
 }

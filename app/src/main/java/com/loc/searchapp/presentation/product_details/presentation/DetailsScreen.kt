@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,15 +30,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.ProductDetails
 import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.presentation.product_details.components.EquipmentRow
 import com.loc.searchapp.presentation.product_details.components.ProductInfoRow
@@ -122,16 +123,19 @@ fun DetailsScreen(
 
                 LazyColumn(
                     modifier = modifierWithPadding,
-                    contentPadding = PaddingValues(horizontal = MediumPadding1, vertical = MediumPadding1)
+                    contentPadding = PaddingValues(horizontal = BasePadding, vertical = BasePadding)
                 ) {
                     fun card(content: @Composable ColumnScope.() -> Unit) {
                         item {
                             Card(
-                                modifier = Modifier.fillMaxWidth().padding(bottom = MediumPadding1),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = BasePadding),
                                 elevation = CardDefaults.cardElevation(ExtraSmallPadding),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                shape = RoundedCornerShape(StrongCorner)
                             ) {
-                                Column(Modifier.padding(MediumPadding1), content = content)
+                                Column(Modifier.padding(BasePadding), content = content)
                             }
                         }
                     }
@@ -152,7 +156,7 @@ fun DetailsScreen(
                             text = stringResource(id = R.string.product_details),
                             style = MaterialTheme.typography.titleLarge,
                             color = colorResource(id = R.color.light_red),
-                            modifier = Modifier.padding(bottom = SmallPadding)
+                            modifier = Modifier.padding(bottom = BasePadding)
                         )
 
                         @Composable
@@ -171,46 +175,53 @@ fun DetailsScreen(
                         }
                     }
 
-                        card {
-                            Text(
-                                text = stringResource(id = R.string.bond_info),
-                                style = MaterialTheme.typography.titleLarge,
-                                color = colorResource(id = R.color.light_red),
-                                modifier = Modifier.padding(bottom = SmallPadding)
+                    card {
+                        Text(
+                            text = stringResource(id = R.string.bond_info),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = colorResource(id = R.color.light_red),
+                        )
+
+                        data.bonds.forEach { bond ->
+                            HorizontalDivider(modifier = Modifier.padding(
+                                vertical = ExtraSmallPadding)
                             )
 
-                            data.bonds.forEach { bond ->
+                            Text(
+                                text = bond.nameBond,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.padding(
+                                    top = BasePadding,
+                                    bottom = SmallPadding
+                                )
+                            )
+
+                            Text(
+                                text = bond.bondDescription,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+
+                            if (bond.bondCooling.isNotEmpty()) {
                                 Text(
-                                    text = bond.nameBond,
-                                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.padding(bottom = SmallPadding)
+                                    text = stringResource(id = R.string.cooling_instructions),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = colorResource(id = R.color.light_red),
+                                    modifier = Modifier.padding(
+                                        top = BasePadding,
+                                        bottom = ExtraSmallPadding
+                                    )
                                 )
 
                                 Text(
-                                    text = bond.bondDescription,
+                                    text = bond.bondCooling,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
-
-                                if (bond.bondCooling.isNotEmpty()) {
-                                    HorizontalDivider(modifier = Modifier.padding(vertical = ExtraSmallPadding))
-
-                                    Text(
-                                        text = stringResource(id = R.string.cooling_instructions),
-                                        style = MaterialTheme.typography.titleSmall,
-                                        color = colorResource(id = R.color.light_red),
-                                        modifier = Modifier.padding(top = SmallPadding, bottom = ExtraSmallPadding)
-                                    )
-
-                                    Text(
-                                        text = bond.bondCooling,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
                             }
                         }
+                    }
 
                     if (data.machines.isNotEmpty()) {
                         card {
@@ -224,7 +235,9 @@ fun DetailsScreen(
                             data.machines.forEachIndexed { index, machine ->
                                 EquipmentRow(machine.model, machine.name)
                                 if (index < data.machines.size - 1) {
-                                    HorizontalDivider(modifier = Modifier.padding(vertical = ExtraSmallPadding))
+                                    HorizontalDivider(modifier = Modifier.padding(
+                                        vertical = ExtraSmallPadding)
+                                    )
                                 }
                             }
                         }

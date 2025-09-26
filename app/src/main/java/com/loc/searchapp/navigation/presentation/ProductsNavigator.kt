@@ -27,7 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.navigation.components.BottomNavigation
 import com.loc.searchapp.navigation.graph.Route
@@ -157,8 +157,8 @@ fun ProductsNavigator(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(
-                            start = MediumPadding1,
-                            end = MediumPadding1,
+                            start = BasePadding,
+                            end = BasePadding,
                             bottom = if (isBottomBarVisible) paddingValues.calculateBottomPadding()
                             else TopLogoHeight
                         ),

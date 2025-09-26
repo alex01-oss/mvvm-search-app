@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.auth.AuthField
 import com.loc.searchapp.core.domain.model.auth.User
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
 import com.loc.searchapp.presentation.shared.components.AuthForm
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
@@ -46,6 +47,7 @@ fun SettingsScreen(
 ) {
     val state by viewModel.authState.collectAsState()
     val context = LocalContext.current
+    val themeColor = themeAdaptiveColor()
 
     var fullname by rememberSaveable { mutableStateOf(state.getUser()?.fullname.orEmpty()) }
     var email by rememberSaveable { mutableStateOf(state.getUser()?.email.orEmpty()) }
@@ -129,7 +131,7 @@ fun SettingsScreen(
                 },
                 fields = fields,
                 isLoading = false,
-                submitButtonText = stringResource(id = R.string.save_changes),
+                submitButtonText = stringResource(id = R.string.save_changes, themeColor),
                 onSubmitClick = {
                     if (oldPassword.isBlank() && newPassword.isNotBlank()) {
                         Toast.makeText(

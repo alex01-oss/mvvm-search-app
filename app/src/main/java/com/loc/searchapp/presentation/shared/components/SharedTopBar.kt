@@ -21,7 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,16 +34,18 @@ fun SharedTopBar(
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = MaterialTheme.colorScheme.primary
 ) {
+    val themeColor = themeAdaptiveColor()
+
     TopAppBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (leadingIcon != null) {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                    CompositionLocalProvider(LocalContentColor provides themeColor) {
                         leadingIcon()
                     }
                 }
-                Spacer(modifier = Modifier.width(SmallPadding))
-                if (title != null) Text(text = title, color = MaterialTheme.colorScheme.onBackground)
+                Spacer(modifier = Modifier.width(BasePadding))
+                if (title != null) Text(title, color = themeColor)
             }
         },
         navigationIcon = {
@@ -50,7 +53,7 @@ fun SharedTopBar(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
-                        tint = MaterialTheme.colorScheme.onBackground,
+                        tint = themeColor,
                         contentDescription = stringResource(id = R.string.arrow_back)
                     )
                 }
@@ -59,8 +62,8 @@ fun SharedTopBar(
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor,
-            actionIconContentColor = MaterialTheme.colorScheme.onBackground,
-            navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+            actionIconContentColor = themeColor,
+            navigationIconContentColor = themeColor
         )
     )
 }

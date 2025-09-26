@@ -27,10 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
-import com.loc.searchapp.core.ui.values.Dimens.LargePadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
+import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.presentation.post_details.components.PostInfoTopBar
 import com.loc.searchapp.presentation.post_details.utils.formatDate
@@ -46,25 +45,22 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 fun PostDetailedScreen(
     modifier: Modifier = Modifier,
     state: UiState<Post>,
-    onEditClick: (Post) -> Unit,
+    postId: Int,
+    onEditClick: (Int) -> Unit,
     onBackClick: () -> Unit,
     authViewModel: AuthViewModel,
     authorName: String? = null
 ) {
-    val post = (state as? UiState.Success)?.data
-
     Scaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
         topBar = {
-            if (post != null) {
-                PostInfoTopBar(
-                    onEditClick = { onEditClick(post) },
-                    onBackClick = onBackClick,
-                    post = post,
-                    authViewModel = authViewModel
-                )
-            }
+            PostInfoTopBar(
+                postId = postId,
+                onEditClick = onEditClick,
+                onBackClick = onBackClick,
+                authViewModel = authViewModel
+            )
         }
     ) { paddingValues ->
         when (state) {
@@ -87,9 +83,10 @@ fun PostDetailedScreen(
             }
 
             is UiState.Success -> {
+                val post = state.data
                 val richTextState = remember { RichTextState() }
 
-                LaunchedEffect(post!!.id) {
+                LaunchedEffect(post.id) {
                     richTextState.setHtml(post.content)
                 }
 
@@ -98,7 +95,7 @@ fun PostDetailedScreen(
                         .fillMaxSize()
                         .padding(paddingValues)
                         .verticalScroll(rememberScrollState())
-                        .padding(MediumPadding1)
+                        .padding(BasePadding)
                 ) {
                     Text(
                         text = post.title,
@@ -107,7 +104,7 @@ fun PostDetailedScreen(
                         color = MaterialTheme.colorScheme.onBackground
                     )
 
-                    Spacer(Modifier.height(SmallPadding))
+                    Spacer(Modifier.height(BasePadding))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -128,7 +125,7 @@ fun PostDetailedScreen(
                         )
                     }
 
-                    Spacer(Modifier.height(MediumPadding1))
+                    Spacer(Modifier.height(BasePadding))
 
                     if (post.image?.isNotEmpty() == true) {
                         AsyncImage(
@@ -140,7 +137,7 @@ fun PostDetailedScreen(
                                 .clip(RoundedCornerShape(StrongCorner))
                         )
 
-                        Spacer(modifier = Modifier.height(MediumPadding1))
+                        Spacer(modifier = Modifier.height(BasePadding))
                     }
 
                     Surface(
@@ -151,12 +148,12 @@ fun PostDetailedScreen(
                     ) {
                         RichText(
                             modifier = Modifier
-                                .padding(MediumPadding1),
+                                .padding(BasePadding),
                             state = richTextState
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(LargePadding))
+                    Spacer(modifier = Modifier.height(TopLogoHeight))
                 }
             }
         }

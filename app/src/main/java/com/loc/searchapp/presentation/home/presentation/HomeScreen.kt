@@ -41,21 +41,23 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
+import com.loc.searchapp.core.ui.values.Dimens.LogoHeight
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.TitleSize
+import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.presentation.home.components.HomeCategories
 import com.loc.searchapp.presentation.home.components.HomeTopBar
 import com.loc.searchapp.presentation.home.components.PostsSlider
 import com.loc.searchapp.presentation.home.components.SocialIcon
 import com.loc.searchapp.presentation.home.components.YouTubeVideoSlider
+import com.loc.searchapp.presentation.home.viewmodel.HomeViewModel
 import com.loc.searchapp.presentation.shared.network.NetworkObserver
 import com.loc.searchapp.presentation.shared.network.NetworkStatus
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
-import com.loc.searchapp.presentation.home.viewmodel.HomeViewModel
 import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
 
 @Composable
@@ -119,7 +121,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = paddingValues.calculateTopPadding())
-                    .padding(horizontal = MediumPadding1)
+                    .padding(horizontal = BasePadding)
             ) {
                 item {
                     Column(
@@ -127,14 +129,14 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.height(LogoHeight),
                             painter = painterResource(id = R.drawable.logo),
                             contentDescription = stringResource(id = R.string.logo),
                             contentScale = ContentScale.Fit
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(BasePadding))
                 }
 
                 item {
@@ -163,8 +165,8 @@ fun HomeScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                top = MediumPadding1,
-                                bottom = ExtraSmallPadding2
+                                top = BasePadding,
+                                bottom = SmallPadding
                             ),
                     ) {
                         Text(
@@ -186,10 +188,7 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(
-                                top = MediumPadding1,
-                                bottom = ExtraSmallPadding2
-                            ),
+                            .padding(top = BasePadding),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -211,11 +210,11 @@ fun HomeScreen(
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Medium
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(ExtraSmallPadding))
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = stringResource(id = R.string.all_posts),
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(IndicatorSize)
                             )
                         }
                     }
@@ -231,7 +230,7 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(MediumPadding1),
+                            .padding(vertical = BasePadding),
                     ) {
                         Text(
                             text = stringResource(id = R.string.our_videos),
@@ -252,8 +251,8 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(
-                                    top = MediumPadding1,
-                                    bottom = ExtraSmallPadding2
+                                    top = BasePadding,
+                                    bottom = SmallPadding
                                 ),
                         ) {
                             Text(
@@ -293,7 +292,7 @@ fun HomeScreen(
                 }
 
                 item {
-                    Box(modifier = Modifier.fillMaxWidth().height(NavBarHeight))
+                    Box(modifier = Modifier.fillMaxWidth().height(TopLogoHeight))
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.loc.searchapp.presentation.cart.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.loc.searchapp.core.data.remote.dto.CartItemDto
 import com.loc.searchapp.core.domain.model.catalog.CartItem
 import com.loc.searchapp.presentation.shared.components.ProductCardBase
 

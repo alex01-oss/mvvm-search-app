@@ -26,10 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.FilterItem
 import com.loc.searchapp.core.domain.model.catalog.Filters
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.IconSize
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.presentation.home.components.FilterCategory
 import com.loc.searchapp.presentation.shared.model.UiState
 
@@ -43,6 +46,7 @@ fun FiltersBottomSheet(
     onApply: () -> Unit
 ) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val themeColor = themeAdaptiveColor()
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -51,8 +55,8 @@ fun FiltersBottomSheet(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(IconSize),
+            verticalArrangement = Arrangement.spacedBy(SmallPadding)
         ) {
             item {
                 Row(
@@ -126,7 +130,7 @@ fun FiltersBottomSheet(
             }
 
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(BasePadding))
 
                 Button(
                     onClick = {
@@ -138,12 +142,12 @@ fun FiltersBottomSheet(
                     Icon(
                         Icons.Default.Done,
                         contentDescription = stringResource(R.string.apply),
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = themeColor
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(SmallPadding))
                     Text(
                         text = stringResource(R.string.apply),
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = themeColor
                     )
                 }
             }

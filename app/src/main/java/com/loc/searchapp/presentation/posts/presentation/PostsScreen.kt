@@ -28,8 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.PostsSpacerSize
+import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.presentation.posts.components.PostItemShimmer
 import com.loc.searchapp.presentation.shared.components.PostItem
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
@@ -68,7 +69,7 @@ fun PostsScreen(
                     Icon(
                         Icons.Default.Add,
                         contentDescription = stringResource(id = R.string.add_post),
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = themeAdaptiveColor()
                     )
                 }
             }
@@ -106,7 +107,7 @@ fun PostsScreen(
                         isAdmin = authViewModel.isAdmin
                     )
                 }
-                item { Spacer(modifier = Modifier.height(PostsSpacerSize)) }
+                item { Spacer(modifier = Modifier.height(TopLogoHeight)) }
             }
         }
     }

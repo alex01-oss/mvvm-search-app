@@ -16,12 +16,14 @@ import androidx.compose.material.icons.filled.FormatItalic
 import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.FormatUnderlined
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
@@ -30,9 +32,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
-import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.mohamedrejeb.richeditor.model.RichTextState
 
 @Composable
@@ -40,16 +43,20 @@ fun RichTextToolbar(
     modifier: Modifier = Modifier,
     richTextState: RichTextState
 ) {
-    Card(modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(DefaultCorner))
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(StrongCorner),
+        elevation = CardDefaults.cardElevation(0.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         val scrollState = rememberScrollState()
 
         Row(
             modifier = Modifier
                 .horizontalScroll(scrollState)
-                .padding(SmallPadding),
+                .padding(BasePadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             RichTextButton(Icons.Default.FormatBold) {
@@ -89,7 +96,16 @@ fun RichTextToolbar(
 
 @Composable
 fun RichTextButton(icon: ImageVector, onClick: () -> Unit) {
-    FilledTonalIconButton(onClick = onClick) {
-        Icon(icon, contentDescription = stringResource(id = R.string.editor_button))
+    FilledTonalIconButton(
+        onClick = onClick,
+        colors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        )
+    ) {
+        Icon(
+            icon,
+            contentDescription = stringResource(id = R.string.editor_button)
+        )
     }
 }

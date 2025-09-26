@@ -24,12 +24,13 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.auth.AuthField
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.InputFieldHeight
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.MediumPadding2
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextSize
 import com.loc.searchapp.presentation.shared.components.notifications.InlineErrorMessage
 
@@ -48,17 +49,14 @@ fun AuthForm(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = InputFieldHeight)
+            .padding(horizontal = MediumPadding2)
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = title)
+        Text(title)
+        Spacer(modifier = Modifier.height(BasePadding))
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
-
-        if (showError != null) {
-            InlineErrorMessage(message = showError)
-        }
+        if (showError != null) InlineErrorMessage(message = showError)
 
         fields.forEach { field ->
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -87,44 +85,44 @@ fun AuthForm(
                         text = field.errorMessage,
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = SmallPadding, top = ExtraSmallPadding)
+                        modifier = Modifier.padding(start = BasePadding, top = ExtraSmallPadding)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(SmallPadding))
+            Spacer(modifier = Modifier.height(BasePadding))
         }
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier = Modifier.height(BasePadding))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(InputFieldHeight),
             onClick = onSubmitClick,
-            shape = RoundedCornerShape(BasePadding),
+            shape = RoundedCornerShape(StrongCorner),
             enabled = !isLoading
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(MediumPadding1),
+                    modifier = Modifier.size(BasePadding),
                     color = MaterialTheme.colorScheme.onPrimary,
                     strokeWidth = BorderStroke
                 )
             } else {
                 Text(
                     text = submitButtonText,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = themeAdaptiveColor()
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier = Modifier.height(BasePadding))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             HorizontalDivider(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier.padding(horizontal = SmallPadding),
+                modifier = Modifier.padding(horizontal = BasePadding),
                 text = stringResource(id = R.string.or),
                 style = TextStyle(
                     fontSize = TextSize,
@@ -133,8 +131,6 @@ fun AuthForm(
             )
             HorizontalDivider(modifier = Modifier.weight(1f))
         }
-
-        Spacer(modifier = Modifier.height(ExtraSmallPadding))
 
         TextButton(onClick = onBottomTextClick) {
             bottomContent()

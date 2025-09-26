@@ -11,15 +11,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 
 
 @Composable
 fun PostInfoTopBar(
-    post: Post,
-    onEditClick: (Post) -> Unit,
+    postId: Int,
+    onEditClick: (Int) -> Unit,
     onBackClick: () -> Unit,
     authViewModel: AuthViewModel,
 ) {
@@ -29,7 +28,7 @@ fun PostInfoTopBar(
         title = stringResource(id = R.string.post_info),
         actions = {
             if (authViewModel.isAdmin) {
-                IconButton(onClick = { onEditClick(post) }) {
+                IconButton(onClick = { onEditClick(postId) }) {
                     Icon(
                         Icons.Default.Edit,
                         contentDescription = stringResource(id = R.string.edit_post)

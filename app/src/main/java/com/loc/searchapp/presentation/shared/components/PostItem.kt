@@ -30,9 +30,8 @@ import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 
@@ -55,12 +54,15 @@ fun PostItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(StrongCorner)
+        shape = RoundedCornerShape(StrongCorner),
+        elevation = CardDefaults.cardElevation(0.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(
             modifier = Modifier
-                .padding(MediumPadding1)
+                .padding(BasePadding)
         ) {
             if (post.image?.isNotEmpty() == true ) {
                 AsyncImage(
@@ -72,7 +74,7 @@ fun PostItem(
                         .height(PostImageHeight)
                         .clip(RoundedCornerShape(StrongCorner))
                 )
-                Spacer(Modifier.height(SmallPadding))
+                Spacer(Modifier.height(BasePadding))
             }
 
             Text(
@@ -83,7 +85,7 @@ fun PostItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(Modifier.height(SmallPadding))
+            Spacer(Modifier.height(BasePadding))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -102,7 +104,7 @@ fun PostItem(
                 )
             }
 
-            Spacer(Modifier.height(SmallPadding))
+            Spacer(Modifier.height(BasePadding))
 
             Text(
                 text = HtmlCompat.fromHtml(post.content, HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
@@ -120,8 +122,8 @@ fun PostItem(
                     IconButton(onClick = onDeleteClick) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error
+                            contentDescription = stringResource(R.string.delete_post),
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }

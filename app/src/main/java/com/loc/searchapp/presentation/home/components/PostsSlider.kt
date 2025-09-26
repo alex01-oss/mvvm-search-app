@@ -30,7 +30,6 @@ import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 import com.loc.searchapp.core.utils.Constants.BASE_URL
@@ -65,10 +64,8 @@ fun PostsSlider(
                         .height(PostImageHeight)
                 ) {
                     HorizontalPager(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(PostImageHeight),
-                        state = pagerState
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize()
                     ) { page ->
                         val post = state.data[page]
                         val fullImageUrl = "$BASE_URL${post.image}"
@@ -99,7 +96,7 @@ fun PostsSlider(
                                             )
                                         )
                                     )
-                                    .padding(horizontal = BasePadding, vertical = SmallPadding),
+                                    .padding(horizontal = BasePadding, vertical = BasePadding),
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Text(

@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.EmptyIconSize
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -86,7 +86,7 @@ fun EmptyContent(
             tint = if (isSystemInDarkTheme()) LightGray else DarkGray
         )
         Text(
-            modifier = Modifier.padding(SmallPadding).alpha(alphaAnim),
+            modifier = Modifier.padding(BasePadding).alpha(alphaAnim),
             text = message,
             style = MaterialTheme.typography.bodyMedium,
             color = if (isSystemInDarkTheme()) LightGray else DarkGray,

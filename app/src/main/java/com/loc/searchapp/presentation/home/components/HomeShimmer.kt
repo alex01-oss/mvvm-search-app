@@ -24,12 +24,11 @@ import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding2
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.ShimmerHeight2
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 
@@ -69,7 +68,7 @@ fun PostsSliderShimmer(
                 .height(TextBarHeight)
                 .background(MaterialTheme.colorScheme.background)
                 .shimmerEffect()
-                .padding(horizontal = BasePadding, vertical = SmallPadding),
+                .padding(horizontal = BasePadding, vertical = BasePadding),
             verticalArrangement = Arrangement.Center
         ) {
             Box(
@@ -79,7 +78,7 @@ fun PostsSliderShimmer(
                     .clip(RoundedCornerShape(StrongCorner))
                     .shimmerEffect()
             )
-            Spacer(modifier = Modifier.height(ExtraSmallPadding2))
+            Spacer(modifier = Modifier.height(SmallPadding))
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.4f)

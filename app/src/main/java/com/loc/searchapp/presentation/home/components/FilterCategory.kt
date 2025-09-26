@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.core.domain.model.catalog.FilterItem
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
 @Composable
 fun FilterCategory(
@@ -31,7 +31,7 @@ fun FilterCategory(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         HorizontalDivider(
@@ -53,15 +53,14 @@ fun FilterCategory(
                     .clickable {
                         val isCurrentlySelected = selectedIds.contains(item.id)
                         onToggle(item.id, !isCurrentlySelected)
-                    }
-                    .padding(vertical = 4.dp),
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
                     checked = selectedIds.contains(item.id),
                     onCheckedChange = { onToggle(item.id, it) }
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(SmallPadding))
                 Text(
                     text = displayName,
                     style = MaterialTheme.typography.bodyMedium

@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.AvatarHeight
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.presentation.shared.components.Avatar
 
 @Composable
@@ -29,7 +29,7 @@ fun GuestUser(
         onAvatarClick = {}
     )
 
-    Spacer(modifier = Modifier.height(MediumPadding1))
+    Spacer(modifier = Modifier.height(BasePadding))
 
     Text(
         text = stringResource(id = R.string.must_login),
@@ -37,7 +37,7 @@ fun GuestUser(
         textAlign = TextAlign.Center
     )
 
-    Spacer(modifier = Modifier.height(MediumPadding1))
+    Spacer(modifier = Modifier.height(BasePadding))
 
     Button(
         onClick = onAuthClick,

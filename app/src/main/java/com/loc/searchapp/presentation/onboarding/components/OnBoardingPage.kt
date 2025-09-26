@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.Page
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding2
 
 @Composable
@@ -35,7 +35,7 @@ fun OnBoardingPage(
             contentDescription = stringResource(id = R.string.onboarding_image),
             contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier = Modifier.height(BasePadding))
         Text(
             modifier = Modifier.padding(horizontal = MediumPadding2),
             text = page.title,

@@ -37,7 +37,6 @@ import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.AboutLogoSize
 import com.loc.searchapp.core.ui.values.Dimens.AboutTextWidth
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.about.components.ExpandableItem
 
 @Composable
@@ -62,20 +61,19 @@ fun AboutScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = MediumPadding1),
+                .padding(horizontal = BasePadding),
             verticalArrangement = Arrangement.spacedBy(BasePadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(MediumPadding1))
+            Spacer(modifier = Modifier.height(BasePadding))
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.logo),
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .size(AboutLogoSize)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onBackground)
                     .scale(0.8f)
             )
 

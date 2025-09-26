@@ -19,6 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
@@ -41,7 +42,7 @@ fun EquipmentRow(
             tint = colorResource(id = R.color.light_red)
         )
 
-        Spacer(modifier = Modifier.width(SmallPadding))
+        Spacer(modifier = Modifier.width(BasePadding))
 
         Column {
             Text(

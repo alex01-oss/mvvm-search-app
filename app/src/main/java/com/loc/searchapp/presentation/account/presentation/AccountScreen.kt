@@ -30,13 +30,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.R
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
 import com.loc.searchapp.presentation.shared.components.Avatar
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.AvatarHeight
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.presentation.account.components.AccountOption
 import com.loc.searchapp.presentation.shared.components.notifications.GuestUser
 import com.loc.searchapp.presentation.shared.model.AuthEvent
@@ -55,6 +54,7 @@ fun AccountScreen(
     onLogout: () -> Unit
 ) {
     val authState = viewModel.authState.collectAsState().value
+    val themeColor = themeAdaptiveColor()
 
     Scaffold(
         modifier = modifier,
@@ -75,15 +75,15 @@ fun AccountScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding() + MediumPadding1)
-                .padding(horizontal = MediumPadding1),
+                .padding(top = paddingValues.calculateTopPadding() + BasePadding)
+                .padding(horizontal = BasePadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (authState) {
                 is AuthState.Authenticated -> {
                     val user = authState.user
 
-                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(BasePadding))
 
                     Avatar(
                         firstName = user?.fullname?.substringBefore(" ").toString(),
@@ -93,7 +93,7 @@ fun AccountScreen(
                         onAvatarClick = {}
                     )
 
-                    Spacer(modifier = Modifier.height(SmallPadding))
+                    Spacer(modifier = Modifier.height(BasePadding))
 
                     Text(
                         text = user?.fullname.toString(),
@@ -117,7 +117,7 @@ fun AccountScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(BasePadding))
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         AccountOption(
@@ -142,7 +142,7 @@ fun AccountScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(BasePadding))
 
                     Button(
                         onClick = {
@@ -157,7 +157,7 @@ fun AccountScreen(
                     ) {
                         Text(
                             text = stringResource(id = R.string.logout),
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = themeColor,
                         )
                     }
                 }

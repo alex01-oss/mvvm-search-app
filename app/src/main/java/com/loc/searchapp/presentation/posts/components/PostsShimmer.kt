@@ -20,8 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.presentation.shared.components.loading.shimmerEffect
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
@@ -32,7 +31,7 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Column(modifier = Modifier.padding(MediumPadding1)) {
+        Column(modifier = Modifier.padding(BasePadding)) {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -41,7 +40,7 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
                     .shimmerEffect()
             )
 
-            Spacer(modifier = Modifier.height(MediumPadding1))
+            Spacer(modifier = Modifier.height(BasePadding))
 
             Spacer(
                 modifier = Modifier
@@ -51,7 +50,7 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
                     .shimmerEffect()
             )
 
-            Spacer(modifier = Modifier.height(SmallPadding))
+            Spacer(modifier = Modifier.height(BasePadding))
 
             Spacer(
                 modifier = Modifier
@@ -61,7 +60,7 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
                     .shimmerEffect()
             )
 
-            Spacer(modifier = Modifier.height(SmallPadding))
+            Spacer(modifier = Modifier.height(BasePadding))
 
             Spacer(
                 modifier = Modifier
@@ -79,7 +78,7 @@ fun PostDetailedShimmer(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(MediumPadding1)
+            .padding(BasePadding)
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(
@@ -90,7 +89,7 @@ fun PostDetailedShimmer(modifier: Modifier = Modifier) {
                 .shimmerEffect()
         )
 
-        Spacer(modifier = Modifier.height(SmallPadding))
+        Spacer(modifier = Modifier.height(BasePadding))
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -112,7 +111,7 @@ fun PostDetailedShimmer(modifier: Modifier = Modifier) {
             )
         }
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier = Modifier.height(BasePadding))
 
         Spacer(
             modifier = Modifier
@@ -122,7 +121,7 @@ fun PostDetailedShimmer(modifier: Modifier = Modifier) {
                 .shimmerEffect()
         )
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+        Spacer(modifier = Modifier.height(BasePadding))
 
         repeat(4) {
             Spacer(

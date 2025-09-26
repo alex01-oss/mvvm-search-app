@@ -16,5 +16,5 @@ interface AuthRepository {
     suspend fun getUser(): User
     suspend fun updateUser(data: UpdateData): User
     suspend fun deleteUser()
-    suspend fun logout(data: RefreshData): LogoutResult
+    suspend fun logout(data: RefreshData): LogoutResult?
 }

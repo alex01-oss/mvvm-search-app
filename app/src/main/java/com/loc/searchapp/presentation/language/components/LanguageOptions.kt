@@ -21,11 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallCorner
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
 fun LanguageOption(
@@ -40,12 +38,12 @@ fun LanguageOption(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(horizontal = MediumPadding1)
+            .padding(horizontal = BasePadding)
             .clickable { onClick() }
             .border(
                 width = SmallCorner,
                 color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray,
-                shape = RoundedCornerShape(DefaultCorner)
+                shape = RoundedCornerShape(StrongCorner)
             )
             .padding(BasePadding),
         verticalAlignment = Alignment.CenterVertically
@@ -59,7 +57,7 @@ fun LanguageOption(
                 else null
         )
 
-        Spacer(modifier = Modifier.width(SmallPadding))
+        Spacer(modifier = Modifier.width(BasePadding))
 
         Text(
             text = language,

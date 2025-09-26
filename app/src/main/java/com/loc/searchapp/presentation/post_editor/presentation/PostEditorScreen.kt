@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -33,18 +34,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.PostFormState
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
-import com.loc.searchapp.core.ui.values.Dimens.TitleSize
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.FileUtil
 import com.loc.searchapp.presentation.post_editor.components.EditorTopBar
 import com.loc.searchapp.presentation.post_editor.components.PostImagePicker
@@ -54,9 +52,9 @@ import com.loc.searchapp.presentation.shared.components.notifications.ErrorDialo
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.PostViewModel
 import com.mohamedrejeb.richeditor.model.RichTextState
-import com.mohamedrejeb.richeditor.ui.material3.RichText
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditorDefaults
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
@@ -71,10 +69,7 @@ fun PostEditorScreen(
     val context = LocalContext.current
     val richTextState = remember { RichTextState() }
 
-    var formState by remember {
-        mutableStateOf(PostFormState())
-    }
-
+    var formState by remember { mutableStateOf(PostFormState()) }
     var showImagePicker by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
@@ -132,7 +127,6 @@ fun PostEditorScreen(
 
     if (showImagePicker) {
         imagePickerLauncher.launch("image/*")
-//        showImagePicker = false
     }
 
     if (showErrorDialog) {
@@ -224,19 +218,21 @@ fun PostEditorScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = paddingValues.calculateTopPadding())
-                        .padding(horizontal = MediumPadding1)
+                        .padding(horizontal = BasePadding)
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(BasePadding)
                 ) {
-                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Spacer(modifier = Modifier.height(BasePadding))
 
                     OutlinedTextField(
                         value = formState.title,
                         onValueChange = { formState = formState.copy(title = it) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text(stringResource(R.string.title)) },
-                        singleLine = true
+                        label = { Text(stringResource(id = R.string.title)) },
+                        singleLine = true,
+                        shape = RoundedCornerShape(StrongCorner),
                     )
+
 
                     PostImagePicker(
                         context = context,
@@ -259,37 +255,25 @@ fun PostEditorScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .heightIn(min = PostImageHeight),
-                        shape = RoundedCornerShape(SmallPadding),
-                        border = ButtonDefaults.outlinedButtonBorder(enabled = true)
+                        border = ButtonDefaults.outlinedButtonBorder(enabled = true),
+                        shape = RoundedCornerShape(StrongCorner),
+                        elevation = CardDefaults.cardElevation(0.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
                     ) {
                         RichTextEditor(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(BasePadding),
                             state = richTextState,
-                            colors = RichTextEditorDefaults.richTextEditorColors()
-                        )
-                    }
-
-                    Text(
-                        text = stringResource(R.string.preview),
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = TitleSize
-                        ),
-                        modifier = Modifier.padding(top = BasePadding),
-                        color = MaterialTheme.colorScheme.onBackground,
-                    )
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = SmallPadding),
-                        shape = RoundedCornerShape(SmallPadding)
-                    ) {
-                        RichText(
-                            modifier = Modifier.padding(BasePadding),
-                            state = richTextState
+                            colors = RichTextEditorDefaults.richTextEditorColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                cursorColor = MaterialTheme.colorScheme.onBackground,
+                                textColor = MaterialTheme.colorScheme.onBackground,
+                                placeholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         )
                     }
                 }

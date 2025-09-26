@@ -31,9 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.SearchParams
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +52,7 @@ fun SearchBottomSheet(
 ) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var searchFields by remember { mutableStateOf(currentSearchParams) }
+    val themeColor = themeAdaptiveColor()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -66,8 +70,8 @@ fun SearchBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(MediumPadding1),
+            verticalArrangement = Arrangement.spacedBy(BasePadding)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -150,7 +154,7 @@ fun SearchBottomSheet(
                 fieldType = "machine"
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(SmallPadding))
 
             Button(
                 onClick = {
@@ -163,12 +167,14 @@ fun SearchBottomSheet(
             ) {
                 Icon(
                     Icons.Default.Search,
-                    contentDescription = stringResource(R.string.search)
+                    contentDescription = stringResource(R.string.search),
+                    tint = themeColor
+
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(SmallPadding))
                 Text(
                     text = stringResource(R.string.apply),
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = themeColor
                 )
             }
 
@@ -181,7 +187,7 @@ fun SearchBottomSheet(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Default.Clear, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(SmallPadding))
                 Text(stringResource(R.string.clear_all))
             }
         }

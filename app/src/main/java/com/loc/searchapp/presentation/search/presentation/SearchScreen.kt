@@ -29,11 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
+import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.presentation.search.components.FiltersBottomSheet
 import com.loc.searchapp.presentation.search.components.ProductsList
@@ -60,6 +62,8 @@ fun SearchScreen(
     var showSearchSheet by remember { mutableStateOf(false) }
     var showFiltersSheet by remember { mutableStateOf(false) }
 
+    val themeColor = themeAdaptiveColor()
+
     Scaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
@@ -79,13 +83,13 @@ fun SearchScreen(
             Column(
                 modifier = Modifier
                     .padding(top = paddingValues.calculateTopPadding())
-                    .padding(horizontal = MediumPadding1)
+                    .padding(horizontal = BasePadding)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = MediumPadding1),
-                    horizontalArrangement = Arrangement.spacedBy(MediumPadding1)
+                        .padding(top = BasePadding),
+                    horizontalArrangement = Arrangement.spacedBy(BasePadding)
                 ) {
                     Button(
                         onClick = { showSearchSheet = true },
@@ -98,13 +102,13 @@ fun SearchScreen(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = stringResource(id = R.string.search),
-                            modifier = Modifier.size(18.dp),
-                            tint = MaterialTheme.colorScheme.onBackground
+                            modifier = Modifier.size(IndicatorSize),
+                            tint = themeColor
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(SmallPadding))
                         Text(
                             text = stringResource(id = R.string.search),
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = themeColor
                         )
                     }
 
@@ -119,10 +123,10 @@ fun SearchScreen(
                         Icon(
                             imageVector = Icons.Default.Tune,
                             contentDescription = stringResource(id = R.string.filters),
-                            modifier = Modifier.size(18.dp),
+                            modifier = Modifier.size(IndicatorSize),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(SmallPadding))
                         Text(
                             text = stringResource(id = R.string.filters),
                             color = MaterialTheme.colorScheme.onSurface

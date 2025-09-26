@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.SmallPadding2
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
 @Composable
 fun AppSnackbar(
@@ -59,12 +59,12 @@ fun AppSnackbar(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier.padding(end = SmallPadding2),
+                modifier = Modifier.padding(end = SmallPadding),
                 imageVector = Icons.Default.Info,
                 contentDescription = stringResource(id = R.string.info),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(modifier = Modifier.width(SmallPadding2))
+            Spacer(modifier = Modifier.width(SmallPadding))
             Text(data.visuals.message)
         }
     }

@@ -9,7 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import com.loc.searchapp.core.ui.values.Dimens.ButtonCorner
+import com.loc.searchapp.core.ui.values.Dimens.DefaultCorner
 import com.loc.searchapp.core.ui.theme.WhiteGray
 
 @Composable
@@ -22,7 +22,7 @@ fun ProductButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = Color.White
-        ), shape = RoundedCornerShape(size = ButtonCorner)
+        ), shape = RoundedCornerShape(size = DefaultCorner)
     ) {
         Text(
             text = text,
