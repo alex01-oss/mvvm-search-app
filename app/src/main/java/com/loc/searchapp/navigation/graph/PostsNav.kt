@@ -21,6 +21,10 @@ fun NavGraphBuilder.postScreens(
     postViewModel: PostViewModel
 ) {
     composable(route = Route.PostsScreen.route) {
+        LaunchedEffect(Unit) {
+            postViewModel.loadAllPosts()
+        }
+
         PostsScreen(
             viewModel = postViewModel,
             authViewModel = authViewModel,

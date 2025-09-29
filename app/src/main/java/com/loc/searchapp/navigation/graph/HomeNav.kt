@@ -32,6 +32,10 @@ fun NavGraphBuilder.homeScreens(
     composable(route = Route.HomeScreen.route) {
         val homeViewModel: HomeViewModel = hiltViewModel()
 
+        LaunchedEffect(Unit) {
+            postViewModel.loadRecentPosts()
+        }
+
         HomeScreen(
             authViewModel = authViewModel,
             postViewModel = postViewModel,

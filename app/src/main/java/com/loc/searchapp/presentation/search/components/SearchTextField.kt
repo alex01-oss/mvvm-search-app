@@ -30,6 +30,7 @@ import com.loc.searchapp.core.ui.values.Dimens.AboutTextWidth
 import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +44,6 @@ fun SearchTextField(
     isLoadingSuggestions: Boolean = false,
     onSuggestionClick: (String) -> Unit = {},
     onTextChanged: (String) -> Unit = {},
-    fieldType: String = ""
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -89,7 +89,7 @@ fun SearchTextField(
                 .menuAnchor()
             ,
             singleLine = true,
-            shape = RoundedCornerShape(IndicatorSize)
+            shape = RoundedCornerShape(StrongCorner)
         )
 
         if (suggestions.isNotEmpty()) {

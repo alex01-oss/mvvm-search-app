@@ -55,6 +55,7 @@ fun SearchScreen(
     val filtersState by viewModel.filtersState.collectAsState()
     val selectedFilters by viewModel.selectedFilters.collectAsState()
 
+    val searchParams by viewModel.searchParams.collectAsState()
     val suggestions by viewModel.autocompleteSuggestions.collectAsState()
     val isLoadingSuggestions by viewModel.isLoadingAutocomplete.collectAsState()
     val currentAutocompleteField by viewModel.currentAutocompleteField.collectAsState()
@@ -148,7 +149,7 @@ fun SearchScreen(
                 SearchBottomSheet(
                     onSearch = { searchParams -> viewModel.search(searchParams) },
                     onDismiss = { showSearchSheet = false },
-                    currentSearchParams = viewModel.getCurrentSearchParams(),
+                    currentSearchParams = searchParams,
                     suggestions = suggestions,
                     isLoadingSuggestion = isLoadingSuggestions,
                     currentAutocompleteField = currentAutocompleteField,

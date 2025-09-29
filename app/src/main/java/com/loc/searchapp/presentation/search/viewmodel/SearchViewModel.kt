@@ -1,8 +1,5 @@
 package com.loc.searchapp.presentation.search.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,14 +12,12 @@ import com.loc.searchapp.core.domain.model.catalog.SearchParams
 import com.loc.searchapp.core.domain.model.catalog.toCatalogParams
 import com.loc.searchapp.core.domain.usecases.autocomplete.AutocompleteUseCases
 import com.loc.searchapp.core.domain.usecases.catalog.CatalogUseCases
-import com.loc.searchapp.presentation.search.model.SearchState
 import com.loc.searchapp.presentation.shared.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,17 +29,17 @@ class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val initialCategoryId: Int = savedStateHandle["categoryId"] ?: 1
-    private val _state = mutableStateOf(SearchState(categoryId = initialCategoryId))
-    val state: State<SearchState> = _state
+    private val categoryId: Int = savedStateHandle["categoryId"] ?: 1
+    private val _searchParams = MutableStateFlow(SearchParams())
+    val searchParams = _searchParams.asStateFlow()
+
+    private val _filterParams = MutableStateFlow(FilterParams())
 
     private val _filtersState = MutableStateFlow<UiState<Filters>>(UiState.Loading)
     val filtersState = _filtersState.asStateFlow()
 
     private val _selectedFilters = MutableStateFlow<Map<String, List<Int>>>(emptyMap())
     val selectedFilters = _selectedFilters.asStateFlow()
-
-    private val _searchFlow = MutableStateFlow<SearchState?>(null)
 
     private val _autocompleteSuggestions = MutableStateFlow<List<String>>(emptyList())
     val autocompleteSuggestions = _autocompleteSuggestions.asStateFlow()
@@ -56,15 +51,10 @@ class SearchViewModel @Inject constructor(
     val currentAutocompleteField = _currentAutocompleteField.asStateFlow()
 
     init {
-        loadFilters()
-        loadCatalog()
-    }
-
-    private fun loadFilters() {
         viewModelScope.launch {
             try {
                 val filters = catalogUseCases.getFilters(
-                    CategoryId(_state.value.categoryId)
+                    CategoryId(categoryId)
                 )
                 _filtersState.value = if (
                     filters.bonds.isEmpty() &&
@@ -77,23 +67,16 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun loadCatalog() {
-        _searchFlow.value = _state.value
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    val products = _searchFlow
-        .filterNotNull()
-        .distinctUntilChanged()
-        .flatMapLatest {
-            val params = state.value.searchParams.toCatalogParams(
-                filterParams = state.value.filterParams,
-                categoryId = state.value.categoryId
+    val products = combine(_searchParams, _filterParams) { search, filter ->
+        search to filter
+    }.flatMapLatest { (search, filter) ->
+            val params = search.toCatalogParams(
+                filterParams = filter,
+                categoryId = categoryId
             )
-
             catalogUseCases.getCatalogPaging(params)
-        }
-        .cachedIn(viewModelScope)
+        }.cachedIn(viewModelScope)
 
     fun toggleFilter(categoryKey: String, itemId: Int, isSelected: Boolean) {
         val current = _selectedFilters.value.toMutableMap()
@@ -107,24 +90,15 @@ class SearchViewModel @Inject constructor(
 
     fun updateFilters() {
         val filters = _selectedFilters.value
-        val catalogFilters = FilterParams(
+        _filterParams.value = FilterParams(
             bondIds = filters["bonds"] ?: emptyList(),
             gridSizeIds = filters["grids"] ?: emptyList(),
             mountingIds = filters["mountings"] ?: emptyList(),
         )
-
-        _state.value = _state.value.copy(filterParams = catalogFilters)
-        _searchFlow.value = _state.value
     }
 
-    fun search(searchParams: Any) {
-        _state.value = _state.value.copy(searchParams = searchParams as SearchParams)
-        _searchFlow.value = _state.value
-    }
-
-    fun getCurrentSearchParams(): SearchParams {
-        val params = _state.value.searchParams
-        return params
+    fun search(searchParams: SearchParams) {
+        _searchParams.value = searchParams
     }
 
     fun getAutocomplete(query: String, fieldType: String) {
@@ -138,17 +112,16 @@ class SearchViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val currentState = _state.value
                 val params = AutocompleteParams(
                     query = query,
-                    categoryId = currentState.categoryId,
-                    searchCode = if (fieldType != "code") currentState.searchParams.searchCode else null,
-                    searchShape = if (fieldType != "shape") currentState.searchParams.searchShape else null,
-                    searchDimensions = if (fieldType != "dimensions") currentState.searchParams.searchDimensions else null,
-                    searchMachine = if (fieldType != "machine") currentState.searchParams.searchMachine else null,
-                    bondIds = currentState.filterParams.bondIds,
-                    gridSizeIds = currentState.filterParams.gridSizeIds,
-                    mountingIds = currentState.filterParams.mountingIds
+                    categoryId = categoryId,
+                    searchCode = if (fieldType != "code") _searchParams.value.searchCode else null,
+                    searchShape = if (fieldType != "shape") _searchParams.value.searchShape else null,
+                    searchDimensions = if (fieldType != "dimensions") _searchParams.value.searchDimensions else null,
+                    searchMachine = if (fieldType != "machine") _searchParams.value.searchMachine else null,
+                    bondIds = _filterParams.value.bondIds,
+                    gridSizeIds = _filterParams.value.gridSizeIds,
+                    mountingIds = _filterParams.value.mountingIds
                 )
 
                 val suggestions = when (fieldType) {
@@ -159,8 +132,7 @@ class SearchViewModel @Inject constructor(
                     else -> emptyList()
                 }
                 _autocompleteSuggestions.value = suggestions
-            } catch (e: Exception) {
-                Log.e("SearchViewModel", "Autocomplete Error", e)
+            } catch (_: Exception) {
                 _autocompleteSuggestions.value = emptyList()
             } finally {
                 _isLoadingAutocomplete.value = false

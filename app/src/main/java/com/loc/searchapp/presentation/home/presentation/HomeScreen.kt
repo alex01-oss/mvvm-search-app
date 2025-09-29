@@ -73,7 +73,7 @@ fun HomeScreen(
 ) {
     val categoriesState by viewModel.categoriesState.collectAsState()
     val videoIdsState by viewModel.videoState.collectAsState()
-    val postsState by postViewModel.postsState.collectAsState()
+    val postsState by postViewModel.recentPostsState.collectAsState()
 
     val scrollState = rememberLazyListState()
 

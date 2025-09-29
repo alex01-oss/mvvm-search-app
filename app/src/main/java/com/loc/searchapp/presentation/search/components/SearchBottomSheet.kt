@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
@@ -37,6 +38,7 @@ import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,9 +107,7 @@ fun SearchBottomSheet(
                 onSuggestionClick = { suggestion ->
                     searchFields = searchFields.copy(searchCode = suggestion)
                     onClearAutocomplete()
-                },
-                fieldType = "code"
-            )
+                })
 
             SearchTextField(
                 value = searchFields.searchShape,
@@ -120,9 +120,7 @@ fun SearchBottomSheet(
                 onSuggestionClick = { suggestion ->
                     searchFields = searchFields.copy(searchShape = suggestion)
                     onClearAutocomplete()
-                },
-                fieldType = "shape"
-            )
+                })
 
             SearchTextField(
                 value = searchFields.searchDimensions,
@@ -135,9 +133,7 @@ fun SearchBottomSheet(
                 onSuggestionClick = { suggestion ->
                     searchFields = searchFields.copy(searchDimensions = suggestion)
                     onClearAutocomplete()
-                },
-                fieldType = "dimensions"
-            )
+                })
 
             SearchTextField(
                 value = searchFields.searchMachine,
@@ -150,9 +146,7 @@ fun SearchBottomSheet(
                 onSuggestionClick = { suggestion ->
                     searchFields = searchFields.copy(searchMachine = suggestion)
                     onClearAutocomplete()
-                },
-                fieldType = "machine"
-            )
+                })
 
             Spacer(modifier = Modifier.height(SmallPadding))
 
@@ -163,6 +157,7 @@ fun SearchBottomSheet(
                     onDismiss()
                 },
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(StrongCorner),
                 enabled = searchFields.hasAnyValue()
             ) {
                 Icon(
@@ -184,7 +179,8 @@ fun SearchBottomSheet(
                     onSearch(SearchParams())
                     onClearAutocomplete()
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(StrongCorner),
             ) {
                 Icon(Icons.Default.Clear, contentDescription = null)
                 Spacer(modifier = Modifier.width(SmallPadding))

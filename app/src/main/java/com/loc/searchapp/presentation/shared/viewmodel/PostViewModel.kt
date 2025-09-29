@@ -2,6 +2,7 @@ package com.loc.searchapp.presentation.shared.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.loc.searchapp.core.domain.model.catalog.Limit
 import com.loc.searchapp.core.domain.model.posts.EditPostData
 import com.loc.searchapp.core.domain.model.posts.Post
 import com.loc.searchapp.core.domain.model.posts.PostData
@@ -24,8 +25,11 @@ class PostViewModel @Inject constructor(
     private val postsUseCases: PostsUseCases
 ) : ViewModel() {
 
-    private val _postsState = MutableStateFlow<UiState<List<Post>>>(UiState.Loading)
-    val postsState = _postsState.asStateFlow()
+    private val _recentPostsState = MutableStateFlow<UiState<List<Post>>>(UiState.Loading)
+    val recentPostsState = _recentPostsState.asStateFlow()
+
+    private val _allPostsState = MutableStateFlow<UiState<List<Post>>>(UiState.Loading)
+    val allPostsState = _allPostsState.asStateFlow()
 
     private val _postEditorState = MutableStateFlow<PostEditorState>(PostEditorState.CreateMode)
     val postEditorState: StateFlow<PostEditorState> = _postEditorState.asStateFlow()
@@ -35,10 +39,6 @@ class PostViewModel @Inject constructor(
 
     private val _postActionState = MutableStateFlow<UiState<Unit>>(UiState.Empty)
     val postActionState = _postActionState.asStateFlow()
-
-    init {
-        loadPosts()
-    }
 
     fun initCreateMode() {
         _postEditorState.value = PostEditorState.CreateMode
@@ -72,15 +72,28 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    private fun loadPosts() {
+    fun loadRecentPosts() {
         viewModelScope.launch {
-            _postsState.value = UiState.Loading
+            _recentPostsState.value = UiState.Loading
             try {
-                val posts = postsUseCases.getAllPosts()
-                _postsState.value =
+                val posts = postsUseCases.getAllPosts(Limit(3))
+                _recentPostsState.value =
                     if (posts.isEmpty()) UiState.Empty else UiState.Success(posts)
             } catch (e: Exception) {
-                _postsState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
+                _recentPostsState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
+            }
+        }
+    }
+
+    fun loadAllPosts() {
+        viewModelScope.launch {
+            _allPostsState.value = UiState.Loading
+            try {
+                val posts = postsUseCases.getAllPosts(null)
+                _allPostsState.value =
+                    if (posts.isEmpty()) UiState.Empty else UiState.Success(posts)
+            } catch (e: Exception) {
+                _allPostsState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             }
         }
     }
@@ -91,7 +104,7 @@ class PostViewModel @Inject constructor(
             try {
                 postsUseCases.createPost(PostData(title, content, imageUrl))
                 _postActionState.value = UiState.Success(Unit)
-                loadPosts()
+                loadAllPosts()
             } catch (e: Exception) {
                 _postActionState.value =
                     UiState.Error(e.localizedMessage ?: "Failed to create post")
@@ -105,7 +118,7 @@ class PostViewModel @Inject constructor(
             try {
                 postsUseCases.editPost(EditPostData(postId, title, content, imageUrl))
                 _postActionState.value = UiState.Success(Unit)
-                loadPosts()
+                loadAllPosts()
             } catch (e: Exception) {
                 _postActionState.value =
                     UiState.Error(e.localizedMessage ?: "Failed to update post")
@@ -119,7 +132,7 @@ class PostViewModel @Inject constructor(
             try {
                 postsUseCases.deletePost(PostId(postId))
                 _postActionState.value = UiState.Success(Unit)
-                loadPosts()
+                loadAllPosts()
             } catch (e: Exception) {
                 _postActionState.value =
                     UiState.Error(e.localizedMessage ?: "Failed to delete post")

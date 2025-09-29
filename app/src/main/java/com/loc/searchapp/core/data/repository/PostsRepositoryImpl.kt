@@ -2,7 +2,9 @@ package com.loc.searchapp.core.data.repository
 
 import com.loc.searchapp.core.data.mappers.toDomain
 import com.loc.searchapp.core.data.mappers.toDto
+import com.loc.searchapp.core.data.mappers.toQueryParam
 import com.loc.searchapp.core.data.remote.api.PostsApi
+import com.loc.searchapp.core.domain.model.catalog.Limit
 import com.loc.searchapp.core.domain.model.posts.DeletePostResult
 import com.loc.searchapp.core.domain.model.posts.EditPostData
 import com.loc.searchapp.core.domain.model.posts.Post
@@ -44,8 +46,8 @@ class PostsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllPosts(): List<Post> {
-        val res = api.getAllPosts()
+    override suspend fun getAllPosts(data: Limit?): List<Post> {
+        val res = api.getAllPosts(data?.toQueryParam())
         return if (res.isSuccessful) {
             res.body()?.toDomain() ?: throw RuntimeException("Get all posts successful but body is null")
         } else {

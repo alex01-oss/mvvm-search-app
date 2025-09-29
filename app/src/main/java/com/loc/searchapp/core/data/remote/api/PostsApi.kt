@@ -15,6 +15,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface PostsApi {
     @POST("blog")
@@ -33,7 +34,9 @@ interface PostsApi {
     ): Response<PostResponse>
 
     @GET("blog")
-    suspend fun getAllPosts(): Response<List<PostResponse>>
+    suspend fun getAllPosts(
+        @Query("limit") limit: Int?
+    ): Response<List<PostResponse>>
 
     @GET("blog/{post_id}")
     suspend fun getPostById(

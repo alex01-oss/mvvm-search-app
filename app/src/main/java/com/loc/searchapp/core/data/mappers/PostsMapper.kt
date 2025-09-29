@@ -5,6 +5,7 @@ import com.loc.searchapp.core.data.remote.dto.EditPostRequest
 import com.loc.searchapp.core.data.remote.dto.ImageUploadResponse
 import com.loc.searchapp.core.data.remote.dto.PostRequest
 import com.loc.searchapp.core.data.remote.dto.PostResponse
+import com.loc.searchapp.core.domain.model.catalog.Limit
 import com.loc.searchapp.core.domain.model.posts.DeletePostResult
 import com.loc.searchapp.core.domain.model.posts.EditPostData
 import com.loc.searchapp.core.domain.model.posts.Post
@@ -73,3 +74,5 @@ fun EditPostData.toDto(): EditPostRequest {
         )
     )
 }
+
+fun Limit.toQueryParam(): Int = this.limit

@@ -8,6 +8,10 @@ data class CatalogId(
     val id: Int
 )
 
+data class Limit(
+    val limit: Int
+)
+
 sealed class FilterItem {
     abstract val id: Int
 

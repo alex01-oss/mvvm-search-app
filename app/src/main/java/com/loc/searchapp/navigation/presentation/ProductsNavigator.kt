@@ -60,15 +60,6 @@ fun ProductsNavigator(
     val backstackState by navController.currentBackStackEntryAsState()
     val context = LocalContext.current
 
-    val startDestination = when (authState) {
-        is AuthState.Authenticated -> Route.HomeScreen.route
-        is AuthState.Unauthenticated, is AuthState.Error -> Route.LoginScreen.route
-        AuthState.Loading -> {
-            LoadingScreen()
-            return
-        }
-    }
-
     val bottomNavigationItems = listOf(
         BottomNavItem(
             icon = R.drawable.home, text = stringResource(id = R.string.home)
@@ -137,19 +128,20 @@ fun ProductsNavigator(
         }
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
-            NavHost(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = paddingValues.calculateBottomPadding() / 2),
-                navController = navController,
-                startDestination = startDestination
-            ) {
-                mainNavGraph(
-                    navController,
-                    authViewModel,
-                    postViewModel,
-                    productViewModel
-                )
+            when (authState) {
+                is AuthState.Loading -> LoadingScreen()
+                else -> {
+                    NavHost(
+                        navController = navController,
+                        startDestination = when (authState) {
+                            is AuthState.Authenticated -> Route.HomeScreen.route
+                            is AuthState.Unauthenticated, is AuthState.Error -> Route.LoginScreen.route
+                            else -> Route.LoginScreen.route
+                        }
+                    ) {
+                        mainNavGraph(navController, authViewModel, postViewModel, productViewModel)
+                    }
+                }
             }
 
             if (networkStatus != NetworkStatus.Available) {

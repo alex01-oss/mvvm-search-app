@@ -48,7 +48,7 @@ fun PostsScreen(
     onBackClick: () -> Unit,
     onAddNewPost: () -> Unit,
 ) {
-    val postState = viewModel.postsState.collectAsState().value
+    val postState = viewModel.allPostsState.collectAsState().value
     var showDeleteDialog by remember { mutableStateOf<Post?>(null) }
 
     Scaffold(
