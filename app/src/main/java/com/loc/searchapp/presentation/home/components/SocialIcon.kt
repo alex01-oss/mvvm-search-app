@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.core.net.toUri
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.IconSize2
@@ -19,18 +21,22 @@ import com.loc.searchapp.core.ui.values.Dimens.IconSize2
 fun SocialIcon(
     @DrawableRes iconRes: Int,
     link: String,
+    iconName: String,
 ) {
     val context = LocalContext.current
+    val fullDescription = stringResource(R.string.social_link_description, iconName)
+
     IconButton(
         onClick = {
             val intent = Intent(Intent.ACTION_VIEW, link.toUri())
             context.startActivity(intent)
-        }
+        },
+        modifier = Modifier.semantics { contentDescription = fullDescription }
     ) {
         Icon(
             modifier = Modifier.size(IconSize2),
             painter = painterResource(id = iconRes),
-            contentDescription = stringResource(id = R.string.social_icon),
+            contentDescription = null,
             tint = MaterialTheme.colorScheme.onBackground
         )
     }

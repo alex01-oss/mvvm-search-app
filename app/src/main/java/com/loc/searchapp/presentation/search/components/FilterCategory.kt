@@ -1,4 +1,4 @@
-package com.loc.searchapp.presentation.home.components
+package com.loc.searchapp.presentation.search.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.core.domain.model.catalog.FilterItem
@@ -51,6 +55,9 @@ fun FilterCategory(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {
+                        role = Role.Checkbox
+                    }
                     .clickable {
                         val isCurrentlySelected = selectedIds.contains(item.id)
                         onToggle(item.id, !isCurrentlySelected)
@@ -59,12 +66,13 @@ fun FilterCategory(
             ) {
                 Checkbox(
                     checked = selectedIds.contains(item.id),
-                    onCheckedChange = { onToggle(item.id, it) },
+                    onCheckedChange = null,
                     colors = CheckboxDefaults.colors(
                         checkedColor = MaterialTheme.colorScheme.primary,
                         uncheckedColor = MaterialTheme.colorScheme.onSurface,
                         checkmarkColor = MaterialTheme.colorScheme.onBackground
-                    )
+                    ),
+                    modifier = Modifier.clearAndSetSemantics { }
                 )
                 Spacer(modifier = Modifier.width(SmallPadding))
                 Text(

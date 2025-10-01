@@ -23,6 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -50,9 +54,15 @@ fun PostItem(
     val fallback = stringResource(id = R.string.author_fallback, post.userId)
     val displayName = authorName ?: fallback
 
+    val cardDescription = stringResource(R.string.post_card_description, post.title, displayName)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .semantics {
+                contentDescription = cardDescription
+                role = Role.Button
+            }
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(StrongCorner),
         elevation = CardDefaults.cardElevation(0.dp),

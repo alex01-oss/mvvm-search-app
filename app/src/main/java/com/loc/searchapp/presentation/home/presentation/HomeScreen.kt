@@ -36,6 +36,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -173,7 +175,8 @@ fun HomeScreen(
                             text = stringResource(id = R.string.categories),
                             fontWeight = FontWeight.Bold,
                             fontSize = TitleSize,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.semantics { heading() }
                         )
                     }
 
@@ -196,7 +199,8 @@ fun HomeScreen(
                             text = stringResource(id = R.string.last_news),
                             fontWeight = FontWeight.Bold,
                             fontSize = TitleSize,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.semantics { heading() }
                         )
 
                         TextButton(
@@ -213,7 +217,7 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.width(ExtraSmallPadding))
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = stringResource(id = R.string.all_posts),
+                                contentDescription = null,
                                 modifier = Modifier.size(IndicatorSize)
                             )
                         }
@@ -236,7 +240,8 @@ fun HomeScreen(
                             text = stringResource(id = R.string.our_videos),
                             fontWeight = FontWeight.Bold,
                             fontSize = TitleSize,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.semantics { heading() }
                         )
                     }
                     YouTubeVideoSlider(
@@ -259,7 +264,8 @@ fun HomeScreen(
                                 text = stringResource(id = R.string.social_media),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = TitleSize,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.semantics { heading() }
                             )
                         }
 
@@ -269,23 +275,28 @@ fun HomeScreen(
                         ) {
                             SocialIcon(
                                 R.drawable.facebook,
-                                link = "https://www.facebook.com/superabrasives.tools"
+                                link = "https://www.facebook.com/superabrasives.tools",
+                                iconName = stringResource(R.string.social_name_facebook)
                             )
                             SocialIcon(
                                 R.drawable.instagram,
-                                link = "https://www.instagram.com/pdtools/"
+                                link = "https://www.instagram.com/pdtools/",
+                                iconName = stringResource(R.string.social_name_instagram)
                             )
                             SocialIcon(
                                 R.drawable.youtube,
-                                link = "https://www.youtube.com/channel/UC3tUVI8r3Bfr8hb9-KzfCvw"
+                                link = "https://www.youtube.com/channel/UC3tUVI8r3Bfr8hb9-KzfCvw",
+                                iconName = stringResource(R.string.social_name_youtube)
                             )
                             SocialIcon(
                                 R.drawable.linkedin,
-                                link = "https://www.linkedin.com/company/pdtoolssuperabrasives/posts/?feedView=all"
+                                link = "https://www.linkedin.com/company/pdtoolssuperabrasives/posts/?feedView=all",
+                                iconName = stringResource(R.string.social_name_linkedin)
                             )
                             SocialIcon(
                                 R.drawable.twitter,
-                                link = "https://x.com/PDT73640376"
+                                link = "https://x.com/PDT73640376",
+                                iconName = stringResource(R.string.social_name_twitter)
                             )
                         }
                     }

@@ -17,11 +17,12 @@ sealed class AuthEvent {
         val fullname: String,
         val email: String,
         val phone: String,
-        val currentPassword: String?,
-        val newPassword: String?
+        val password: String?
     ) : AuthEvent()
 
     data object DeleteUser : AuthEvent()
 
     data object LogoutUser : AuthEvent()
+
+    object LogoutAllDevices : AuthEvent()
 }

@@ -65,7 +65,7 @@ fun PostImagePicker(
             ) {
                 Icon(
                     Icons.Default.AddPhotoAlternate,
-                    contentDescription = stringResource(id = R.string.pick_image),
+                    contentDescription = null,
                     tint = themeColor
                 )
 
@@ -85,7 +85,7 @@ fun PostImagePicker(
                         .data(formState.previewUri)
                         .crossfade(true)
                         .build(),
-                    contentDescription = stringResource(id = R.string.preview),
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -103,7 +103,7 @@ fun PostImagePicker(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = stringResource(id = R.string.delete_image)
+                        contentDescription = null
                     )
                     Spacer(Modifier.width(ExtraSmallPadding))
                     Text(stringResource(R.string.delete_image))

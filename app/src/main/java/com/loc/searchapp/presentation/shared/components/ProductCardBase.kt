@@ -14,12 +14,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
@@ -44,7 +45,6 @@ import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.presentation.search.components.ProductDetailRowGrid
-import com.loc.searchapp.presentation.shared.components.notifications.SnackbarManager
 
 @Composable
 fun ProductCardBase(
@@ -54,7 +54,8 @@ fun ProductCardBase(
     onAdd: () -> Unit = {},
     onRemove: () -> Unit = {},
     inProgress: Set<Int>,
-    buttonStates: Map<Int, Boolean>
+    buttonStates: Map<Int, Boolean>,
+    onShowSnackbar: (String) -> Unit
 ) {
     val context = LocalContext.current
     val imageUrl = "$BASE_URL${product.images}"
@@ -63,13 +64,19 @@ fun ProductCardBase(
     val addMessage = stringResource(id = R.string.added)
     val removeMessage = stringResource(id = R.string.removed)
 
-    val snackbarManager = SnackbarManager(
-        scope = rememberCoroutineScope(),
-        snackbarHostState = remember { SnackbarHostState() }
+    val cardDescription: String = stringResource(
+        R.string.product_card_description,
+        product.shape,
+        product.code,
+        product.dimensions
     )
 
     Card(
         modifier = modifier
+            .semantics {
+                contentDescription = cardDescription
+                role = Role.Button
+            }
             .clickable { onClick() }
             .fillMaxWidth(),
         shape = RoundedCornerShape(StrongCorner),
@@ -109,10 +116,9 @@ fun ProductCardBase(
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold
                         ),
-                        modifier = Modifier.padding(
-                            horizontal = SmallPadding,
-                            vertical = ExtraSmallPadding
-                        ),
+                        modifier = Modifier
+                            .padding(horizontal = SmallPadding, vertical = ExtraSmallPadding)
+                            .clearAndSetSemantics { },
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -134,7 +140,7 @@ fun ProductCardBase(
                         .error(R.drawable.placeholder_image)
                         .fallback(R.drawable.placeholder_image)
                         .build(),
-                    contentDescription = product.code,
+                    contentDescription = null,
                     contentScale = ContentScale.Fit
                 )
             }
@@ -152,7 +158,8 @@ fun ProductCardBase(
                     ),
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.clearAndSetSemantics { }
                 )
 
                 ProductDetailRowGrid(
@@ -192,11 +199,11 @@ fun ProductCardBase(
                     isInProgress = product.id in inProgress,
                     onAddToCart = {
                         onAdd()
-                        snackbarManager.show(addMessage)
+                        onShowSnackbar(addMessage)
                     },
                     onRemoveFromCart = {
                         onRemove()
-                        snackbarManager.show(removeMessage)
+                        onShowSnackbar(removeMessage)
                     }
                 )
             }

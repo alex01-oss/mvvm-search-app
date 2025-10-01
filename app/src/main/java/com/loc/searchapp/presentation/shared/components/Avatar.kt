@@ -15,6 +15,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import com.loc.searchapp.R
@@ -29,13 +32,25 @@ fun Avatar(
     size: Dp = AvatarSize,
     textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     placeholder: @Composable (() -> Unit)? = null,
-    onAvatarClick: () -> Unit,
+    onAvatarClick: () -> Unit = {},
     isTopBar: Boolean = false,
     dynamicColor: Color = Color.White
 ) {
+    val avatarDescription = if (!firstName.isNullOrBlank() && !lastName.isNullOrBlank()) {
+        stringResource(R.string.user_profile_button_with_name, "$firstName $lastName")
+    } else {
+        stringResource(R.string.user_profile_button)
+    }
+
     Box(
         modifier
-            .clickable(onClick = onAvatarClick)
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+            }
+            .clickable(
+                onClick = onAvatarClick,
+                onClickLabel = avatarDescription
+            )
             .size(size)
             .clip(CircleShape)
             .border(
@@ -73,7 +88,7 @@ fun DefaultPlaceholder(
     ) {
         Image(
             painter = painterResource(R.drawable.person),
-            contentDescription = stringResource(R.string.avatar),
+            contentDescription = null,
             modifier = Modifier.size(size * 0.55f)
         )
     }

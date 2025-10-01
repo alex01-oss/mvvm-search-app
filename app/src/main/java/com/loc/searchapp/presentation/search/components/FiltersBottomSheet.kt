@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.loc.searchapp.R
@@ -35,7 +36,6 @@ import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
-import com.loc.searchapp.presentation.home.components.FilterCategory
 import com.loc.searchapp.presentation.shared.model.UiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +84,9 @@ fun FiltersBottomSheet(
                 is UiState.Loading -> {
                     item {
                         CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .clearAndSetSemantics { }
                         )
                     }
                 }
@@ -144,7 +146,7 @@ fun FiltersBottomSheet(
                 ) {
                     Icon(
                         Icons.Default.Done,
-                        contentDescription = stringResource(R.string.apply),
+                        contentDescription = null,
                         tint = themeColor
                     )
                     Spacer(modifier = Modifier.width(SmallPadding))

@@ -32,7 +32,7 @@ fun OnBoardingPage(
                 .fillMaxWidth()
                 .fillMaxHeight(fraction = 0.6f),
             painter = painterResource(id = page.image),
-            contentDescription = stringResource(id = R.string.onboarding_image),
+            contentDescription = page.title,
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(BasePadding))

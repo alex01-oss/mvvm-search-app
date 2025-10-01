@@ -11,13 +11,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.loc.searchapp.R
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.model.VideoUi
 import com.loc.searchapp.presentation.shared.network.NetworkStatus
@@ -35,22 +41,50 @@ fun YouTubeVideoSlider(
 
     when {
         networkStatus != NetworkStatus.Available -> {
-            EmptyScreen(stringResource(R.string.no_internet_connection))
+            EmptyContent(
+                message = stringResource(R.string.no_internet_connection),
+                iconId = R.drawable.ic_network_error,
+            )
         }
-        state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_videos))
-        state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+
+        state == UiState.Empty -> {
+            EmptyContent(
+                message = stringResource(id = R.string.empty_videos),
+                iconId = R.drawable.ic_empty_videos,
+            )
+        }
+
+        state is UiState.Error -> {
+            EmptyContent(
+                message = stringResource(id = R.string.error),
+                iconId = R.drawable.ic_network_error,
+            )
+        }
+
         state == UiState.Loading -> VideoSliderShimmer()
+
         state is UiState.Success -> {
             val pagerState = rememberPagerState(
                 initialPage = 0,
                 pageCount = { state.data.size }
             )
 
+            val currentPageText = stringResource(
+                R.string.page_x_of_y,
+                pagerState.currentPage + 1,
+                pagerState.pageCount
+            )
+
+            val context = LocalContext.current
+
             Column(modifier = modifier) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(PostImageHeight)
+                        .semantics {
+                            stateDescription = currentPageText
+                        }
                 ) {
                     HorizontalPager(
                         state = pagerState,
@@ -60,7 +94,14 @@ fun YouTubeVideoSlider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(PostImageHeight)
-                                .clip(RoundedCornerShape(StrongCorner)),
+                                .clip(RoundedCornerShape(StrongCorner))
+                                .semantics(mergeDescendants = true) {
+                                    role = Role.Button
+                                    contentDescription = context.getString(
+                                        R.string.youtube_video_button_description,
+                                        state.data[page].title
+                                    )
+                                },
                             factory = { context ->
                                 YouTubePlayerView(context).apply {
                                     lifecycleOwner.lifecycle.addObserver(this)

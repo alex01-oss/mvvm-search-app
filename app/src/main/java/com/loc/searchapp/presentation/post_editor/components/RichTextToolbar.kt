@@ -1,5 +1,6 @@
 package com.loc.searchapp.presentation.post_editor.components
 
+import android.accessibilityservice.GestureDescription
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,35 +60,61 @@ fun RichTextToolbar(
                 .padding(BasePadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            RichTextButton(Icons.Default.FormatBold) {
+            RichTextButton(
+                Icons.Default.FormatBold,
+                stringResource(R.string.format_bold) // <-- ТУТ ЗНАХОДИТЬСЯ РЯДОК
+            ) {
                 richTextState.toggleSpanStyle(SpanStyle(fontWeight = FontWeight.Bold))
             }
 
-            RichTextButton(Icons.Default.FormatItalic) {
+            RichTextButton(
+                Icons.Default.FormatItalic,
+                stringResource(R.string.format_italic) // FIX
+            ) {
                 richTextState.toggleSpanStyle(SpanStyle(fontStyle = FontStyle.Italic))
             }
 
-            RichTextButton(Icons.Default.FormatUnderlined) {
+            RichTextButton(
+                Icons.Default.FormatUnderlined,
+                stringResource(R.string.format_underline) // FIX
+            ) {
                 richTextState.toggleSpanStyle(SpanStyle(textDecoration = TextDecoration.Underline))
             }
 
-            RichTextButton(Icons.AutoMirrored.Filled.FormatListBulleted) {
+            // --- СПИСКИ ---
+            RichTextButton(
+                Icons.AutoMirrored.Filled.FormatListBulleted,
+                stringResource(R.string.format_list_bulleted) // FIX
+            ) {
                 richTextState.toggleUnorderedList()
             }
 
-            RichTextButton(Icons.Default.FormatListNumbered) {
+            RichTextButton(
+                Icons.Default.FormatListNumbered,
+                stringResource(R.string.format_list_numbered) // FIX
+            ) {
                 richTextState.toggleOrderedList()
             }
 
-            RichTextButton(Icons.AutoMirrored.Filled.FormatAlignLeft) {
+            // --- ВИРІВНЮВАННЯ ---
+            RichTextButton(
+                Icons.AutoMirrored.Filled.FormatAlignLeft,
+                stringResource(R.string.align_left) // FIX
+            ) {
                 richTextState.toggleParagraphStyle(ParagraphStyle(textAlign = TextAlign.Start))
             }
 
-            RichTextButton(Icons.Default.FormatAlignCenter) {
+            RichTextButton(
+                Icons.Default.FormatAlignCenter,
+                stringResource(R.string.align_center) // FIX
+            ) {
                 richTextState.toggleParagraphStyle(ParagraphStyle(textAlign = TextAlign.Center))
             }
 
-            RichTextButton(Icons.AutoMirrored.Filled.FormatAlignRight) {
+            RichTextButton(
+                Icons.AutoMirrored.Filled.FormatAlignRight,
+                stringResource(R.string.align_right) // FIX
+            ) {
                 richTextState.toggleParagraphStyle(ParagraphStyle(textAlign = TextAlign.End))
             }
         }
@@ -95,7 +122,11 @@ fun RichTextToolbar(
 }
 
 @Composable
-fun RichTextButton(icon: ImageVector, onClick: () -> Unit) {
+fun RichTextButton(
+    icon: ImageVector,
+    contentDescriptionText: String,
+    onClick: () -> Unit,
+) {
     FilledTonalIconButton(
         onClick = onClick,
         colors = IconButtonDefaults.filledTonalIconButtonColors(
@@ -105,7 +136,7 @@ fun RichTextButton(icon: ImageVector, onClick: () -> Unit) {
     ) {
         Icon(
             icon,
-            contentDescription = stringResource(id = R.string.editor_button)
+            contentDescription = contentDescriptionText
         )
     }
 }

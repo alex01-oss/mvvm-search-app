@@ -14,8 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
+import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
+import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 
 @Composable
 fun PagerIndicator(
@@ -27,7 +30,8 @@ fun PagerIndicator(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = BasePadding),
+                .padding(top = BasePadding)
+                .clearAndSetSemantics { },
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(totalPages) { index ->
@@ -35,20 +39,20 @@ fun PagerIndicator(
                 Box(
                     modifier = Modifier
                         .size(
-                            width = if (isSelected) 20.dp else 8.dp,
-                            height = 8.dp
+                            width = if (isSelected) IndicatorSize else SmallPadding,
+                            height = SmallPadding
                         )
                         .background(
                             color = if (isSelected)
                                 MaterialTheme.colorScheme.primary
                             else
                                 MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(4.dp)
+                            shape = RoundedCornerShape(ExtraSmallPadding)
                         )
                         .animateContentSize()
                 )
                 if (index < totalPages - 1) {
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(ExtraSmallPadding))
                 }
             }
         }

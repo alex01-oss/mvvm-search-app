@@ -12,6 +12,10 @@
     <string name="profile_settings">Налаштування профілю</string>
     <string name="edit_profile">Редагувати профіль</string>
     <string name="delete_account">Видалити акаунт</string>
+    <string name="danger_zone">Небезпечна зона</string>
+    <string name="logout_all_devices">Вийти з усіх пристроїв</string>
+    <string name="confirm_logout_all">Підтвердити вихід з усіх пристроїв</string>
+    <string name="logout_all">Вийти з усіх</string>
 
     <!-- Login screen -->
     <string name="sign_in">Увійти</string>
@@ -196,5 +200,37 @@
     <string name="editor_button">Кнопка редактора</string>
     <string name="machine_icon">Іконка обладнання</string>
     <string name="empty_icon">Порожня іконка</string>
-    <string name="confirm_delete">Confirm delete</string>
+    <string name="confirm_delete">Підтвердіть видалення</string>
+    <string name="expanded">Розгорнуто</string>
+    <string name="collapsed">Згорнуто</string>
+    <string name="expandable_action">Натисніть, щоб змінити видимість</string>
+    <string name="expandable_item_description">%s. Натисніть, щоб змінити видимість</string>
+    <string name="action_send_email">Надіслати електронний лист</string>
+    <string name="loading_indicator">Завантаження даних</string>
+    <string name="loading_product_list">Завантаження товарів</string>
+    <string name="user_profile_button">Кнопка профілю користувача. Натисніть, щоб перейти до профілю.</string>
+    <string name="user_profile_button_with_name">Профіль користувача %s. Натисніть, щоб перейти до профілю.</string>
+    <string name="post_card_description">Пост: %1$s, Автор: %2$s</string>
+    <string name="product_card_description">Товар: %1$s, Код: %2$s, Розміри: %3$s. Натисніть, щоб переглянути деталі.</string>
+    <string name="home_screen_title">Головна сторінка</string>
+    <string name="page_x_of_y">Сторінка %1$d з %2$d</string>
+    <string name="youtube_video_button_description">YouTube Відео: %s</string>
+    <string name="social_link_description">Посилання на %s</string>
+    <string name="social_name_facebook">Фейсбук</string>
+    <string name="social_name_instagram">Інстаграм</string>
+    <string name="social_name_youtube">Ютуб</string>
+    <string name="social_name_linkedin">ЛінкедІн</string>
+    <string name="social_name_twitter">Твітер</string>
+    <string name="hide_password">Приховати пароль</string>
+    <string name="show_password">Показати пароль</string>
+    <string name="send_report_email">Надіслати електронний лист для скарги</string>
+    <string name="format_bold">Жирний</string>
+    <string name="format_italic">Курсив</string>
+    <string name="format_underline">Підкреслення</string>
+    <string name="format_list_bulleted">Невпорядкований список</string>
+    <string name="format_list_numbered">Нумерований список</string>
+    <string name="align_left">Вирівняти по лівому краю</string>
+    <string name="align_center">Вирівняти по центру</string>
+    <string name="align_right">Вирівняти по правому краю</string>
+    <string name="post_content_editor">Поле для введення контенту поста</string>
 </resources>

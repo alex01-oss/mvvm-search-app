@@ -64,5 +64,5 @@ data class UpdateUserRequest(
     @SerialName("full_name") val fullname: String? = null,
     val email: String? = null,
     val phone: String? = null,
-    val password: String? = null
+    val password: String? = null,
 )

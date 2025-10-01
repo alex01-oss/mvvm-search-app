@@ -14,6 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 
 @Composable
@@ -27,7 +30,10 @@ fun AccountOption(
         modifier
             .fillMaxWidth()
             .padding(vertical = BasePadding)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

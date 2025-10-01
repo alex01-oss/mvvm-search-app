@@ -9,10 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,13 +26,16 @@ import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.BottomNavHeight
 import com.loc.searchapp.presentation.cart.components.CartList
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
+import com.loc.searchapp.presentation.shared.components.notifications.AppSnackbar
 import com.loc.searchapp.presentation.shared.components.notifications.GuestUser
 import com.loc.searchapp.presentation.shared.model.AuthState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun CartScreen(
@@ -39,6 +47,19 @@ fun CartScreen(
 ) {
     val authState by authViewModel.authState.collectAsState()
     val cartState by viewModel.cartState.collectAsState()
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val showSnackbarAction: (String) -> Unit = { message ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -54,6 +75,14 @@ fun CartScreen(
                     )
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = BottomNavHeight)
+            ) { data ->
+                AppSnackbar(data = data)
+            }
         }
     ) { paddingValues ->
         Column(
@@ -71,7 +100,8 @@ fun CartScreen(
                             onClick = { id -> navigateToDetails(id) },
                             onRemove = { id -> viewModel.removeFromCart(id) },
                             inProgress = viewModel.inProgress.collectAsState().value,
-                            buttonStates = viewModel.buttonStates.collectAsState().value
+                            buttonStates = viewModel.buttonStates.collectAsState().value,
+                            onShowSnackbar = showSnackbarAction
                         )
                     }
                 }

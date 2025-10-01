@@ -162,7 +162,7 @@ fun SearchBottomSheet(
             ) {
                 Icon(
                     Icons.Default.Search,
-                    contentDescription = stringResource(R.string.search),
+                    contentDescription = null,
                     tint = themeColor
 
                 )

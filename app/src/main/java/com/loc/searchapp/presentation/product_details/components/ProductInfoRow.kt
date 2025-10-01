@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import com.loc.searchapp.core.ui.values.Dimens.EmptyIconSize
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
@@ -23,7 +24,8 @@ fun ProductInfoRow(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(vertical = ExtraSmallPadding),
+            .padding(vertical = ExtraSmallPadding)
+            .semantics(mergeDescendants = true) {},
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

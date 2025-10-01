@@ -19,6 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
@@ -30,7 +34,11 @@ fun AppSnackbar(
     modifier: Modifier = Modifier
 ) {
     Snackbar(
-        modifier = modifier.padding(BasePadding),
+        modifier = modifier
+            .padding(BasePadding)
+            .semantics {
+                liveRegion = LiveRegionMode.Polite
+            },
         action = {
             data.visuals.actionLabel?.let {
                 IconButton(
@@ -59,9 +67,11 @@ fun AppSnackbar(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier.padding(end = SmallPadding),
+                modifier = Modifier
+                    .padding(end = SmallPadding)
+                    .semantics { contentDescription = "" },
                 imageVector = Icons.Default.Info,
-                contentDescription = stringResource(id = R.string.info),
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.width(SmallPadding))

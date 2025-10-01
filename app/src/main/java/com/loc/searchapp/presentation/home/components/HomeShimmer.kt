@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.presentation.shared.components.loading.shimmerEffect
 import com.loc.searchapp.core.ui.values.Dimens.ArticleImageHeight
@@ -36,7 +37,7 @@ import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 fun CategoriesShimmer(
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.fillMaxWidth()) {
+    Column(modifier.fillMaxWidth().clearAndSetSemantics {}) {
         repeat(2) {
             Box(
                 modifier = Modifier
@@ -45,6 +46,7 @@ fun CategoriesShimmer(
                     .padding(vertical = ExtraSmallPadding)
                     .clip(RoundedCornerShape(DefaultCorner))
                     .shimmerEffect()
+                    .clearAndSetSemantics {}
             )
         }
     }
@@ -99,7 +101,8 @@ fun VideoSliderShimmer(
             .fillMaxWidth()
             .height(PostImageHeight)
             .clip(RoundedCornerShape(StrongCorner))
-            .shimmerEffect(),
+            .shimmerEffect()
+            .clearAndSetSemantics {},
         contentAlignment = Alignment.Center
     ) {
         Icon(

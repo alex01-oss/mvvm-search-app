@@ -2,6 +2,7 @@ package com.loc.searchapp.core.domain.usecases.auth
 
 import com.loc.searchapp.core.domain.model.auth.UpdateData
 import com.loc.searchapp.core.domain.model.auth.User
+import com.loc.searchapp.core.domain.model.catalog.MessageResult
 import com.loc.searchapp.core.domain.repository.AuthRepository
 import jakarta.inject.Inject
 
@@ -10,7 +11,7 @@ class UpdateUser @Inject constructor(
 ) {
     suspend operator fun invoke(
         data: UpdateData
-    ): User {
+    ): MessageResult {
         return authRepository.updateUser(data)
     }
 }

@@ -28,10 +28,7 @@ fun MainContent(
         }
     }
 
-    val shouldShowContent = startDestination != null &&
-            (startDestination == Route.AppStartNavigation.route || authState != AuthState.Loading)
-
-    if (shouldShowContent) {
+    if (startDestination != null) {
         NavGraph(
             startDestination = startDestination,
             authViewModel = authViewModel,

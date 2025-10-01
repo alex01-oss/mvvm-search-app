@@ -28,6 +28,7 @@ object Dimens {
     val ShimmerHeight3 = 20.dp
     val ShimmerHeight4 = 36.dp
     val BottomNavMargin = 32.dp
+    val BottomNavHeight = 64.dp
     val TitleSize = 24.sp
     val TextSize = 16.sp
     val StrongCorner = 4.dp

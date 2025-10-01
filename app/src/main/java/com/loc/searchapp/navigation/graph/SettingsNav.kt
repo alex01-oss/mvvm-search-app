@@ -21,6 +21,9 @@ fun NavGraphBuilder.settingsScreens(
             },
             onDeleteClick = {
                 navController.navigate(Route.RegisterScreen.route)
+            },
+            onUpdated = {
+                navController.navigate(Route.AccountScreen.route)
             }
         )
     }

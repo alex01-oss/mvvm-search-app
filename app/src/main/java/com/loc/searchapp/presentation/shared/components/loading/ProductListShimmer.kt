@@ -24,6 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.EmptyIconSize
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallCorner
@@ -37,9 +42,15 @@ import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
 fun ProductListShimmer() {
+    val loadingDescription = stringResource(R.string.loading_product_list)
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics(mergeDescendants = true) {
+                contentDescription = loadingDescription
+            },
         contentPadding = PaddingValues(vertical = BasePadding),
         verticalArrangement = Arrangement.spacedBy(BasePadding),
         horizontalArrangement = Arrangement.spacedBy(BasePadding)
@@ -59,7 +70,8 @@ fun ProductCardShimmer(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .clearAndSetSemantics { },
         shape = RoundedCornerShape(StrongCorner),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

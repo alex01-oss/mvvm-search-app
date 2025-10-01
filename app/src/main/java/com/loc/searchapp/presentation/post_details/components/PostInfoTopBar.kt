@@ -25,13 +25,13 @@ fun PostInfoTopBar(
     val context = LocalContext.current
 
     SharedTopBar(
-        title = stringResource(id = R.string.post_info),
+        title = stringResource(R.string.post_info),
         actions = {
             if (authViewModel.isAdmin) {
                 IconButton(onClick = { onEditClick(postId) }) {
                     Icon(
                         Icons.Default.Edit,
-                        contentDescription = stringResource(id = R.string.edit_post)
+                        contentDescription = stringResource(R.string.edit_post)
                     )
                 }
             } else {
@@ -43,7 +43,7 @@ fun PostInfoTopBar(
                 }) {
                     Icon(
                         Icons.Default.Report,
-                        contentDescription = stringResource(id = R.string.report_icon)
+                        contentDescription = stringResource(id = R.string.send_report_email)
                     )
                 }
             }

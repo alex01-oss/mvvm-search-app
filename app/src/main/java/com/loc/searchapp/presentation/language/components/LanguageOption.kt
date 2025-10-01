@@ -18,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
@@ -39,6 +41,9 @@ fun LanguageOption(
         modifier
             .fillMaxWidth()
             .padding(horizontal = BasePadding)
+            .semantics(mergeDescendants = true) {
+                role = Role.RadioButton
+            }
             .clickable { onClick() }
             .border(
                 width = SmallCorner,
@@ -51,7 +56,7 @@ fun LanguageOption(
         Image(
             modifier = Modifier.size(IconSize),
             painter = painterResource(id = id),
-            contentDescription = stringResource(id = id),
+            contentDescription = null,
             colorFilter =
                 if (isSystemIcon) ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                 else null

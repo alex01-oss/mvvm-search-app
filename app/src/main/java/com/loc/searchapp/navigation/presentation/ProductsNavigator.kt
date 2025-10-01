@@ -19,9 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -31,10 +32,7 @@ import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.navigation.components.BottomNavigation
 import com.loc.searchapp.navigation.graph.Route
-import com.loc.searchapp.navigation.graph.authScreens
-import com.loc.searchapp.navigation.graph.homeScreens
-import com.loc.searchapp.navigation.graph.postScreens
-import com.loc.searchapp.navigation.graph.settingsScreens
+import com.loc.searchapp.navigation.graph.mainNavGraph
 import com.loc.searchapp.navigation.utils.navigateToTab
 import com.loc.searchapp.presentation.shared.components.loading.LoadingScreen
 import com.loc.searchapp.presentation.shared.model.AuthState
@@ -108,7 +106,10 @@ fun ProductsNavigator(
                     onItemClick = { index ->
                         when (index) {
                             0 -> {
-                                while (navController.currentDestination?.route?.startsWith(Route.SearchScreen.route) == true) {
+                                while (navController.currentDestination?.route?.startsWith(
+                                        Route.SearchScreen.route
+                                    ) == true
+                                ) {
                                     navController.popBackStack()
                                 }
                                 navController.navigate(Route.HomeScreen.route) {
@@ -118,6 +119,7 @@ fun ProductsNavigator(
                                     launchSingleTop = true
                                 }
                             }
+
                             1 -> navigateToTab(navController, Route.SearchScreen.route)
                             2 -> navigateToTab(navController, Route.CartScreen.route)
                             3 -> navigateToTab(navController, Route.AccountScreen.route)
@@ -129,7 +131,10 @@ fun ProductsNavigator(
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             when (authState) {
-                is AuthState.Loading -> LoadingScreen()
+                is AuthState.Loading -> {
+                    LoadingScreen()
+                }
+
                 else -> {
                     NavHost(
                         navController = navController,
@@ -153,7 +158,10 @@ fun ProductsNavigator(
                             end = BasePadding,
                             bottom = if (isBottomBarVisible) paddingValues.calculateBottomPadding()
                             else TopLogoHeight
-                        ),
+                        )
+                        .semantics(mergeDescendants = true) {
+                            liveRegion = LiveRegionMode.Polite
+                        },
                     action = {
                         TextButton(onClick = {
                             val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
@@ -163,36 +171,14 @@ fun ProductsNavigator(
                         }
                     }
                 ) {
-                    Text(stringResource(R.string.no_internet_connection, networkStatus.name))
+                    Text(
+                        stringResource(
+                            R.string.no_internet_connection,
+                            networkStatus.name
+                        )
+                    )
                 }
             }
         }
     }
-}
-
-fun NavGraphBuilder.mainNavGraph(
-    navController: NavController,
-    authViewModel: AuthViewModel,
-    postViewModel: PostViewModel,
-    productViewModel: ProductViewModel
-) {
-    homeScreens(
-        navController,
-        authViewModel,
-        postViewModel,
-        productViewModel
-    )
-    authScreens(
-        navController,
-        authViewModel,
-    )
-    postScreens(
-        navController,
-        authViewModel,
-        postViewModel,
-    )
-    settingsScreens(
-        navController,
-        authViewModel,
-    )
 }

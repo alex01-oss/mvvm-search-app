@@ -12,7 +12,8 @@ fun CartItemCard(
     onClick: () -> Unit,
     onRemove: (id: Int) -> Unit,
     inProgress: Set<Int>,
-    buttonStates: Map<Int, Boolean>
+    buttonStates: Map<Int, Boolean>,
+    onShowSnackbar: (String) -> Unit
 ) {
     ProductCardBase(
         modifier = modifier,
@@ -20,6 +21,7 @@ fun CartItemCard(
         onClick = onClick,
         onRemove = { onRemove(cartItem.product.id) },
         inProgress = inProgress,
-        buttonStates = buttonStates
+        buttonStates = buttonStates,
+        onShowSnackbar = onShowSnackbar
     )
 }

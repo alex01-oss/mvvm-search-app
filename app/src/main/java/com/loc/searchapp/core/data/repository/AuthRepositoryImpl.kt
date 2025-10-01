@@ -11,6 +11,7 @@ import com.loc.searchapp.core.domain.model.auth.RefreshResult
 import com.loc.searchapp.core.domain.model.auth.RegisterData
 import com.loc.searchapp.core.domain.model.auth.UpdateData
 import com.loc.searchapp.core.domain.model.auth.User
+import com.loc.searchapp.core.domain.model.catalog.MessageResult
 import com.loc.searchapp.core.domain.repository.AuthRepository
 import jakarta.inject.Inject
 
@@ -54,7 +55,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUser(data: UpdateData): User {
+    override suspend fun updateUser(data: UpdateData): MessageResult {
         val res = api.updateUser(data.toDto())
         return if (res.isSuccessful) {
             res.body()?.toDomain() ?: throw RuntimeException("Update user successful but body is null")
@@ -72,6 +73,15 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logout(data: RefreshData): LogoutResult? {
         val res = api.logout(data.toDto())
+        return if (res.isSuccessful) {
+            res.body()?.toDomain()
+        } else {
+            throw RuntimeException("Logout failed: ${res.code()} ${res.message()}")
+        }
+    }
+
+    override suspend fun logoutAllDevices(): LogoutResult? {
+        val res = api.logoutAllDevices()
         return if (res.isSuccessful) {
             res.body()?.toDomain()
         } else {

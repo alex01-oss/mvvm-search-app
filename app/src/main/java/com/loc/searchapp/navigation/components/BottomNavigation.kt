@@ -33,6 +33,10 @@ import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
 
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 @Composable
 fun BottomNavigation(
     modifier: Modifier = Modifier,
@@ -101,13 +105,17 @@ fun BottomNavigation(
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = CircleShape
                             )
-                            .clickable { onItemClick(selected) },
+                            .clickable { onItemClick(selected) }
+                            .semantics {
+                                contentDescription = selectedItem.text
+                                role = Role.Button
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             modifier = Modifier.size(IconSize),
                             painter = painterResource(id = selectedItem.icon),
-                            contentDescription = selectedItem.text,
+                            contentDescription = null,
                             tint = Color.White
                         )
                     }

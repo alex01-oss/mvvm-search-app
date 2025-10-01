@@ -18,6 +18,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.common.Page
 import com.loc.searchapp.presentation.shared.components.ProductButton
@@ -72,7 +74,18 @@ fun OnBoardingScreen(
             }
         }
 
-        HorizontalPager(state = pagerState) { index ->
+        val currentPageText = stringResource(
+            R.string.page_x_of_y,
+            pagerState.currentPage + 1,
+            pagerState.pageCount
+        )
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.semantics {
+                stateDescription = currentPageText
+            }
+        ) { index ->
             OnBoardingPage(page = pages[index])
         }
 

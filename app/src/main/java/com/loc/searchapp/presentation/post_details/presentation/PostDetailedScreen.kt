@@ -23,6 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.loc.searchapp.R
@@ -34,8 +36,7 @@ import com.loc.searchapp.core.utils.Constants.BASE_URL
 import com.loc.searchapp.presentation.post_details.components.PostInfoTopBar
 import com.loc.searchapp.presentation.post_details.utils.formatDate
 import com.loc.searchapp.presentation.posts.components.PostDetailedShimmer
-import com.loc.searchapp.presentation.shared.components.PaddedContent
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.AuthViewModel
 import com.mohamedrejeb.richeditor.model.RichTextState
@@ -64,22 +65,20 @@ fun PostDetailedScreen(
         }
     ) { paddingValues ->
         when (state) {
-            is UiState.Loading -> {
-                PaddedContent(paddingValues) {
-                    PostDetailedShimmer()
-                }
-            }
+            is UiState.Loading -> PostDetailedShimmer()
 
             is UiState.Error -> {
-                PaddedContent(paddingValues) {
-                    EmptyScreen(message = state.message)
-                }
+                EmptyContent(
+                    message = state.message,
+                    iconId = R.drawable.ic_network_error,
+                )
             }
 
             UiState.Empty -> {
-                PaddedContent(paddingValues) {
-                    EmptyScreen(message = stringResource(id = R.string.error))
-                }
+                EmptyContent(
+                    message = stringResource(id = R.string.error),
+                    iconId = R.drawable.ic_network_error,
+                )
             }
 
             is UiState.Success -> {
@@ -101,13 +100,16 @@ fun PostDetailedScreen(
                         text = post.title,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.semantics { heading() }
                     )
 
                     Spacer(Modifier.height(BasePadding))
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics(mergeDescendants = true) {},
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(

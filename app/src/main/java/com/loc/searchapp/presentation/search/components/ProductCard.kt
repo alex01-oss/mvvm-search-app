@@ -13,7 +13,8 @@ fun ProductCard(
     onAdd: (id: Int) -> Unit,
     onRemove: (id: Int) -> Unit,
     inProgress: Set<Int>,
-    buttonStates: Map<Int, Boolean>
+    buttonStates: Map<Int, Boolean>,
+    onShowSnackbar: (String) -> Unit
 ) {
 
     ProductCardBase(
@@ -23,6 +24,7 @@ fun ProductCard(
         onAdd = { onAdd(product.id) },
         onRemove = { onRemove(product.id) },
         inProgress = inProgress,
-        buttonStates = buttonStates
+        buttonStates = buttonStates,
+        onShowSnackbar = onShowSnackbar
     )
 }

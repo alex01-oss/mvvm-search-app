@@ -21,11 +21,14 @@ fun NavGraphBuilder.postScreens(
     postViewModel: PostViewModel
 ) {
     composable(route = Route.PostsScreen.route) {
+        val postState by postViewModel.allPostsState.collectAsState()
+
         LaunchedEffect(Unit) {
             postViewModel.loadAllPosts()
         }
 
         PostsScreen(
+            state = postState,
             viewModel = postViewModel,
             authViewModel = authViewModel,
             onPostClick = { post ->
@@ -76,16 +79,16 @@ fun NavGraphBuilder.postScreens(
         })
     ) { backStackEntry ->
         val postId = backStackEntry.arguments?.getInt("postId") ?: -1
-        val postEditorState by postViewModel.postEditorState.collectAsState()
-        val postActionState by postViewModel.postActionState.collectAsState()
+        val editorState by postViewModel.postEditorState.collectAsState()
+        val actionState by postViewModel.postActionState.collectAsState()
 
-        if (postId != -1 && postEditorState is PostEditorState.CreateMode) {
+        if (postId != -1 && editorState is PostEditorState.CreateMode) {
             postViewModel.initEditMode(postId)
         }
 
         PostEditorScreen(
-            postActionState = postActionState,
-            postEditorState = postEditorState,
+            actionState = actionState,
+            editorState = editorState,
             viewModel = postViewModel,
             onBackClick = { navController.popBackStack() },
             onFinish = {

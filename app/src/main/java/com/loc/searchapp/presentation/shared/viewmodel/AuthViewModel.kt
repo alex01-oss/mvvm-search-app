@@ -74,6 +74,7 @@ class AuthViewModel @Inject constructor(
                 is AuthEvent.UpdateUser -> handleUpdateUser(event)
                 is AuthEvent.DeleteUser -> handleDeleteUser()
                 is AuthEvent.LogoutUser -> handleLogout()
+                AuthEvent.LogoutAllDevices -> handleLogoutAll()
             }
         }
     }
@@ -108,10 +109,18 @@ class AuthViewModel @Inject constructor(
     private suspend fun handleUpdateUser(event: AuthEvent.UpdateUser) {
         _authState.value = AuthState.Loading
         try {
-            val newUser = authUseCases.updateUser(
-                UpdateData(event.fullname, event.email, event.phone, event.newPassword)
+            authUseCases.updateUser(
+                UpdateData(
+                    event.fullname,
+                    event.email,
+                    event.phone,
+                    event.password
+                )
             )
-            _authState.value = AuthState.Authenticated(newUser)
+
+            val updatedUser = authUseCases.getUser()
+
+            _authState.value = AuthState.Authenticated(updatedUser)
         } catch (e: Exception) {
             _authState.value = AuthState.Error(e.localizedMessage ?: "Unknown error")
         }
@@ -132,6 +141,16 @@ class AuthViewModel @Inject constructor(
             userPreferences.getRefreshToken()?.let {
                 authUseCases.logoutUser(RefreshData(it))
             }
+        } finally {
+            userPreferences.clearTokens()
+            _authState.value = AuthState.Unauthenticated
+            _logoutCompleted.value = true
+        }
+    }
+
+    private suspend fun handleLogoutAll() {
+        try {
+            authUseCases.logoutAllDevices()
         } finally {
             userPreferences.clearTokens()
             _authState.value = AuthState.Unauthenticated

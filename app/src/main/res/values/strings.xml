@@ -12,6 +12,10 @@
     <string name="profile_settings">Profile Settings</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="delete_account">Delete Account</string>
+    <string name="danger_zone">Danger zone</string>
+    <string name="logout_all_devices">Logout all devices</string>
+    <string name="confirm_logout_all">Confirm logout all devices</string>
+    <string name="logout_all">Logout all</string>
 
     <!-- Login screen -->
     <string name="sign_in">Sign In</string>
@@ -197,4 +201,36 @@
     <string name="machine_icon">Machine icon</string>
     <string name="empty_icon">Empty icon</string>
     <string name="confirm_delete">Confirm delete</string>
+    <string name="expanded">Expanded</string>
+    <string name="collapsed">Collapsed</string>
+    <string name="expandable_action">Click to change visibility</string>
+    <string name="expandable_item_description">%s. Click to change visibility</string>
+    <string name="action_send_email">Send email</string>
+    <string name="loading_indicator">Loading data</string>
+    <string name="loading_product_list">Loading products</string>
+    <string name="user_profile_button">User profile button. Tap to go to profile.</string>
+    <string name="user_profile_button_with_name">User profile for %s. Tap to go to profile.</string>
+    <string name="post_card_description">Post: %1$s, Author: %2$s</string>
+    <string name="product_card_description">Product: %1$s, Code: %2$s, Size: %3$s. Click to see details.</string>
+    <string name="home_screen_title">Home screen</string>
+    <string name="page_x_of_y">Page %1$d of %2$d</string>
+    <string name="youtube_video_button_description">YouTube Video: %s</string>
+    <string name="social_link_description">Link to %s</string>
+    <string name="social_name_facebook">Facebook</string>
+    <string name="social_name_instagram">Instagram</string>
+    <string name="social_name_youtube">Youtube</string>
+    <string name="social_name_linkedin">LinkedIn</string>
+    <string name="social_name_twitter">Twitter</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="send_report_email">Send email for complaint</string>
+    <string name="format_bold">Bold</string>
+    <string name="format_italic">Italic</string>
+    <string name="format_underline">Underline</string>
+    <string name="format_list_bulleted">Bulleted List</string>
+    <string name="format_list_numbered">Numbered List</string>
+    <string name="align_left">Align Left</string>
+    <string name="align_center">Align Center</string>
+    <string name="align_right">Align Right</string>
+    <string name="post_content_editor">Post content editor field</string>
 </resources>

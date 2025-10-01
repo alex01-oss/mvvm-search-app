@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import com.loc.searchapp.R
@@ -105,7 +106,9 @@ fun AuthForm(
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(BasePadding),
+                    modifier = Modifier
+                        .size(BasePadding)
+                        .clearAndSetSemantics { },
                     color = MaterialTheme.colorScheme.onPrimary,
                     strokeWidth = BorderStroke
                 )
@@ -120,7 +123,9 @@ fun AuthForm(
         Spacer(modifier = Modifier.height(BasePadding))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            HorizontalDivider(modifier = Modifier.weight(1f))
+            HorizontalDivider(
+                modifier = Modifier.weight(1f).clearAndSetSemantics { }
+            )
             Text(
                 modifier = Modifier.padding(horizontal = BasePadding),
                 text = stringResource(id = R.string.or),
@@ -129,7 +134,9 @@ fun AuthForm(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             )
-            HorizontalDivider(modifier = Modifier.weight(1f))
+            HorizontalDivider(
+                modifier = Modifier.weight(1f).clearAndSetSemantics { }
+            )
         }
 
         TextButton(onClick = onBottomTextClick) {

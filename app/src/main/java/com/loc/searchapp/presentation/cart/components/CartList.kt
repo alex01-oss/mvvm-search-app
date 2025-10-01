@@ -19,7 +19,7 @@ import com.loc.searchapp.core.domain.model.catalog.Cart
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 import com.loc.searchapp.presentation.shared.model.UiState
 
 @Composable
@@ -29,14 +29,21 @@ fun CartList(
     onClick: (id: Int) -> Unit,
     onRemove: (id: Int) -> Unit,
     inProgress: Set<Int>,
-    buttonStates: Map<Int, Boolean>
+    buttonStates: Map<Int, Boolean>,
+    onShowSnackbar: (String) -> Unit
 ) {
     when(state) {
         UiState.Empty -> {
-            EmptyScreen(message = stringResource(id = R.string.empty_cart))
+            EmptyContent(
+                message = stringResource(id = R.string.empty_cart),
+                iconId = R.drawable.ic_empty_cart,
+            )
         }
         is UiState.Error -> {
-            EmptyScreen(message = state.message)
+            EmptyContent(
+                message = state.message,
+                iconId = R.drawable.ic_network_error,
+            )
         }
         UiState.Loading -> {
             ProductListShimmer()
@@ -58,7 +65,8 @@ fun CartList(
                         onRemove = { onRemove(cartItem.product.id) },
                         cartItem = cartItem,
                         inProgress = inProgress,
-                        buttonStates = buttonStates
+                        buttonStates = buttonStates,
+                        onShowSnackbar = onShowSnackbar,
                     )
                 }
 

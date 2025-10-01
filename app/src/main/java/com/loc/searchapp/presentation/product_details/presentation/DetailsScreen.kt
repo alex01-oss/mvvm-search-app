@@ -16,6 +16,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +32,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.loc.searchapp.R
@@ -44,9 +48,10 @@ import com.loc.searchapp.presentation.product_details.components.EquipmentRow
 import com.loc.searchapp.presentation.product_details.components.ProductInfoRow
 import com.loc.searchapp.presentation.shared.components.CartActionButton
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
-import com.loc.searchapp.presentation.shared.components.notifications.SnackbarManager
+import com.loc.searchapp.presentation.shared.components.notifications.AppSnackbar
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailsScreen(
@@ -57,10 +62,18 @@ fun DetailsScreen(
 ) {
     val context = LocalContext.current
 
-    val snackbarManager = SnackbarManager(
-        scope = rememberCoroutineScope(),
-        snackbarHostState = remember { SnackbarHostState() }
-    )
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val showSnackbarAction: (String) -> Unit = { message ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
 
     val addMessage = stringResource(id = R.string.added)
     val removeMessage = stringResource(id = R.string.removed)
@@ -75,6 +88,11 @@ fun DetailsScreen(
     Scaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                AppSnackbar(data = data)
+            }
+        },
         topBar = {
             if (product != null) {
                 SharedTopBar(
@@ -87,11 +105,11 @@ fun DetailsScreen(
                             isInProgress = product.id in inProgress,
                             onAddToCart = {
                                 viewModel.addToCart(product.id)
-                                snackbarManager.show(addMessage)
+                                showSnackbarAction(addMessage)
                             },
                             onRemoveFromCart = {
                                 viewModel.removeFromCart(product.id)
-                                snackbarManager.show(removeMessage)
+                                showSnackbarAction(removeMessage)
                             },
                             isDetailedScreen = true
                         )
@@ -156,7 +174,9 @@ fun DetailsScreen(
                             text = stringResource(id = R.string.product_details),
                             style = MaterialTheme.typography.titleLarge,
                             color = colorResource(id = R.color.light_red),
-                            modifier = Modifier.padding(bottom = BasePadding)
+                            modifier = Modifier
+                                .padding(bottom = BasePadding)
+                                .semantics { heading() }
                         )
 
                         @Composable
@@ -180,6 +200,7 @@ fun DetailsScreen(
                             text = stringResource(id = R.string.bond_info),
                             style = MaterialTheme.typography.titleLarge,
                             color = colorResource(id = R.color.light_red),
+                            modifier = Modifier.semantics { heading() }
                         )
 
                         data.bonds.forEach { bond ->

@@ -23,7 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
@@ -33,6 +40,15 @@ fun ExpandableItem(
     content: String
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    val stateDescriptionText = stringResource(
+        id = if (expanded) R.string.expanded else R.string.collapsed
+    )
+
+    val itemDescription = stringResource(
+        id = R.string.expandable_item_description,
+        title
+    )
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -44,8 +60,14 @@ fun ExpandableItem(
     ) {
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .clickable { expanded = !expanded }
                 .padding(BasePadding)
+                .semantics(mergeDescendants = true) {
+                    role = Role.Button
+                    contentDescription = itemDescription
+                    stateDescription = stateDescriptionText
+                }
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

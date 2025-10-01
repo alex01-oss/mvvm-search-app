@@ -22,6 +22,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.text.HtmlCompat
@@ -33,7 +38,7 @@ import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.ui.values.Dimens.TextBarHeight
 import com.loc.searchapp.core.utils.Constants.BASE_URL
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.network.NetworkStatus
 
@@ -46,15 +51,37 @@ fun PostsSlider(
 ) {
     when {
         networkStatus != NetworkStatus.Available -> {
-            EmptyScreen(stringResource(R.string.no_internet_connection))
+            EmptyContent(
+                message = stringResource(R.string.no_internet_connection),
+                iconId = R.drawable.ic_network_error,
+            )
         }
-        state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.empty_news))
-        state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+
+        state == UiState.Empty -> {
+            EmptyContent(
+                message = stringResource(id = R.string.empty_news),
+                iconId = R.drawable.ic_empty_blog,
+            )
+        }
+
+        state is UiState.Error -> {
+            EmptyContent(
+                message = stringResource(id = R.string.error),
+                iconId = R.drawable.ic_network_error,
+            )
+        }
+
         state == UiState.Loading -> PostsSliderShimmer()
         state is UiState.Success -> {
             val pagerState = rememberPagerState(
                 initialPage = 0,
                 pageCount = { state.data.size }
+            )
+
+            val currentPageText = stringResource(
+                R.string.page_x_of_y,
+                pagerState.currentPage + 1,
+                pagerState.pageCount
             )
 
             Column(modifier = modifier) {
@@ -65,7 +92,11 @@ fun PostsSlider(
                 ) {
                     HorizontalPager(
                         state = pagerState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .semantics {
+                                stateDescription = currentPageText
+                            }
                     ) { page ->
                         val post = state.data[page]
                         val fullImageUrl = "$BASE_URL${post.image}"
@@ -74,12 +105,15 @@ fun PostsSlider(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(StrongCorner))
+                                .semantics(mergeDescendants = true) {
+                                    role = Role.Button
+                                }
                                 .clickable { onPostClick(post.id) }
                         ) {
                             AsyncImage(
                                 modifier = Modifier.fillMaxSize(),
                                 model = fullImageUrl,
-                                contentDescription = post.title,
+                                contentDescription = null,
                                 contentScale = ContentScale.Crop
                             )
 
@@ -115,7 +149,8 @@ fun PostsSlider(
                                     color = Color.White.copy(alpha = 0.9f),
                                     style = MaterialTheme.typography.bodySmall,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.clearAndSetSemantics {}
                                 )
                             }
                         }

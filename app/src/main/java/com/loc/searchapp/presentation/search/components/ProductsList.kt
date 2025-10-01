@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
@@ -27,7 +28,7 @@ import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
 import com.loc.searchapp.core.ui.values.Dimens.SmallCorner
 import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 
 @Composable
 fun ProductsList(
@@ -37,19 +38,26 @@ fun ProductsList(
     onAdd: (Int) -> Unit,
     onRemove: (Int) -> Unit,
     inProgress: Set<Int>,
-    buttonStates: Map<Int, Boolean>
+    buttonStates: Map<Int, Boolean>,
+    onShowSnackbar: (String) -> Unit
 ) {
     when (val state = items.loadState.refresh) {
         is LoadState.Error -> {
             val errorMessage = state.error.localizedMessage ?: stringResource(R.string.error)
-            EmptyScreen(message = stringResource(R.string.error, errorMessage))
+            EmptyContent(
+                message = stringResource(R.string.error, errorMessage),
+                iconId = R.drawable.ic_network_error,
+            )
         }
 
         LoadState.Loading -> ProductListShimmer()
 
         is LoadState.NotLoading -> {
             if (items.itemCount == 0) {
-                EmptyScreen(message = stringResource(id = R.string.not_found))
+                EmptyContent(
+                    message = stringResource(id = R.string.not_found),
+                    iconId = R.drawable.ic_empty_list,
+                )
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -70,7 +78,8 @@ fun ProductsList(
                                 onAdd = { onAdd(product.id) },
                                 onRemove = { onRemove(product.id) },
                                 inProgress = inProgress,
-                                buttonStates = buttonStates
+                                buttonStates = buttonStates,
+                                onShowSnackbar = onShowSnackbar,
                             )
                         }
                     }
@@ -85,7 +94,8 @@ fun ProductsList(
                             ) {
                                 CircularProgressIndicator(
                                     strokeWidth = SmallCorner,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.clearAndSetSemantics { }
                                 )
                             }
                         }

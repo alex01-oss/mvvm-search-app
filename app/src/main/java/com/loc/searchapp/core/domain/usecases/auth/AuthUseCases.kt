@@ -8,6 +8,7 @@ data class AuthUseCases @Inject constructor(
     val refreshToken: RefreshToken,
     val updateUser: UpdateUser,
     val logoutUser: LogoutUser,
+    val logoutAllDevices: LogoutAllDevices,
     val getUser: GetUser,
     val deleteUser: DeleteUser
 )

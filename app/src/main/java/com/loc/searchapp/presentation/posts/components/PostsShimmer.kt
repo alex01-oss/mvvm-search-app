@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import com.loc.searchapp.presentation.shared.components.loading.shimmerEffect
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
@@ -27,7 +28,8 @@ import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 fun PostItemShimmer(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clearAndSetSemantics { },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -80,6 +82,7 @@ fun PostDetailedShimmer(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(BasePadding)
             .verticalScroll(rememberScrollState())
+            .clearAndSetSemantics { },
     ) {
         Spacer(
             modifier = Modifier

@@ -18,12 +18,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +37,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.theme.themeAdaptiveColor
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.BottomNavHeight
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
 import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
@@ -42,7 +47,9 @@ import com.loc.searchapp.presentation.search.components.ProductsList
 import com.loc.searchapp.presentation.search.components.SearchBottomSheet
 import com.loc.searchapp.presentation.search.viewmodel.SearchViewModel
 import com.loc.searchapp.presentation.shared.components.SharedTopBar
+import com.loc.searchapp.presentation.shared.components.notifications.AppSnackbar
 import com.loc.searchapp.presentation.shared.viewmodel.ProductViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
@@ -63,6 +70,19 @@ fun SearchScreen(
     var showSearchSheet by remember { mutableStateOf(false) }
     var showFiltersSheet by remember { mutableStateOf(false) }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val showSnackbarAction: (String) -> Unit = { message ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
+
     val themeColor = themeAdaptiveColor()
 
     Scaffold(
@@ -79,6 +99,14 @@ fun SearchScreen(
                     )
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = BottomNavHeight)
+            ) { data ->
+                AppSnackbar(data = data)
+            }
         },
         content = { paddingValues ->
             Column(
@@ -141,7 +169,8 @@ fun SearchScreen(
                     onAdd = { id -> productViewModel.addToCart(id) },
                     onRemove = { id -> productViewModel.removeFromCart(id) },
                     inProgress = productViewModel.inProgress.collectAsState().value,
-                    buttonStates = productViewModel.buttonStates.collectAsState().value
+                    buttonStates = productViewModel.buttonStates.collectAsState().value,
+                    onShowSnackbar = showSnackbarAction
                 )
             }
 

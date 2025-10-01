@@ -21,7 +21,7 @@ import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ProductCardSize
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 import com.loc.searchapp.core.utils.Constants.BASE_URL
-import com.loc.searchapp.presentation.shared.components.notifications.EmptyScreen
+import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 import com.loc.searchapp.presentation.shared.model.UiState
 import com.loc.searchapp.presentation.shared.network.NetworkStatus
 
@@ -35,11 +35,25 @@ fun HomeCategories(
 ) {
     when {
         networkStatus != NetworkStatus.Available -> {
-            EmptyScreen(stringResource(R.string.no_internet_connection))
+            EmptyContent(
+                message = stringResource(R.string.no_internet_connection),
+                iconId = R.drawable.ic_network_error,
+            )
         }
 
-        state == UiState.Empty -> EmptyScreen(stringResource(id = R.string.no_categories))
-        state is UiState.Error -> EmptyScreen(stringResource(id = R.string.error))
+        state == UiState.Empty -> {
+            EmptyContent(
+                message = stringResource(id = R.string.no_categories),
+                iconId = R.drawable.ic_empty_list,
+            )
+        }
+
+        state is UiState.Error -> {
+            EmptyContent(
+                message = stringResource(id = R.string.error),
+                iconId = R.drawable.ic_network_error,
+            )
+        }
         state == UiState.Loading -> CategoriesShimmer()
         state is UiState.Success -> {
             Column(modifier.fillMaxWidth()) {

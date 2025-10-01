@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.AboutTextWidth
 import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
@@ -73,13 +74,15 @@ fun SearchTextField(
             trailingIcon = {
                 if (isLoadingSuggestions) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(IconSize),
-                        strokeWidth = BorderStroke
+                        modifier = Modifier
+                            .size(IconSize)
+                            .clearAndSetSemantics { },
+                        strokeWidth = BorderStroke,
                     )
                 } else if (suggestions.isNotEmpty()) {
                     Icon(
                         Icons.Default.KeyboardArrowDown,
-                        contentDescription = stringResource(R.string.suggestions),
+                        contentDescription = null,
                         modifier = Modifier.rotate(if (expanded) 180f else 0f)
                     )
                 }
