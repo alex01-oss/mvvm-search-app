@@ -8,8 +8,8 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.plugin.compose'
     id 'org.jetbrains.kotlin.plugin.serialization'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.appdistribution'
+//    id 'com.google.gms.google-services'
+//    id 'com.google.firebase.appdistribution'
 }
 
 def localProperties = new Properties()
@@ -38,23 +38,58 @@ android {
         }
     }
 
-    buildTypes {
-        debug {
-            firebaseAppDistribution {
-                groups = "testers"
-                releaseNotes = "Debug build for testing"
-            }
+    flavorDimensions = ["environment"]
+
+    productFlavors {
+        dev {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+
+            buildConfigField("String", "BASE_URL", "\"https://marketing4.taile27bf0.ts.net/api/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+
+            resValue("string", "app_name", "SearchApp DEV")
         }
+
+        staging {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+
+            buildConfigField("String", "BASE_URL", "\"https://marketing4.taile27bf0.ts.net/api/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+
+            resValue("string", "app_name", "SearchApp STAGING")
+        }
+
+        prod {
+            dimension = "environment"
+
+            buildConfigField("String", "BASE_URL", "\"https://domain.com/api/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+
+            resValue("string", "app_name", "SearchApp")
+        }
+    }
+
+    buildTypes {
+//        debug {
+//            firebaseAppDistribution {
+//                groups = "testers"
+//                releaseNotes = "Debug build for testing"
+//            }
+//        }
         release {
             minifyEnabled = false
             proguardFiles(
                     getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
             )
-            firebaseAppDistribution {
-                groups = "testers"
-                releaseNotesFile = "release-notes.txt"
-            }
+//            firebaseAppDistribution {
+//                groups = "testers"
+//                releaseNotesFile = "release-notes.txt"
+//            }
         }
     }
     compileOptions {
@@ -146,6 +181,5 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0'
 
     // Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:34.3.0')
-
+//    implementation platform('com.google.firebase:firebase-bom:34.3.0')
 }
