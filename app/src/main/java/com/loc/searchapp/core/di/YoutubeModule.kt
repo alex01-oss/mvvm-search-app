@@ -6,47 +6,54 @@ import com.loc.searchapp.core.data.remote.api.YoutubeApi
 import com.loc.searchapp.core.data.repository.YoutubeRepositoryImpl
 import com.loc.searchapp.core.domain.model.youtube.YoutubeData
 import com.loc.searchapp.core.domain.repository.YoutubeRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import jakarta.inject.Singleton
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
-object YoutubeModule {
-    private val contentType = "application/json".toMediaType()
+abstract class YoutubeModule {
 
-    @Provides
-    @Named("youtube_api_key")
-    fun provideYoutubeApiKey(): String = BuildConfig.YOUTUBE_API_KEY
+    @Binds
+    @Singleton
+    abstract fun bindYoutubeRepository(
+        impl: YoutubeRepositoryImpl
+    ): YoutubeRepository
 
-    @Provides
-    fun provideYoutubeApi(): YoutubeApi {
-        val json = Json { ignoreUnknownKeys = true }
+    companion object {
 
-        return Retrofit.Builder()
-            .baseUrl("https://www.googleapis.com/youtube/v3/")
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-            .create(YoutubeApi::class.java)
-    }
+        @Provides
+        @Singleton
+        @YoutubeApiKey
+        fun provideYoutubeApiKey(): String = BuildConfig.YOUTUBE_API_KEY
 
-    @Provides
-    fun provideYoutubeRepository(
-        api: YoutubeApi,
-        @Named("youtube_api_key") apiKey: String
-    ): YoutubeRepository {
-        val playlistId = "UU3tUVI8r3Bfr8hb9-KzfCvw"
-        return YoutubeRepositoryImpl(
-            api,
-            YoutubeData(
+        @Provides
+        @Singleton
+        fun provideYoutubeApi(
+            json: Json,
+        ): YoutubeApi {
+            return Retrofit.Builder()
+                .baseUrl("https://www.googleapis.com/youtube/v3/")
+                .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                .build()
+                .create(YoutubeApi::class.java)
+        }
+
+        @Provides
+        @Singleton
+        fun provideYoutubeData(
+            @YoutubeApiKey apiKey: String
+        ): YoutubeData {
+            return YoutubeData(
                 apiKey = apiKey,
-                playlistId = playlistId
+                playlistId = "UU3tUVI8r3Bfr8hb9-KzfCvw"
             )
-        )
+        }
     }
 }

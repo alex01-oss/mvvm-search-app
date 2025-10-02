@@ -6,16 +6,17 @@ import androidx.media3.common.util.UnstableApi
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
 import com.loc.searchapp.core.data.remote.api.AuthApi
 import com.loc.searchapp.core.data.remote.dto.RefreshTokenRequest
+import com.loc.searchapp.core.di.RefreshAuthApi
+import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
     private val userPreferences: UserPreferences,
-    private val refreshAuthApi: AuthApi
+    @RefreshAuthApi private val refreshAuthApi: AuthApi
 ) : Authenticator {
 
     companion object {

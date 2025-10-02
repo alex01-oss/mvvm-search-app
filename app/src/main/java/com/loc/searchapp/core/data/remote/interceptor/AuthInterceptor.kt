@@ -1,10 +1,10 @@
 package com.loc.searchapp.core.data.remote.interceptor
 
 import com.loc.searchapp.core.data.local.datastore.UserPreferences
+import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
     private val userPreferences: UserPreferences

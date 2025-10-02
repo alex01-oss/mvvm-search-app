@@ -8,11 +8,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.loc.searchapp.core.domain.manager.LocalUserManger
 import com.loc.searchapp.core.utils.Constants
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class LocalUserManagerImpl(
-    private val context: Context
+class LocalUserManagerImpl @Inject constructor(
+    @ApplicationContext private val context: Context
 ) : LocalUserManger {
     override suspend fun saveAppEntry() {
         context.dataStore.edit { settings ->

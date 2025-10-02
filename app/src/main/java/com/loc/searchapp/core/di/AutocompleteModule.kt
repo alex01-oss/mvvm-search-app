@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Named
 import jakarta.inject.Singleton
 import retrofit2.Retrofit
 
@@ -26,7 +25,7 @@ abstract class AutocompleteModule {
         @Provides
         @Singleton
         fun provideAutocompleteApi(
-            @Named("mainRetrofit") retrofit: Retrofit
+            @MainRetrofit retrofit: Retrofit
         ): AutocompleteApi {
             return retrofit.create(AutocompleteApi::class.java)
         }
