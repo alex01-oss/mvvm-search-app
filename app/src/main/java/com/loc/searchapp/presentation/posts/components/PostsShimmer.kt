@@ -22,6 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.loc.searchapp.presentation.shared.components.loading.shimmerEffect
 import com.loc.searchapp.core.ui.values.Dimens.LargePadding
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.InputFieldHeight
+import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
+import com.loc.searchapp.core.ui.values.Dimens.ShimmerHeight2
+import com.loc.searchapp.core.ui.values.Dimens.ShimmerHeight3
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
@@ -30,15 +34,15 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .clearAndSetSemantics { },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = StrongCorner),
+        shape = RoundedCornerShape(StrongCorner)
     ) {
         Column(modifier = Modifier.padding(BasePadding)) {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .height(PostImageHeight)
+                    .clip(RoundedCornerShape(StrongCorner))
                     .shimmerEffect()
             )
 
@@ -47,8 +51,8 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .height(ShimmerHeight3)
+                    .clip(RoundedCornerShape(StrongCorner))
                     .shimmerEffect()
             )
 
@@ -57,8 +61,8 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth(0.4f)
-                    .height(16.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .height(ShimmerHeight2)
+                    .clip(RoundedCornerShape(StrongCorner))
                     .shimmerEffect()
             )
 
@@ -67,8 +71,8 @@ fun PostItemShimmer(modifier: Modifier = Modifier) {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .height(InputFieldHeight)
+                    .clip(RoundedCornerShape(StrongCorner))
                     .shimmerEffect()
             )
         }

@@ -79,40 +79,45 @@ fun PostsScreen(
             }
         }
     ) { paddingValues ->
-        when (state) {
-            UiState.Loading -> PostItemShimmer()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(BasePadding),
+            verticalArrangement = Arrangement.spacedBy(BasePadding)
+        ) {
+            when (state) {
+                UiState.Loading -> items(3) { PostItemShimmer() }
 
-            is UiState.Error -> {
-                EmptyContent(
-                    message = state.message,
-                    iconId = R.drawable.ic_network_error,
-                )
-            }
-
-            UiState.Empty -> {
-                EmptyContent(
-                    message = stringResource(id = R.string.error),
-                    iconId = R.drawable.ic_network_error,
-                )
-            }
-
-            is UiState.Success -> LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(BasePadding),
-                verticalArrangement = Arrangement.spacedBy(BasePadding)
-            ) {
-                items(state.data) { post ->
-                    PostItem(
-                        post = post,
-                        onClick = { onPostClick(post) },
-                        onDeleteClick = { showDeleteDialog = post },
-                        isAdmin = authViewModel.isAdmin
-                    )
+                is UiState.Error -> {
+                    item {
+                        EmptyContent(
+                            message = state.message,
+                            iconId = R.drawable.ic_network_error,
+                        )
+                    }
                 }
-                item { Spacer(modifier = Modifier.height(TopLogoHeight)) }
+
+                UiState.Empty -> {
+                    item {
+                        EmptyContent(
+                            message = stringResource(id = R.string.error),
+                            iconId = R.drawable.ic_network_error,
+                        )
+                    }
+                }
+
+                is UiState.Success ->
+                    items(state.data) { post ->
+                        PostItem(
+                            post = post,
+                            onClick = { onPostClick(post) },
+                            onDeleteClick = { showDeleteDialog = post },
+                            isAdmin = authViewModel.isAdmin
+                        )
+                    }
             }
+            item { Spacer(modifier = Modifier.height(TopLogoHeight)) }
         }
     }
 

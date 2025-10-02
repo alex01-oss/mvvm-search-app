@@ -24,19 +24,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.loc.searchapp.R
-import com.loc.searchapp.core.domain.model.common.BottomNavItem
-import com.loc.searchapp.core.ui.values.Dimens.ActiveButtonSize
-import com.loc.searchapp.core.ui.values.Dimens.BottomNavMargin
-import com.loc.searchapp.core.ui.values.Dimens.IconSize
-import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
-
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
+import com.loc.searchapp.R
+import com.loc.searchapp.core.domain.model.common.BottomNavItem
+import com.loc.searchapp.core.ui.values.Dimens.ActiveButtonSize
+import com.loc.searchapp.core.ui.values.Dimens.BasePadding
+import com.loc.searchapp.core.ui.values.Dimens.BottomNavCorner
+import com.loc.searchapp.core.ui.values.Dimens.BottomNavMargin
+import com.loc.searchapp.core.ui.values.Dimens.IconSize
+import com.loc.searchapp.core.ui.values.Dimens.IconSize2
+import com.loc.searchapp.core.ui.values.Dimens.NavBarHeight
+
 @Composable
 fun BottomNavigation(
     modifier: Modifier = Modifier,
@@ -59,7 +61,7 @@ fun BottomNavigation(
                 .fillMaxWidth()
                 .height(navBarHeight)
                 .align(Alignment.BottomCenter),
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(BottomNavCorner),
             colors = CardDefaults.cardColors(
                 containerColor = colorResource(id = R.color.bottom_nav)
             ),
@@ -79,7 +81,7 @@ fun BottomNavigation(
                     ) {
                         if (index != selected) {
                             IconButton(
-                                modifier = Modifier.size(32.dp),
+                                modifier = Modifier.size(IconSize2),
                                 onClick = { onItemClick(index) }
                             ) {
                                 Icon(

@@ -42,6 +42,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.request.ImageRequest
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.posts.PostFormState
+import com.loc.searchapp.core.ui.values.Dimens.AboutLogoSize
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.PostImageHeight
 import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
@@ -127,8 +128,11 @@ fun PostEditorScreen(
         }
     }
 
-    if (showImagePicker) {
-        imagePickerLauncher.launch("image/*")
+    LaunchedEffect(showImagePicker) {
+        if (showImagePicker) {
+            imagePickerLauncher.launch("image/*")
+            showImagePicker = false
+        }
     }
 
     if (showErrorDialog) {
@@ -288,6 +292,8 @@ fun PostEditorScreen(
                             )
                         )
                     }
+
+                    Box(modifier = Modifier.fillMaxWidth().height(AboutLogoSize))
                 }
             }
         }

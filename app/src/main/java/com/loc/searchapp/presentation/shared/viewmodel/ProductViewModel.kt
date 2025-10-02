@@ -70,13 +70,23 @@ class ProductViewModel @Inject constructor(
     fun removeFromCart(id: Int) {
         viewModelScope.launch {
             _inProgress.update { it + id }
+
+            val currentSuccessState = _cartState.value as? UiState.Success ?: return@launch
+            val updatedCart = currentSuccessState.data.cart.filter { it.product.id != id }
+
+            if (updatedCart.isEmpty()) {
+                _cartState.value = UiState.Empty
+            } else {
+                _cartState.value = currentSuccessState.copy(
+                    data = currentSuccessState.data.copy(cart = updatedCart)
+                )
+            }
+
             try {
                 catalogUseCases.deleteProduct(CatalogId(id))
                 _buttonStates.update { it + (id to false) }
-                if (isCartScreenActive) {
-                    loadCart()
-                }
             } catch (e: Exception) {
+                _cartState.value = currentSuccessState
                 _cartState.value = UiState.Error(e.localizedMessage ?: "Unknown error")
             } finally {
                 _inProgress.update { it - id }

@@ -1,7 +1,6 @@
 package com.loc.searchapp.core.data.remote.api
 
 import com.loc.searchapp.core.data.remote.dto.DeletePostResponse
-import com.loc.searchapp.core.data.remote.dto.EditPostRequest
 import com.loc.searchapp.core.data.remote.dto.ImageUploadResponse
 import com.loc.searchapp.core.data.remote.dto.PostRequest
 import com.loc.searchapp.core.data.remote.dto.PostResponse
@@ -30,7 +29,8 @@ interface PostsApi {
 
     @PUT("blog/{post_id}")
     suspend fun editPost(
-        request: EditPostRequest
+        @Path("post_id") postId: Int,
+        @Body request: PostRequest
     ): Response<PostResponse>
 
     @GET("blog")

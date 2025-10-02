@@ -1,6 +1,7 @@
 package com.loc.searchapp.presentation.post_details.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -64,98 +66,98 @@ fun PostDetailedScreen(
             )
         }
     ) { paddingValues ->
-        when (state) {
-            is UiState.Loading -> PostDetailedShimmer()
 
-            is UiState.Error -> {
-                EmptyContent(
+        val richTextState = remember { RichTextState() }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
+        ) {
+            when (state) {
+                is UiState.Loading -> PostDetailedShimmer()
+
+                is UiState.Error -> EmptyContent(
                     message = state.message,
-                    iconId = R.drawable.ic_network_error,
+                    iconId = R.drawable.ic_network_error
                 )
-            }
 
-            UiState.Empty -> {
-                EmptyContent(
+                UiState.Empty -> EmptyContent(
                     message = stringResource(id = R.string.error),
-                    iconId = R.drawable.ic_network_error,
+                    iconId = R.drawable.ic_network_error
                 )
-            }
 
-            is UiState.Success -> {
-                val post = state.data
-                val richTextState = remember { RichTextState() }
+                is UiState.Success -> {
+                    val post = state.data
 
-                LaunchedEffect(post.id) {
-                    richTextState.setHtml(post.content)
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .verticalScroll(rememberScrollState())
-                        .padding(BasePadding)
-                ) {
-                    Text(
-                        text = post.title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.semantics { heading() }
-                    )
-
-                    Spacer(Modifier.height(BasePadding))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .semantics(mergeDescendants = true) {},
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.author_label,
-                                authorName ?: "№${post.userId}"
-                            ),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = post.createdAt.formatDate(),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    LaunchedEffect(post.id) {
+                        richTextState.setHtml(post.content)
                     }
 
-                    Spacer(Modifier.height(BasePadding))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(BasePadding)
+                    ) {
+                        Text(
+                            text = post.title,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.semantics { heading() }
+                        )
 
-                    if (post.image?.isNotEmpty() == true) {
-                        AsyncImage(
-                            model = "$BASE_URL${post.image}",
-                            contentDescription = post.title,
-                            contentScale = ContentScale.Crop,
+                        Spacer(Modifier.height(BasePadding))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.author_label,
+                                    authorName ?: "№${post.userId}"
+                                ),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = post.createdAt.formatDate(),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        Spacer(Modifier.height(BasePadding))
+
+                        if (!post.image.isNullOrEmpty()) {
+                            AsyncImage(
+                                model = "$BASE_URL${post.image}",
+                                contentDescription = post.title,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(StrongCorner))
+                            )
+                            Spacer(Modifier.height(BasePadding))
+                        }
+
+                        Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(StrongCorner))
-                        )
+                                .clip(RoundedCornerShape(StrongCorner)),
+                            color = MaterialTheme.colorScheme.surface
+                        ) {
+                            RichText(
+                                modifier = Modifier.padding(BasePadding),
+                                state = richTextState
+                            )
+                        }
 
-                        Spacer(modifier = Modifier.height(BasePadding))
+                        Spacer(modifier = Modifier.height(TopLogoHeight))
                     }
-
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(StrongCorner)),
-                        color = MaterialTheme.colorScheme.surface
-                    ) {
-                        RichText(
-                            modifier = Modifier
-                                .padding(BasePadding),
-                            state = richTextState
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(TopLogoHeight))
                 }
             }
         }

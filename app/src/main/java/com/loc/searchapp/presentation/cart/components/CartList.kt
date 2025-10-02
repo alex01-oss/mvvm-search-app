@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.Cart
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BottomNavHeight
 import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
 import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
 import com.loc.searchapp.presentation.shared.model.UiState
@@ -71,7 +71,7 @@ fun CartList(
                 }
 
                 item(span = { GridItemSpan(2) }) {
-                    Box(modifier = Modifier.fillMaxWidth().height(MediumPadding1))
+                    Box(modifier = Modifier.fillMaxWidth().height(BottomNavHeight))
                 }
             }
         }

@@ -35,6 +35,7 @@ object Dimens {
     val SmallCorner = 2.dp
     val ExtraSmallCorner = 1.dp
     val DefaultCorner = 8.dp
+    val BottomNavCorner = 20.dp
     val IndicatorSize = 16.dp
     val PageIndicatorWidth = 56.dp
     val BorderStroke = 2.dp

@@ -44,13 +44,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import com.loc.searchapp.R
+import com.loc.searchapp.core.ui.values.Dimens.AboutLogoSize
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.ui.values.Dimens.ExtraSmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.IndicatorSize
 import com.loc.searchapp.core.ui.values.Dimens.LogoHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallPadding
 import com.loc.searchapp.core.ui.values.Dimens.TitleSize
-import com.loc.searchapp.core.ui.values.Dimens.TopLogoHeight
 import com.loc.searchapp.presentation.home.components.HomeCategories
 import com.loc.searchapp.presentation.home.components.HomeTopBar
 import com.loc.searchapp.presentation.home.components.PostsSlider
@@ -303,7 +303,7 @@ fun HomeScreen(
                 }
 
                 item {
-                    Box(modifier = Modifier.fillMaxWidth().height(TopLogoHeight))
+                    Box(modifier = Modifier.fillMaxWidth().height(AboutLogoSize))
                 }
             }
         }

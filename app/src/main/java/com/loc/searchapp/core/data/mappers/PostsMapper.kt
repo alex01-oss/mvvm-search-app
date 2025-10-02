@@ -1,7 +1,6 @@
 package com.loc.searchapp.core.data.mappers
 
 import com.loc.searchapp.core.data.remote.dto.DeletePostResponse
-import com.loc.searchapp.core.data.remote.dto.EditPostRequest
 import com.loc.searchapp.core.data.remote.dto.ImageUploadResponse
 import com.loc.searchapp.core.data.remote.dto.PostRequest
 import com.loc.searchapp.core.data.remote.dto.PostResponse
@@ -50,10 +49,17 @@ fun List<PostResponse>.toDomain(): List<Post> {
 }
 
 fun UploadData.toDto(): MultipartBody.Part {
+    val mimeType = when (file.extension.lowercase()) {
+        "png" -> "image/png"
+        "jpg", "jpeg" -> "image/jpeg"
+        "webp" -> "image/webp"
+        else -> "application/octet-stream"
+    }
+
     return MultipartBody.Part.createFormData(
         name = "file",
         filename = file.name,
-        body = file.asRequestBody("image/*".toMediaType())
+        body = file.asRequestBody(mimeType.toMediaType())
     )
 }
 
@@ -64,14 +70,11 @@ fun ImageUploadResponse.toDomain(): UploadResult {
     )
 }
 
-fun EditPostData.toDto(): EditPostRequest {
-    return EditPostRequest(
-        id = this.id,
-        body = PostRequest(
-            title = this.title,
-            content = this.content,
-            image = this.image
-        )
+fun EditPostData.toDto(): Pair<Int, PostRequest> {
+    return id to PostRequest(
+        title = title,
+        content = content,
+        image = image
     )
 }
 

@@ -25,7 +25,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.loc.searchapp.R
 import com.loc.searchapp.core.domain.model.catalog.Product
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
-import com.loc.searchapp.core.ui.values.Dimens.MediumPadding1
+import com.loc.searchapp.core.ui.values.Dimens.BottomNavHeight
 import com.loc.searchapp.core.ui.values.Dimens.SmallCorner
 import com.loc.searchapp.presentation.shared.components.loading.ProductListShimmer
 import com.loc.searchapp.presentation.shared.components.notifications.EmptyContent
@@ -112,7 +112,7 @@ fun ProductsList(
                     }
 
                     item(span = { GridItemSpan(2) }) {
-                        Box(modifier = Modifier.fillMaxWidth().height(MediumPadding1))
+                        Box(modifier = Modifier.fillMaxWidth().height(BottomNavHeight))
                     }
                 }
             }

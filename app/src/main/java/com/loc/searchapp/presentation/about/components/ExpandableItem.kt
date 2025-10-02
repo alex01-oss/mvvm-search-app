@@ -55,7 +55,7 @@ fun ExpandableItem(
         shape = RoundedCornerShape(StrongCorner),
         elevation = CardDefaults.cardElevation(0.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Column(

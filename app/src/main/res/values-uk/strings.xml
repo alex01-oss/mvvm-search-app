@@ -123,7 +123,7 @@
     <string name="server_unavailable">Сервер недоступний.</string>
     <string name="internet_unavailable">Інтернет недоступний.</string>
     <string name="no_internet_connection">Відсутнє з\'єднання з інтернетом</string>
-    <string name="error">Щось пішло не так: %1$s</string>
+    <string name="error">Щось пішло не так:</string>
     <string name="loading_error">Помилка завантаження</string>
 
     <!-- User states -->

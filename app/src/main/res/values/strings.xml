@@ -123,7 +123,7 @@
     <string name="server_unavailable">Server is unavailable.</string>
     <string name="internet_unavailable">Internet is unavailable.</string>
     <string name="no_internet_connection">No internet connection</string>
-    <string name="error">Something went wrong: %1$s</string>
+    <string name="error">Something went wrong:</string>
     <string name="loading_error">Loading error</string>
 
     <!-- User states -->

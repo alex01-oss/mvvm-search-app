@@ -129,11 +129,30 @@ class PostViewModel @Inject constructor(
     fun deletePost(postId: Int) {
         viewModelScope.launch {
             _postActionState.value = UiState.Loading
+
+            val currentAllPosts = _allPostsState.value as? UiState.Success
+            val currentRecentPosts = _recentPostsState.value as? UiState.Success
+
+            currentAllPosts?.let { success ->
+                val updated = success.data.filterNot { it.id == postId }
+                _allPostsState.value = if (updated.isEmpty()) UiState.Empty
+                    else UiState.Success(updated)
+            }
+
+            currentRecentPosts?.let { success ->
+                val updated = success.data.filterNot { it.id == postId }
+                _recentPostsState.value = if (updated.isEmpty()) UiState.Empty
+                    else UiState.Success(updated)
+            }
+
             try {
                 postsUseCases.deletePost(PostId(postId))
                 _postActionState.value = UiState.Success(Unit)
                 loadAllPosts()
             } catch (e: Exception) {
+                currentAllPosts?.let { _allPostsState.value = it }
+                currentRecentPosts?.let { _recentPostsState.value = it }
+
                 _postActionState.value =
                     UiState.Error(e.localizedMessage ?: "Failed to delete post")
             }

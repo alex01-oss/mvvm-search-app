@@ -38,7 +38,8 @@ class PostsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun editPost(data: EditPostData): Post {
-        val res = api.editPost(data.toDto())
+        val (id, request) = data.toDto()
+        val res = api.editPost(id, request)
         return if (res.isSuccessful) {
             res.body()?.toDomain() ?: throw RuntimeException("Edit post successful but body is null")
         } else {

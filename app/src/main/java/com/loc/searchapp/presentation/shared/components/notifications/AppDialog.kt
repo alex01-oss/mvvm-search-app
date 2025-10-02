@@ -1,5 +1,6 @@
 package com.loc.searchapp.presentation.shared.components.notifications
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.loc.searchapp.R
+import com.loc.searchapp.core.ui.values.Dimens.StrongCorner
 
 @Composable
 fun AppDialog(
@@ -21,6 +23,7 @@ fun AppDialog(
         onDismissRequest = { onDismiss?.invoke() },
         title = title?.let { { Text(it) } },
         text = { Text(message) },
+        shape = RoundedCornerShape(StrongCorner),
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text(
