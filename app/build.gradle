@@ -8,8 +8,6 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.plugin.compose'
     id 'org.jetbrains.kotlin.plugin.serialization'
-//    id 'com.google.gms.google-services'
-//    id 'com.google.firebase.appdistribution'
 }
 
 def localProperties = new Properties()
@@ -17,6 +15,11 @@ def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
 }
+
+def localKeystorePath = localProperties.getProperty('KEYSTORE_PATH') ?: ""
+def localKeyAlias = localProperties.getProperty('KEY_ALIAS') ?: ""
+def localKeystorePassword = localProperties.getProperty('KEYSTORE_PASSWORD') ?: ""
+def localKeyPassword = localProperties.getProperty('KEY_PASSWORD') ?: ""
 
 android {
     namespace = 'com.loc.searchapp'
@@ -35,6 +38,31 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            if (localKeystorePath && file(localKeystorePath).exists()) {
+                storeFile file(localKeystorePath)
+                storePassword localKeystorePassword
+                keyAlias localKeyAlias
+                keyPassword localKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled = false
+        }
+        release {
+            minifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                    getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            )
         }
     }
 
@@ -73,47 +101,30 @@ android {
         }
     }
 
-    buildTypes {
-//        debug {
-//            firebaseAppDistribution {
-//                groups = "testers"
-//                releaseNotes = "Debug build for testing"
-//            }
-//        }
-        release {
-            minifyEnabled = false
-            proguardFiles(
-                    getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.pro'
-            )
-//            firebaseAppDistribution {
-//                groups = "testers"
-//                releaseNotesFile = "release-notes.txt"
-//            }
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.addAll(['-XXLanguage:+PropertyParamAnnotationDefaultTargetMode'])
         }
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-    packagingOptions {
+
+    packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            exclude("META-INF/AL2.0")
+            exclude("META-INF/LGPL2.1")
         }
     }
+
     bundle {
         language {
             enableSplit = false
@@ -179,7 +190,4 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended:1.7.8'
     implementation 'com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc13'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:13.0.0'
-
-    // Firebase BoM
-//    implementation platform('com.google.firebase:firebase-bom:34.3.0')
 }
