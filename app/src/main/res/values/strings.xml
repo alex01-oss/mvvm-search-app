@@ -144,6 +144,8 @@
     <!-- Language settings -->
     <string name="select_language">Select a language: </string>
     <string name="system_language">System Language</string>
+    <string name="english">English</string>
+    <string name="ukrainian">Ukrainian</string>
     <string name="language_settings">Language Settings</string>
     <string name="restart_app_message">Tap OK to apply the language</string>
 

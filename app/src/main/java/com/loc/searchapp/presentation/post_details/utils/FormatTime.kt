@@ -6,7 +6,7 @@ import java.util.Locale
 fun String.formatDate(): String {
     return try {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US)
-        val outputFormat = SimpleDateFormat("d MMMM yyyy", Locale("uk"))
+        val outputFormat = SimpleDateFormat("d MMMM yyyy", Locale.forLanguageTag("uk"))
 
         val date = inputFormat.parse(this)
         outputFormat.format(date!!)

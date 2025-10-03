@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import com.loc.searchapp.R
 import com.loc.searchapp.core.ui.values.Dimens.AboutTextWidth
 import com.loc.searchapp.core.ui.values.Dimens.BorderStroke
 import com.loc.searchapp.core.ui.values.Dimens.IconSize
@@ -89,8 +88,7 @@ fun SearchTextField(
             },
             modifier = modifier
                 .fillMaxWidth()
-                .menuAnchor()
-            ,
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
             singleLine = true,
             shape = RoundedCornerShape(StrongCorner)
         )

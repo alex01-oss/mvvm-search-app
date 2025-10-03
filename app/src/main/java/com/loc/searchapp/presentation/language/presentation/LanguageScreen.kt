@@ -18,13 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
 import com.loc.searchapp.R
-import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
-import com.loc.searchapp.presentation.shared.components.SharedTopBar
 import com.loc.searchapp.core.ui.values.Dimens.BasePadding
 import com.loc.searchapp.core.utils.LanguagePreference
+import com.loc.searchapp.core.utils.Languages
 import com.loc.searchapp.presentation.language.components.LanguageOption
+import com.loc.searchapp.presentation.shared.components.SharedTopBar
+import com.loc.searchapp.presentation.shared.components.notifications.AppDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,11 +41,7 @@ fun LanguageScreen(
     val activity = context as? Activity
     val coroutineScope = rememberCoroutineScope()
 
-    val languages = listOf(
-        Triple(stringResource(R.string.system_language), "system", R.drawable.globe),
-        Triple("English", "en", R.drawable.flag_uk),
-        Triple("Українська", "uk", R.drawable.flag_ukraine)
-    )
+    val languages = Languages.list
 
     BackHandler { onBackClick() }
 
@@ -67,13 +63,13 @@ fun LanguageScreen(
         ) {
             Spacer(modifier = Modifier.height(BasePadding))
 
-            languages.forEachIndexed { index, (label, code, iconRes) ->
+            languages.forEachIndexed { index, lang ->
                 LanguageOption(
-                    language = label,
-                    id = iconRes,
-                    isSelected = selectedLanguage == code,
+                    language = stringResource(lang.titleRes),
+                    id = lang.iconRes,
+                    isSelected = selectedLanguage == lang.code,
                     onClick = {
-                        pendingLanguage = code
+                        pendingLanguage = lang.code
                         showRestartDialog = true
                     }
                 )

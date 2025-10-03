@@ -144,6 +144,8 @@
     <!-- Language settings -->
     <string name="select_language">Оберіть мову: </string>
     <string name="system_language">Системна мова</string>
+    <string name="english">Англійська</string>
+    <string name="ukrainian">Українська</string>
     <string name="language_settings">Налаштування мови</string>
     <string name="restart_app_message">Натисніть OK, щоб застосувати мову</string>
 

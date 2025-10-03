@@ -10,7 +10,7 @@ object LocaleHelper {
         val locale = if (language == "system") {
             Resources.getSystem().configuration.locales.get(0)
         } else {
-            Locale(language)
+            Locale.forLanguageTag(language)
         }
         Locale.setDefault(locale)
 
