@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "10:00"
+      timezone: "Europe/Kiev"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "gradle"
+    reviewers:
+      - "alex01-oss"
+    assignees:
+      - "alex01-oss"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      compose:
+        patterns:
+          - "androidx.compose*"
+        update-types:
+          - "minor"
+          - "patch"
+      androidx:
+        patterns:
+          - "androidx.*"
+        update-types:
+          - "patch"
