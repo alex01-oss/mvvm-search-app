@@ -9,7 +9,7 @@ targetSdk = "36"
 # Compose
 compose-bom = "2025.09.01"
 compose-compiler = "1.5.15"
-activity-compose = "1.11.0"
+activity-compose = "1.12.0"
 navigation = "2.9.6"
 
 # Lifecycle
